@@ -39,18 +39,18 @@ exports.user_create = async (req, res) => {
         if (!validateEmail(body.email)) {
             res.send({
                 message: "Ingresa un correo electrónico válido.",
-                code: "UE00-R"
+                code: "UE00-C"
             })
         } else if (body.name.length <= 3 || body.name.length >= 31) {
             res.send({
                 message: "El nombre debe ser entre 4 y 30 caracteres.",
-                code: "UE01-R"
+                code: "UE01-C"
             })
         }
         else if (!validatePassword(body.password)) {
             res.send({
                 message: "La contraseña debe cumplir con los requisitos",
-                code: "UE02-R"
+                code: "UE02-C"
             })
         }
         else {
@@ -68,7 +68,7 @@ exports.user_create = async (req, res) => {
 
 
     } catch (error) {
-
+        res.send(error);
     }
 
 };
