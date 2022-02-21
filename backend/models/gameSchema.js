@@ -31,6 +31,9 @@ const _GAME_SCHEMA_ = new _MONGOOSE_.Schema({
             type: ObjectId
         }
     ],
+    gameDuration: {
+        type: String
+    },
     genres: [
         {
             type: ObjectId

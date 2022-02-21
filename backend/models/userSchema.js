@@ -6,7 +6,7 @@ const _USER_SCHEMA_ = new _MONGOOSE_.Schema({
         type: String,
         required: true, //true = not null
         minlength: 4,
-        maxlength: 30,
+        maxlength: 60,
         unique: true
     },
     name: {
@@ -36,6 +36,9 @@ const _USER_SCHEMA_ = new _MONGOOSE_.Schema({
         facebook: { type: String },
         instagram: { type: String },
         discord: { type: String }
+    },
+    notifications: {
+        type: _MONGOOSE_.Schema.Types.ObjectId
     }
 
 });
