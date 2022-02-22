@@ -5,11 +5,14 @@ const _GAME_SCHEMA_ = new _MONGOOSE_.Schema({
     name: {
         type: String,
         required: true, //true = not null
-        unique: true
+        unique: true,
+        minlength: 0
     },
     synopsis: {
         type: String,
-        required: true
+        required: true,
+        minlength: 0,
+        maxlength: 300
     },
     studio: {
         type: String,
@@ -28,7 +31,7 @@ const _GAME_SCHEMA_ = new _MONGOOSE_.Schema({
     },
     activeUsers: [
         {
-            type: ObjectId
+            type: _MONGOOSE_.Schema.Types.ObjectId
         }
     ],
     gameDuration: {
@@ -36,7 +39,7 @@ const _GAME_SCHEMA_ = new _MONGOOSE_.Schema({
     },
     genres: [
         {
-            type: ObjectId
+            type: _MONGOOSE_.Schema.Types.ObjectId
         }
     ]
 

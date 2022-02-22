@@ -19,7 +19,7 @@ exports.chatLog_getOne = async (req, res) => {
         } else {
             res.send({
                 message: "No se ha encontrado el chat.",
-                code: "CE00"
+                code: "CLE00"
             })
         }
     } catch (error) {
@@ -84,7 +84,7 @@ exports.chatLog_update = async (req, res) => {
         } else if (chatLogDB) {
 
             const data = await _CHAT_LOG_.findOneAndUpdate({ _id: id }, { $push: { message: body.message } }, { returnOriginal: false }).populate('message.from message.to');
-            console.log(data);
+
             res.send({
                 message: "Registro actualizado exitosamente.",
                 data //lo mismo a data: data

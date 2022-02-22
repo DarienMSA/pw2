@@ -10,7 +10,7 @@ const _COMMENT_SCHEMA_ = new _MONGOOSE_.Schema({
             {
                 content: {
                     type: String,
-                    maxlength: 50
+                    maxlength: 300
                 },
                 date: {
                     type: Date
