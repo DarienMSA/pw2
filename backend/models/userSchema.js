@@ -38,7 +38,8 @@ const _USER_SCHEMA_ = new _MONGOOSE_.Schema({
         discord: { type: String }
     },
     notifications: {
-        type: _MONGOOSE_.Schema.Types.ObjectId
+        type: _MONGOOSE_.Schema.Types.ObjectId,
+        ref: 'notification'
     }
 
 });

@@ -28,6 +28,23 @@ exports.chat_getOne = async (req, res) => {
     }
 }
 
+exports.chat_getUserChats = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = await _CHAT_.find({ members: id });
+        if (data) {
+            res.send(data);
+        } else {
+            res.send({
+                message: "No se ha encontrado el chat.",
+                code: "CE00"
+            })
+        }
+    } catch (error) {
+        res.send(error);
+    }
+}
+
 exports.chat_create = async (req, res) => {
     try {
         const { body } = req;

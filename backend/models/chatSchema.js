@@ -3,7 +3,8 @@ const _MONGOOSE_ = require('mongoose');
 const _CHAT_SCHEMA_ = new _MONGOOSE_.Schema({
     members: [
         {
-            type: _MONGOOSE_.Schema.Types.ObjectId
+            type: _MONGOOSE_.Schema.Types.ObjectId,
+            ref: 'user'
         }
     ],
     lastMessageDate: {
