@@ -9,5 +9,4 @@ _ROUTER_.post("/chatLog", _CHAT_LOG_ROUTER_.chatLog_create);
 _ROUTER_.put("/chatLog/:id", _CHAT_LOG_ROUTER_.chatLog_update);
 _ROUTER_.delete("/chatLog/:id", _CHAT_LOG_ROUTER_.chatLog_delete);
 
-
 module.exports = _ROUTER_;
