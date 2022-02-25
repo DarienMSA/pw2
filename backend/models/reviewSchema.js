@@ -4,11 +4,13 @@ const _MONGOOSE_ = require('mongoose');
 const _REVIEW_SCHEMA_ = new _MONGOOSE_.Schema({
     gameId: {
         type: _MONGOOSE_.Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: 'game'
     },
     userId: {
         type: _MONGOOSE_.Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: 'user'
     },
     content: {
         type: String,
@@ -30,7 +32,8 @@ const _REVIEW_SCHEMA_ = new _MONGOOSE_.Schema({
     },
     voteUsers: [
         {
-            type: _MONGOOSE_.Schema.Types.ObjectId
+            type: _MONGOOSE_.Schema.Types.ObjectId,
+            ref: 'user'
         }
     ]
 

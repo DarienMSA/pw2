@@ -3,15 +3,18 @@ const _MONGOOSE_ = require('mongoose');
 const _USER_BADGES_SCHEMA_ = new _MONGOOSE_.Schema({
     gameId: {
         type: _MONGOOSE_.Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: 'game'
     },
     userId: {
         type: _MONGOOSE_.Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: 'user'
     },
     badges: [
         {
-            type: _MONGOOSE_.Schema.Types.ObjectId
+            type: _MONGOOSE_.Schema.Types.ObjectId,
+            ref: 'badge'
         }
     ]
 

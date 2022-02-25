@@ -7,6 +7,7 @@ exports.chat_getall = async (req, res) => {
         res.send(data);
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 
 }
@@ -22,9 +23,12 @@ exports.chat_getOne = async (req, res) => {
                 message: "No se ha encontrado el chat.",
                 code: "CE00"
             })
+            console.error(`message: "No se ha encontrado el chat.",
+            code: "CE00"`);
         }
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 }
 
@@ -39,9 +43,12 @@ exports.chat_getUserChats = async (req, res) => {
                 message: "No se ha encontrado el chat.",
                 code: "CE00"
             })
+            console.error(`message: "No se ha encontrado el chat.",
+            code: "CE00"`);
         }
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 }
 
@@ -53,6 +60,8 @@ exports.chat_create = async (req, res) => {
                 message: "En las salas de chat solo pueden haber 2 personas.",
                 code: "CE00-C"
             })
+            console.error(`message: "En las salas de chat solo pueden haber 2 personas.",
+            code: "CE00-C"`);
         } else {
             const userOne = await _USER_.findById(body.members[0]);
             const userTwo = await _USER_.findById(body.members[1]);
@@ -61,6 +70,8 @@ exports.chat_create = async (req, res) => {
                     message: "Un usuario no existe.",
                     code: "CE01-C"
                 })
+                console.error(`message: "Un usuario no existe.",
+                code: "CE01-C"`);
             } else {
                 const chatDB = await _CHAT_.find({ members: body.members })
 
@@ -69,13 +80,15 @@ exports.chat_create = async (req, res) => {
                         message: "Ya existe un chat con esos usuarios",
                         code: "CE02-C"
                     })
+                    console.error(`message: "Ya existe un chat con esos usuarios",
+                    code: "CE02-C"`);
                 } else {
                     let newChat = _CHAT_(body);
                     await newChat
                         .save()
                         .then((newObject) => console.log("Success!", newObject))
                         .catch((err) => {
-                            console.log("Oops!!", err);
+                            console.error(err);
                             res.send({ code: "CE03-C", message: err });
                         })
                     res.send(newChat);
@@ -86,6 +99,7 @@ exports.chat_create = async (req, res) => {
         }
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 }
 
@@ -100,6 +114,8 @@ exports.chat_update = async (req, res) => {
                 message: "En las salas de chat solo pueden haber 2 personas.",
                 code: "CE00-C"
             })
+            console.error(`message: "En las salas de chat solo pueden haber 2 personas.",
+            code: "CE00-C"`);
         } else if (chatDB) {
             const data = await _CHAT_.findOneAndUpdate({ _id: id }, body, { returnOriginal: false });
             res.send({
@@ -112,9 +128,12 @@ exports.chat_update = async (req, res) => {
                 message: "No se ha encontrado el chat.",
                 code: "CE00"
             })
+            console.error(`message: "No se ha encontrado el chat.",
+            code: "CE00"`);
         }
     } catch (error) {
         res.send(error)
+        console.error(error);
     }
 }
 
@@ -131,9 +150,12 @@ exports.chat_delete = async (req, res) => {
                 message: "No se ha encontrado el chat.",
                 code: "CE00"
             })
+            console.error(`message: "No se ha encontrado el chat.",
+            code: "CE00"`);
         }
     } catch (error) {
         res.send(error)
+        console.error(error);
     }
 
 }

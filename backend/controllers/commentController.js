@@ -8,6 +8,7 @@ exports.comment_getall = async (req, res) => {
         res.send(data);
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 
 }
@@ -23,9 +24,12 @@ exports.comment_getOne = async (req, res) => {
                 message: "No se ha encontrado el comentario.",
                 code: "COME00"
             })
+            console.error(`message: "No se ha encontrado el comentario.",
+            code: "COME00"`)
         }
     } catch (error) {
         res.send(error);
+        console.error(error)
     }
 }
 
@@ -36,11 +40,13 @@ exports.comment_create = async (req, res) => {
         const reviewDB = await _REVIEW_.findById(body.review);
         if (reviewDB) {
             const commentDB = await _COMMENT_.find({ review: body.review, user: body.comment.user });
-            if (commentDB) {
+            if (commentDB.length != 0) {
                 res.send({
-                    message: "Ya comentaste esta reseña.",
+                    message: "Tratando de crear otro registro de la review",
                     code: "COME00-C"
                 })
+                console.error(`message: "Tratando de crear otro registro de la review",
+                code: "COME00-C"`)
             } else {
                 const userDB = await _USER_.findById(body.comment.user);
                 if (userDB) {
@@ -49,13 +55,15 @@ exports.comment_create = async (req, res) => {
                             message: "El comentario debe tener un máximo de 300 caracteres.",
                             code: "COME03-C"
                         })
+                        console.error(`message: "El comentario debe tener un máximo de 300 caracteres.",
+                        code: "COME03-C"`)
                     } else {
                         let newComment = _COMMENT_(body);
                         await newComment
                             .save()
                             .then((newObject) => console.log("Success!", newObject))
                             .catch((err) => {
-                                console.log("Oops!!", err);
+                                console.error(err);
                                 res.send({ code: "COME04-C", message: err });
                             })
                         res.send(newComment);
@@ -65,6 +73,8 @@ exports.comment_create = async (req, res) => {
                         message: "Error encontrado al usuario que escribió el comentario.",
                         code: "COME02-C"
                     })
+                    console.error(`message: "Error encontrado al usuario que escribió el comentario.",
+                    code: "COME02-C"`)
                 }
             }
         } else {
@@ -72,9 +82,71 @@ exports.comment_create = async (req, res) => {
                 message: "No existe la reseña a la cual se está comentando.",
                 code: "COME01"
             })
+            console.error(`message: "No existe la reseña a la cual se está comentando.",
+            code: "COME01"`)
         }
     } catch (error) {
         res.send(error);
+        console.error(error);
+    }
+}
+
+exports.comment_add = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { body } = req;
+        const reviewDB = await _REVIEW_.findById(body.review);
+        if (reviewDB) {
+            //const commentDB = await _COMMENT_.findById(id);
+            const commentDB = await _COMMENT_.findById(id)
+
+            if (commentDB) {
+                const userDB = await _USER_.findById(body.comment.user);
+                if (userDB) {
+                    if (body.comment.content <= 0 || body.comment.content >= 301) {
+                        res.send({
+                            message: "El comentario debe tener un máximo de 300 caracteres.",
+                            code: "COME03-C"
+                        })
+                        console.error(`message: "El comentario debe tener un máximo de 300 caracteres.",
+                        code: "COME03-C"`)
+                    } else {
+                        const data = await _COMMENT_.findOneAndUpdate({ _id: id }, { $push: { comment: body.comment } }, { returnOriginal: false }).populate('comment.user');
+                        res.send({
+                            message: "Registro actualizado exitosamente.",
+                            data //lo mismo a data: data
+                        })
+                    }
+                } else {
+                    res.send({
+                        message: "Error encontrado al usuario que escribió el comentario.",
+                        code: "COME02-C"
+                    })
+                    console.error(`message: "Error encontrado al usuario que escribió el comentario.",
+                    code: "COME02-C"`)
+                }
+            } else {
+                res.send({
+                    message: "El comentario que se desea actualizar no existe.",
+                    code: "COME02"
+                })
+                console.error(`message: "El comentario que se desea actualizar no existe.",
+                code: "COME02"`)
+            }
+
+
+        } else {
+            res.send({
+                message: "No existe la reseña a la cual se está comentando.",
+                code: "COME01"
+            })
+            console.error(`message: "No existe la reseña a la cual se está comentando.",
+            code: "COME01"`)
+        }
+
+    } catch (error) {
+        res.send(error)
+        console.error(error);
     }
 }
 
@@ -84,62 +156,69 @@ exports.comment_update = async (req, res) => {
         const { body } = req;
         const reviewDB = await _REVIEW_.findById(body.review);
         if (reviewDB) {
-            const commentDB = await _COMMENT_.find({ review: body.review, user: body.comment.user });
-            if (commentDB) {
-                res.send({
-                    message: "Ya comentaste esta reseña.",
-                    code: "COME00-C"
-                })
-            } else {
-                const commentDB = await _COMMENT_.findById(id);
+            const commentDB = await _COMMENT_.find({ "comment._id": id });
+            console.log(commentDB);
 
-                if (commentDB) {
-                    const userDB = await _USER_.findById(body.comment.user);
-                    if (userDB) {
-                        if (body.comment.content <= 0 || body.comment.content >= 301) {
-                            res.send({
-                                message: "El comentario debe tener un máximo de 300 caracteres.",
-                                code: "COME03-C"
-                            })
-                        } else {
-                            const data = await _COMMENT_.findOneAndUpdate({ _id: id }, { $push: { comment: body.comment } }, { returnOriginal: false }).populate('comment.user');
-                            res.send({
-                                message: "Registro actualizado exitosamente.",
-                                data //lo mismo a data: data
-                            })
-                        }
-                    } else {
+            if (commentDB) {
+                const userDB = await _USER_.findById(body.comment.user);
+                if (userDB) {
+                    if (body.comment.content <= 0 || body.comment.content >= 301) {
                         res.send({
-                            message: "Error encontrado al usuario que escribió el comentario.",
-                            code: "COME02-C"
+                            message: "El comentario debe tener un máximo de 300 caracteres.",
+                            code: "COME03-C"
+                        })
+                        console.error(`message: "El comentario debe tener un máximo de 300 caracteres.",
+                            code: "COME03-C"`)
+                    } else {
+                        const data = await _COMMENT_.findOneAndUpdate(
+                            { 'comment._id': id },
+                            { $set: { "comment.$": body.comment } },
+                            { returnOriginal: false })
+                            .populate('comment.user');
+                        res.send({
+                            message: "Registro actualizado exitosamente.",
+                            data //lo mismo a data: data
                         })
                     }
                 } else {
                     res.send({
-                        message: "El comentario que se desea actualizar no existe.",
-                        code: "COME02"
+                        message: "Error encontrado al usuario que escribió el comentario.",
+                        code: "COME02-C"
                     })
+                    console.error(`message: "Error encontrado al usuario que escribió el comentario.",
+                        code: "COME02-C"`)
                 }
-
+            } else {
+                res.send({
+                    message: "El comentario que se desea actualizar no existe.",
+                    code: "COME02"
+                })
+                console.error(`message: "El comentario que se desea actualizar no existe.",
+                    code: "COME02"`);
             }
+
+
         } else {
             res.send({
                 message: "No existe la reseña a la cual se está comentando.",
                 code: "COME01"
             })
+            consoler.error(`message: "No existe la reseña a la cual se está comentando.",
+            code: "COME01"`);
         }
 
     } catch (error) {
         res.send(error)
+        console.error(error);
     }
 }
 
-exports.comment_delete = async (req, res) => {
+exports.comment_remove = async (req, res) => {
     try {
-        const { id, idUser } = req.params;
-        const commentDB = await _COMMENT_.find({ _id: id, user: idUser });
+        const { id, idComment } = req.params;
+        const commentDB = await _COMMENT_.findById(id)
         if (commentDB) {
-            await _COMMENT_.updateOne({ _id: id }, { $pull: { user: idUser } }); //ver si elimina el comentario o solo el id del usuario
+            await _COMMENT_.updateOne({ _id: id }, { $pull: { comment: { _id: idComment } } });
             //await _COMMENT_.deleteOne({ _id: id });
 
             res.send({ message: "Registro eliminado exitosamente" });
@@ -148,9 +227,35 @@ exports.comment_delete = async (req, res) => {
                 message: "No se ha encontrado el comentario.",
                 code: "COME00"
             })
+            console.error(`message: "No se ha encontrado el comentario.",
+            code: "COME00"`);
+        }
+    } catch (error) {
+        res.send(error);
+        console.error(error);
+    }
+
+}
+
+exports.comment_delete = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const commentDB = await _COMMENT_.findById(id)
+        if (commentDB) {
+            await _COMMENT_.deleteOne({ _id: id });
+
+            res.send({ message: "Registro eliminado exitosamente" });
+        } else {
+            res.send({
+                message: "No se ha encontrado el comentario.",
+                code: "COME00"
+            })
+            console.error(`message: "No se ha encontrado el comentario.",
+            code: "COME00"`);
         }
     } catch (error) {
         res.send(error)
+        console.error(error);
     }
 
 }

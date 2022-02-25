@@ -8,6 +8,7 @@ exports.review_getall = async (req, res) => {
         res.send(data);
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 
 }
@@ -23,9 +24,12 @@ exports.review_getOne = async (req, res) => {
                 message: "No se ha encontrado la reseña.",
                 code: "RE00"
             })
+            console.error(`message: "No se ha encontrado la reseña.",
+            code: "RE00"`);
         }
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 }
 
@@ -36,30 +40,38 @@ exports.review_create = async (req, res) => {
         if (gameDB) {
             const userDB = await _USER_.findById(body.userId);
             if (userDB) {
-                if (body.name.length < 0 || body.name.length > 140) {
+                if (body.content.length < 0 || body.content.length > 140) {
                     res.send({
                         message: "La reseña solo puede contar con un máximo de 140 caracteres",
                         code: "RE00-C"
                     })
+                    console.error(`message: "La reseña solo puede contar con un máximo de 140 caracteres",
+                    code: "RE00-C"`);
                 } else if (body.score < 0 || body.score > 5) {
                     res.send({
                         message: "El puntaje solo puede ser entre 0 y 5.",
                         code: "RE01-C"
                     })
+                    console.error(`message: "El puntaje solo puede ser entre 0 y 5.",
+                    code: "RE01-C"`);
                 } else {
-                    const reviewDB = _REVIEW_.find({ userId: body.userId, gameId: body.gameId });
-                    if (reviewDB) {
+
+                    const reviewDB = await _REVIEW_.find({ userId: body.userId, gameId: body.gameId });
+                    if (reviewDB.length != 0) {
                         res.send({
                             message: "El usuario ya escribió una reseña de este juego.",
                             code: "RE04-C"
                         })
+
+                        console.error(`message: "El usuario ya escribió una reseña de este juego.",
+                        code: "RE04-C"`);
                     } else {
                         let newReview = _REVIEW_(body);
                         await newReview
                             .save()
                             .then((newObject) => console.log("Success!", newObject))
                             .catch((err) => {
-                                console.log("Oops!!", err);
+                                console.error(err);
                                 res.send({ code: "RE03-C", message: err });
                             })
                         res.send(newReview);
@@ -71,15 +83,20 @@ exports.review_create = async (req, res) => {
                     message: "Error encontrando al usuario que crea la reseña.",
                     code: "RE01"
                 })
+                console.error(`message: "Error encontrando al usuario que crea la reseña.",
+                code: "RE01"`);
             }
         } else {
             res.send({
                 message: "Error encontrando el juego a reseñar.",
                 code: "RE02"
             })
+            console.error(`message: "Error encontrando el juego a reseñar.",
+            code: "RE02"`);
         }
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 }
 
@@ -97,11 +114,15 @@ exports.review_update = async (req, res) => {
                         message: "La reseña solo puede contar con un máximo de 140 caracteres",
                         code: "RE00-C"
                     })
+                    console.error(`message: "La reseña solo puede contar con un máximo de 140 caracteres",
+                    code: "RE00-C"`);
                 } else if (body.score < 0 || body.score > 5) {
                     res.send({
                         message: "El puntaje solo puede ser entre 0 y 5.",
                         code: "RE01-C"
                     })
+                    console.error(`message: "El puntaje solo puede ser entre 0 y 5.",
+                    code: "RE01-C"`);
                 } else {
                     const data = await _REVIEW_.findOneAndUpdate({ _id: id }, body, { returnOriginal: false });
                     res.send({
@@ -114,15 +135,20 @@ exports.review_update = async (req, res) => {
                     message: "Error encontrando al usuario que crea la reseña.",
                     code: "RE01"
                 })
+                console.error(`message: "Error encontrando al usuario que crea la reseña.",
+                code: "RE01"`);
             }
         } else {
             res.send({
                 message: "Error encontrando el juego a reseñar.",
                 code: "RE02"
             })
+            console.error(`message: "Error encontrando el juego a reseñar.",
+            code: "RE02"`);
         }
     } catch (error) {
         res.send(error)
+        console.error(error);
     }
 }
 
@@ -144,15 +170,20 @@ exports.review_upvote = async (req, res) => {
                     message: "No se ha encontrado la reseña.",
                     code: "RE00"
                 })
+                console.error(`message: "No se ha encontrado la reseña.",
+                code: "RE00"`);
             }
         } else {
             res.send({
                 message: "Error encontrando al usuario que valora la reseña.",
                 code: "RE02"
             })
+            console.error(`message: "Error encontrando al usuario que valora la reseña.",
+            code: "RE02"`);
         }
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 }
 
@@ -174,15 +205,20 @@ exports.review_downvote = async (req, res) => {
                     message: "No se ha encontrado la reseña.",
                     code: "RE00"
                 })
+                console.error(`message: "No se ha encontrado la reseña.",
+                code: "RE00"`);
             }
         } else {
             res.send({
                 message: "Error encontrando al usuario que valora la reseña.",
                 code: "RE02"
             })
+            console.error(`message: "Error encontrando al usuario que valora la reseña.",
+            code: "RE02"`);
         }
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 }
 
@@ -199,9 +235,12 @@ exports.review_delete = async (req, res) => {
                 message: "No se ha encontrado la reseña.",
                 code: "RE00"
             })
+            console.error(`message: "No se ha encontrado la reseña.",
+            code: "RE00"`);
         }
     } catch (error) {
         res.send(error)
+        console.error(error);
     }
 
 }

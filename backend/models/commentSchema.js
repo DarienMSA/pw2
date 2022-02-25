@@ -3,7 +3,8 @@ const _MONGOOSE_ = require('mongoose');
 const _COMMENT_SCHEMA_ = new _MONGOOSE_.Schema({
     review: {
         type: _MONGOOSE_.Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: 'review'
     },
     comment:
         [
@@ -16,7 +17,8 @@ const _COMMENT_SCHEMA_ = new _MONGOOSE_.Schema({
                     type: Date
                 },
                 user: {
-                    type: _MONGOOSE_.Schema.Types.ObjectId
+                    type: _MONGOOSE_.Schema.Types.ObjectId,
+                    ref: 'user'
                 }
             }
         ]

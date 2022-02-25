@@ -6,6 +6,7 @@ exports.userBadges_getall = async (req, res) => {
         res.send(data);
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 
 }
@@ -21,9 +22,12 @@ exports.userBadges_getUserGameBadges = async (req, res) => {
                 message: "No se ha encontrado las medallas del usuario del juego seleccionado.",
                 code: "UBE00"
             })
+            console.error(`message: "No se ha encontrado las medallas del usuario del juego seleccionado.",
+            code: "UBE00"`)
         }
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 }
 
@@ -38,9 +42,12 @@ exports.userBadges_getGameBadges = async (req, res) => {
                 message: "No se ha encontrado las medallas del juego seleccionado.",
                 code: "UBE01"
             })
+            console.error(`message: "No se ha encontrado las medallas del usuario del juego seleccionado.",
+            code: "UBE00"`)
         }
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 }
 
@@ -55,9 +62,12 @@ exports.userBadges_getUserBadges = async (req, res) => {
                 message: "No se ha encontrado las medallas del usuario.",
                 code: "UBE01"
             })
+            console.error(`message: "No se ha encontrado las medallas del usuario del juego seleccionado.",
+            code: "UBE00"`)
         }
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 }
 

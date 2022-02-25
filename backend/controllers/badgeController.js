@@ -6,6 +6,7 @@ exports.badge_getall = async (req, res) => {
         res.send(data);
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 
 }
@@ -21,6 +22,8 @@ exports.badge_getOne = async (req, res) => {
                 message: "No se ha encontrado la medalla.",
                 code: "BE00"
             })
+            console.error(`message: "No se ha encontrado la medalla.",
+            code: "BE00"`);
         }
     } catch (error) {
         res.send(error);
@@ -35,16 +38,22 @@ exports.badge_create = async (req, res) => {
                 message: "El nombre de la medalla necesita ser entre 0 a 30 caracteres.",
                 code: "BE00-C"
             })
+            console.error(`message: "El nombre de la medalla necesita ser entre 0 a 30 caracteres.",
+            code: "BE00-C"`);
         } else if (body.desc.length <= 1 || body.desc.length >= 101) {
             res.send({
                 message: "La descripción de la medalla necesita ser entre 0 a 100 caracteres.",
                 code: "BE01-C"
             })
+            console.error(`message: "La descripción de la medalla necesita ser entre 0 a 100 caracteres.",
+            code: "BE01-C"`);
         } else if (body.image == "") {
             res.send({
                 message: "La medalla necesita tener una imagen.",
                 code: "BE02-C"
             })
+            console.error(`message: "La medalla necesita tener una imagen.",
+            code: "BE02-C"`);
         }
         else {
             let newBadge = _BADGE_(body);
@@ -52,13 +61,14 @@ exports.badge_create = async (req, res) => {
                 .save()
                 .then((newObject) => console.log("Success!", newObject))
                 .catch((err) => {
-                    console.log("Oops!!", err);
+                    console.error(err);
                     res.send({ code: "BE03-C", message: "Ya se ha registrado una medalla con ese nombre." });
                 })
             res.send(newBadge);
         }
     } catch (error) {
         res.send(error);
+        console.error(error);
     }
 }
 
@@ -73,16 +83,22 @@ exports.badge_update = async (req, res) => {
                 message: "El nombre de la medalla necesita ser entre 0 a 30 caracteres.",
                 code: "BE00-C"
             })
+            console.error(`message: "El nombre de la medalla necesita ser entre 0 a 30 caracteres.",
+            code: "BE00-C"`);
         } else if (body.desc.length <= 1 || body.desc.length >= 101) {
             res.send({
                 message: "La descripción de la medalla necesita ser entre 0 a 100 caracteres.",
                 code: "BE01-C"
             })
+            console.error(`message: "La descripción de la medalla necesita ser entre 0 a 100 caracteres.",
+            code: "BE01-C"`);
         } else if (body.image == "") {
             res.send({
                 message: "La medalla necesita tener una imagen.",
                 code: "BE02-C"
             })
+            console.error(`message: "La medalla necesita tener una imagen.",
+            code: "BE02-C"`);
         } else if (badgeDB) {
             const data = await _BADGE_.findOneAndUpdate({ _id: id }, body, { returnOriginal: false });
             res.send({
@@ -95,9 +111,12 @@ exports.badge_update = async (req, res) => {
                 message: "No se ha encontrado la medalla.",
                 code: "BE00"
             })
+            console.error(`message: "No se ha encontrado la medalla.",
+            code: "BE00"`);
         }
     } catch (error) {
         res.send(error)
+        console.error(error);
     }
 }
 
@@ -114,9 +133,12 @@ exports.badge_delete = async (req, res) => {
                 message: "No se ha encontrado la medalla.",
                 code: "BE00"
             })
+            console.error(`message: "No se ha encontrado la medalla.",
+            code: "BE00"`);
         }
     } catch (error) {
         res.send(error)
+        console.error(error);
     }
 
 }

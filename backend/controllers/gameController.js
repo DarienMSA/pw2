@@ -6,6 +6,7 @@ exports.game_getall = async (req, res) => {
         res.send(data);
     } catch (error) {
         res.send(error);
+        console.error(error)
     }
 
 }
@@ -21,43 +22,77 @@ exports.game_getOne = async (req, res) => {
                 message: "No se ha encontrado el juego.",
                 code: "GE00"
             })
+            console.error(`message: "No se ha encontrado el juego.",
+            code: "GE00"`)
         }
     } catch (error) {
         res.send(error);
+        console.error(error)
     }
 }
+
+exports.game_getGamesByGenre = async (req, res) => {
+    try {
+        const { idGenre } = req.params;
+        const data = await _GAME_.find({ genres: idGenre });
+        if (data) {
+            res.send(data);
+        } else {
+            res.send({
+                message: "No hay juegos de ese género.",
+                code: "GE00"
+            })
+            console.error(`message: "No se ha encontrado el juego.",
+            code: "GE00"`)
+        }
+    } catch (error) {
+        res.send(error);
+        console.error(error)
+    }
+}
+
 
 exports.game_create = async (req, res) => {
     try {
         const { body } = req;
         const gameDB = await _GAME_.find({ name: body.name });
-        if (gameDB) {
+        if (gameDB != 0) {
             res.send({
                 message: "Ya hay un videojuego con ese nombre.",
                 code: "GE04-C"
             })
+            console.error(`message: "Ya hay un videojuego con ese nombre.",
+            code: "GE04-C"`)
         }
         else if (body.name.length < 0) {
             res.send({
                 message: "Se necesita introducir el nombre del videojuego.",
                 code: "GE00-C"
             })
+            console.error(`message: "Se necesita introducir el nombre del videojuego.",
+            code: "GE00-C"`)
         } else if (body.synopsis.length < 0 || body.synopsis.length > 300) {
             res.send({
                 message: "La sinopsis del videojuego necesita ser entre 0 a 300 caracteres.",
                 code: "GE01-C"
             })
+            console.error(`message: "La sinopsis del videojuego necesita ser entre 0 a 300 caracteres.",
+            code: "GE01-C"`)
         } else if (body.score < 0 || body.score > 5) {
             res.send({
                 message: "El puntaje del videojuego necesita estar entre 0 y 5.",
                 code: "GE02-C"
             })
+            console.error(`message: "El puntaje del videojuego necesita estar entre 0 y 5.",
+            code: "GE02-C"`)
         }
         else if (body.image == "") {
             res.send({
                 message: "El videojuego necesita tener una imagen.",
-                code: "BE05-C"
+                code: "GE05-C"
             })
+            console.error(`message: "El videojuego necesita tener una imagen.",
+            code: "GE05-C"`)
         }
         else {
             let newGame = _GAME_(body);
@@ -65,13 +100,14 @@ exports.game_create = async (req, res) => {
                 .save()
                 .then((newObject) => console.log("Success!", newObject))
                 .catch((err) => {
-                    console.log("Oops!!", err);
+                    console.error(err);
                     res.send({ code: "GE03-C", message: err });
                 })
             res.send(newGame);
         }
     } catch (error) {
         res.send(error);
+        console.error(error)
     }
 }
 
@@ -86,28 +122,38 @@ exports.game_update = async (req, res) => {
                 message: "Ya hay un videojuego con ese nombre.",
                 code: "GE04-C"
             })
+            console.error(`message: "Ya hay un videojuego con ese nombre.",
+            code: "GE04-C"`)
         }
         else if (body.name.length < 0) {
             res.send({
                 message: "Se necesita introducir el nombre del videojuego.",
                 code: "GE00-C"
             })
+            console.error(`message: "Se necesita introducir el nombre del videojuego.",
+            code: "GE00-C"`)
         } else if (body.synopsis.length < 0 || body.synopsis.length > 300) {
             res.send({
                 message: "La sinopsis del videojuego necesita ser entre 0 a 300 caracteres.",
                 code: "GE01-C"
             })
+            console.error(`message: "La sinopsis del videojuego necesita ser entre 0 a 300 caracteres.",
+            code: "GE01-C"`)
         } else if (body.score < 0 || body.score > 5) {
             res.send({
                 message: "El puntaje del videojuego necesita estar entre 0 y 5.",
                 code: "GE02-C"
             })
+            console.error(`message: "El puntaje del videojuego necesita estar entre 0 y 5.",
+            code: "GE02-C"`)
         }
         else if (body.image == "") {
             res.send({
                 message: "El videojuego necesita tener una imagen.",
-                code: "BE05-C"
+                code: "GE05-C"
             })
+            console.error(`message: "El videojuego necesita tener una imagen.",
+            code: "GE05-C"`)
         } else if (badgeDB) {
             const data = await _GAME_.findOneAndUpdate({ _id: id }, body, { returnOriginal: false });
             res.send({
@@ -118,11 +164,66 @@ exports.game_update = async (req, res) => {
         else {
             res.send({
                 message: "No se ha encontrado el videojuego.",
-                code: "BE00"
+                code: "GE00"
             })
+            console.error(`message: "No se ha encontrado el videojuego.",
+            code: "GE00"`)
         }
     } catch (error) {
         res.send(error)
+        console.error(error)
+    }
+}
+
+exports.game_add_active_user = async (req, res) => {
+    try {
+        const { id, idUser } = req.params;
+        const { body } = req;
+        const gameDB = await _GAME_.findById(id);
+        if (gameDB) {
+            const data = await _GAME_.findOneAndUpdate({ _id: id }, { $push: { activeUsers: idUser } }, { returnOriginal: false });
+            res.send({
+                message: "Registro actualizado exitosamente.",
+                data //lo mismo a data: data
+            })
+        }
+        else {
+            res.send({
+                message: "No se ha encontrado el videojuego.",
+                code: "GE00"
+            })
+            console.error(`message: "No se ha encontrado el videojuego.",
+            code: "GE00"`)
+        }
+    } catch (error) {
+        res.send(error)
+        console.error(error)
+    }
+}
+
+exports.game_remove_active_user = async (req, res) => {
+    try {
+        const { id, idUser } = req.params;
+        const { body } = req;
+        const gameDB = await _GAME_.findById(id);
+        if (gameDB) {
+            const data = await _GAME_.findOneAndUpdate({ _id: id }, { $pull: { activeUsers: idUser } }, { returnOriginal: false });
+            res.send({
+                message: "Registro actualizado exitosamente.",
+                data //lo mismo a data: data
+            })
+        }
+        else {
+            res.send({
+                message: "No se ha encontrado el videojuego.",
+                code: "GE00"
+            })
+            console.error(`message: "No se ha encontrado el videojuego.",
+            code: "GE00"`)
+        }
+    } catch (error) {
+        res.send(error)
+        console.error(error)
     }
 }
 
@@ -139,9 +240,12 @@ exports.game_delete = async (req, res) => {
                 message: "No se ha encontrado el videojuego.",
                 code: "GE00"
             })
+            console.error(`message: "No se ha encontrado el videojuego.",
+            code: "GE00"`)
         }
     } catch (error) {
         res.send(error)
+        console.error(error)
     }
 
 }

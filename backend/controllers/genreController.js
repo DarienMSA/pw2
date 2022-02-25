@@ -1,4 +1,4 @@
-const _GENRE_ = require("../models/badgeSchema");
+const _GENRE_ = require("../models/genreSchema");
 
 exports.genre_getall = async (req, res) => {
     try {
@@ -49,15 +49,26 @@ exports.genre_create = async (req, res) => {
             code: "GNE01-C"`);
         }
         else {
-            let newCategory = _GENRE_(body);
-            await newCategory
-                .save()
-                .then((newObject) => console.log("Success!", newObject))
-                .catch((err) => {
-                    console.error(err);
-                    res.send({ code: "BE03-C", err });
+            const genreDB = await _GENRE_.find({ name: body.name });
+            if (genreDB.length == 0) {
+                let newGenre = _GENRE_(body);
+                await newGenre
+                    .save()
+                    .then((newObject) => console.log("Success!", newObject))
+                    .catch((err) => {
+                        console.error(err);
+                        res.send({ code: "GNE03-C", err });
+                    })
+                res.send(newGenre);
+            } else {
+                res.send({
+                    message: "Ya existe un género con ese nombre.",
+                    code: "GNE01"
                 })
-            res.send(newCategory);
+                console.error(`message: "Ya existe un género con ese nombre.",
+                code: "GNE01"`);
+            }
+
         }
     } catch (error) {
         res.send(error);

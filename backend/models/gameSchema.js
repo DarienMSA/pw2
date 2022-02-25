@@ -31,7 +31,8 @@ const _GAME_SCHEMA_ = new _MONGOOSE_.Schema({
     },
     activeUsers: [
         {
-            type: _MONGOOSE_.Schema.Types.ObjectId
+            type: _MONGOOSE_.Schema.Types.ObjectId,
+            ref: 'user'
         }
     ],
     gameDuration: {
@@ -39,7 +40,8 @@ const _GAME_SCHEMA_ = new _MONGOOSE_.Schema({
     },
     genres: [
         {
-            type: _MONGOOSE_.Schema.Types.ObjectId
+            type: _MONGOOSE_.Schema.Types.ObjectId,
+            ref: 'genre'
         }
     ]
 
