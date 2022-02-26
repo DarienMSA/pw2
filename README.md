@@ -17,9 +17,9 @@
 - # Descripción de las carpetas.
 
 ```sh
-backend | Es la carpeta raíz de la aplicación, contiene todo lo necesario para que esta funcione.
-controllers | Esta carpeta es la que se encarga de desarrollar los endpoints para así poder comunicarnos con la base de datos e intercambiar información.
-models | Aquí contiene la estructura de las colecciones que utilizaremos, basándonos en MongoDB.
-node_modules | En esa carpeta se instalan por defecto todos los los packages que se instalan con NPM o similares.
-routes | En base a lo desarrollado en controllers, aquí se estructuran las rutas para hacer peticiones a la API.
+backend       | Es la carpeta raíz de la aplicación, contiene todo lo necesario para que esta funcione.
+  controllers   | Esta carpeta es la que se encarga de desarrollar los endpoints para así poder comunicarnos con la base de datos e intercambiar información.
+  models        | Aquí contiene la estructura de las colecciones que utilizaremos, basándonos en MongoDB.
+  node_modules  | En esa carpeta se instalan por defecto todos los los packages que se instalan con NPM o similares.
+  routes        | En base a lo desarrollado en controllers, aquí se estructuran las rutas para hacer peticiones a la API.
 ```
