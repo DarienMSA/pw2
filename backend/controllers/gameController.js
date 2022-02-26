@@ -35,7 +35,7 @@ exports.game_getGamesByGenre = async (req, res) => {
     try {
         const { idGenre } = req.params;
         const data = await _GAME_.find({ genres: idGenre });
-        if (data) {
+        if (data.length != 0) {
             res.send(data);
         } else {
             res.send({
@@ -56,7 +56,7 @@ exports.game_create = async (req, res) => {
     try {
         const { body } = req;
         const gameDB = await _GAME_.find({ name: body.name });
-        if (gameDB != 0) {
+        if (gameDB.length != 0) {
             res.send({
                 message: "Ya hay un videojuego con ese nombre.",
                 code: "GE04-C"
@@ -115,17 +115,11 @@ exports.game_update = async (req, res) => {
     try {
         const { id } = req.params;
         const { body } = req;
-        const gameDB = await _GAME_.findById(id);
+        const gameDB = await _GAME_.find({ name: body.name });
 
-        if (gameDB._id != id) {
-            res.send({
-                message: "Ya hay un videojuego con ese nombre.",
-                code: "GE04-C"
-            })
-            console.error(`message: "Ya hay un videojuego con ese nombre.",
-            code: "GE04-C"`)
-        }
-        else if (body.name.length < 0) {
+
+
+        if (body.name.length < 0) {
             res.send({
                 message: "Se necesita introducir el nombre del videojuego.",
                 code: "GE00-C"
@@ -154,20 +148,29 @@ exports.game_update = async (req, res) => {
             })
             console.error(`message: "El videojuego necesita tener una imagen.",
             code: "GE05-C"`)
-        } else if (badgeDB) {
+        } else if (gameDB.length != 0) {
+            if (gameDB[0]._id != id) {
+                res.send({
+                    message: "Ya hay un videojuego con ese nombre.",
+                    code: "GE04-C"
+                })
+                console.error(`message: "Ya hay un videojuego con ese nombre.",
+                code: "GE04-C"`)
+            } else {
+                const data = await _GAME_.findOneAndUpdate({ _id: id }, body, { returnOriginal: false });
+                res.send({
+                    message: "Registro actualizado exitosamente.",
+                    data //lo mismo a data: data
+                })
+            }
+
+        }
+        else {
             const data = await _GAME_.findOneAndUpdate({ _id: id }, body, { returnOriginal: false });
             res.send({
                 message: "Registro actualizado exitosamente.",
                 data //lo mismo a data: data
             })
-        }
-        else {
-            res.send({
-                message: "No se ha encontrado el videojuego.",
-                code: "GE00"
-            })
-            console.error(`message: "No se ha encontrado el videojuego.",
-            code: "GE00"`)
         }
     } catch (error) {
         res.send(error)

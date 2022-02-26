@@ -159,7 +159,7 @@ exports.comment_update = async (req, res) => {
             const commentDB = await _COMMENT_.find({ "comment._id": id });
             console.log(commentDB);
 
-            if (commentDB) {
+            if (commentDB.length != 0) {
                 const userDB = await _USER_.findById(body.comment.user);
                 if (userDB) {
                     if (body.comment.content <= 0 || body.comment.content >= 301) {

@@ -62,7 +62,7 @@ exports.badge_create = async (req, res) => {
                 .then((newObject) => console.log("Success!", newObject))
                 .catch((err) => {
                     console.error(err);
-                    res.send({ code: "BE03-C", message: "Ya se ha registrado una medalla con ese nombre." });
+                    res.send({ code: "BE03-C", message: err });
                 })
             res.send(newBadge);
         }
