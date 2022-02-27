@@ -5,7 +5,7 @@ const _GAME_ROUTER_ = require('../controllers/gameController');
 
 _ROUTER_.get("/game", _GAME_ROUTER_.game_getall);
 _ROUTER_.get("/game/:id", _GAME_ROUTER_.game_getOne);
-_ROUTER_.get("/game/genre/:idGenre", _GAME_ROUTER_.game_getGamesByGenre); //Reporte: Obtiene los juegos de un género.
+_ROUTER_.get("/game/genre/:idGenre", _GAME_ROUTER_.game_getGamesByGenre);
 
 _ROUTER_.post("/game", _GAME_ROUTER_.game_create);
 

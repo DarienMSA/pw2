@@ -56,15 +56,26 @@ exports.badge_create = async (req, res) => {
             code: "BE02-C"`);
         }
         else {
-            let newBadge = _BADGE_(body);
-            await newBadge
-                .save()
-                .then((newObject) => console.log("Success!", newObject))
-                .catch((err) => {
-                    console.error(err);
-                    res.send({ code: "BE03-C", message: err });
-                })
-            res.send(newBadge);
+            const badgeDB = await _BADGE_.find({ name: body.name })
+            if (badgeDB.length == 0) {
+                let newBadge = _BADGE_(body);
+                await newBadge
+                    .save()
+                    .then((newObject) => console.log("Success!", newObject))
+                    .catch((err) => {
+                        console.error(err);
+                        res.send({ code: "BE03-C", message: err });
+                    })
+                res.send(newBadge);
+            }
+            else {
+                res.send({
+                    message: "Ya hay una medalla con ese nombre.",
+                    code: "BE04-C"
+                });
+                console.error(`message: "Ya hay una medalla con ese nombre.",
+                code: "BE04-C"`);
+            }
         }
     } catch (error) {
         res.send(error);

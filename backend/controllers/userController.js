@@ -70,7 +70,7 @@ exports.user_create = async (req, res) => {
                 .then((newObject) => console.log("Success!", newObject))
                 .catch((err) => {
                     console.error(err)
-                    res.send({ code: "UE01", message: "Ya se ha registrado un usuario con ese correo." });
+                    res.send({ code: "UE01", message: err });
                 });
 
             res.send(newUser);
