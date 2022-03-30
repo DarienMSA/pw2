@@ -1,4 +1,4 @@
-import { Box, Button, CardMedia, Chip, Divider, FormControlLabel, FormGroup, Grid, Modal, Rating, styled, Switch, Typography } from '@mui/material'
+import { Avatar, Checkbox, List, ListItem, ListItemButton, ListItemText, ListItemAvatar, Box, Button, CardMedia, Chip, Divider, FormControlLabel, FormGroup, Grid, Modal, Rating, styled, Switch, TextField, Typography } from '@mui/material'
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import SearchIcon from '@mui/icons-material/Search';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -6,6 +6,18 @@ import React, { useState } from 'react'
 import ActiveUsers from '../Components/ShowGame/ActiveUsers';
 import Review from '../Components/ShowGame/Review';
 
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 720,
+    bgcolor: 'background.paper',
+    border: '1px solid #000',
+    boxShadow: 24,
+    p: 4,
+    borderRadius: "1%",
+};
 
 const GameImage = styled(CardMedia)(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
@@ -53,6 +65,29 @@ export default function ShowGame() {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const [open2, setOpen2] = React.useState(false);
+    const handleOpen2 = () => setOpen2(true);
+    const handleClose2 = () => setOpen2(false);
+
+    const [open3, setOpen3] = React.useState(false);
+    const handleOpen3 = () => setOpen3(true);
+    const handleClose3 = () => setOpen3(false);
+
+    const [checked, setChecked] = React.useState([1]);
+
+    const handleToggle = (value) => () => {
+        const currentIndex = checked.indexOf(value);
+        const newChecked = [...checked];
+
+        if (currentIndex === -1) {
+            newChecked.push(value);
+        } else {
+            newChecked.splice(currentIndex, 1);
+        }
+
+        setChecked(newChecked);
+    };
     //
     return (
         <Grid container>
@@ -61,11 +96,8 @@ export default function ShowGame() {
                     <Box item>
                         <GameImage sx={{ borderRadius: 16, borderColor: "white", borderStyle: "solid", borderTopWidth: "15px", borderBottomWidth: "15px" }}
                             component="img"
-
-
                             image="https://image.api.playstation.com/vulcan/ap/rnd/202110/2000/aGhopp3MHppi7kooGE2Dtt8C.png"
                             alt="green iguana"
-
                         />
                     </Box>
                     <Box mt={5} width={"100%"} textAlign="center">
@@ -75,8 +107,6 @@ export default function ShowGame() {
                                 <StarBorderIcon fontSize="inherit" sx={{ color: "white" }} />
                             } />
                     </Box>
-
-
                 </Grid>
                 <Grid item container xs={12} md={7} my={5} direction="row">
                     <Grid item xs={12}>
@@ -89,9 +119,118 @@ export default function ShowGame() {
                         <Chip color="secondary" label="Mundo abierto" />
                         <Typography color="white" variant="h6" textAlign={"left"} mt={3}>Elden Ring es un videojuego de rol de acción desarrollado por FromSoftware y publicado por Bandai Namco Entertainment. El videojuego surge de una colaboración entre el director y diseñador Hidetaka Miyazaki y el novelista de fantasía George R. R. Martin. Fue lanzado a nivel mundial el 25 de febrero de 2022, fecha revelada durante el evento Summer Game Fest, para las plataformas Xbox One, Xbox Series X/S, Microsoft Windows, PlayStation 4 y PlayStation 5.</Typography>
                     </Grid>
-
                     <Grid item container xs={12} justifyContent="flex-end" alignItems="flex-end">
-                        <Button sx={{ marginRight: "30px" }} variant="contained" color="warning" endIcon={<AddCircleIcon />}>Crear Reseña</Button>
+                        <Button onClick={handleOpen2} sx={{ marginRight: "30px" }} variant="contained" color="warning" endIcon={<AddCircleIcon />}>Crear Reseña</Button>
+                        <Button onClick={handleOpen3} sx={{ marginRight: "30px" }} variant="contained" color="warning" endIcon={<AddCircleIcon />}>Modificar Rseña</Button>
+
+                        <Modal
+                            open={open2}
+                            onClose={handleClose2}
+                            aria-labelledby="title-review">
+                            <Box sx={style}>
+                            <Typography my={2.5} id="title-review" variant="h5" component="h2">
+                                    Reseña y puntúa el juego
+                                </Typography>
+                                <Grid container alignItems="center" justifyContent="center">
+                                    <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', maxHeight: 200, overflow:"auto", overflowX:"hidden" }}>
+                                        {[0, 1, 2, 3, 4, 5].map((value) => {
+                                            const labelId = `checkbox-list-secondary-label-${value}`;
+                                            return (
+                                                <ListItem
+                                                    key={value}
+                                                    secondaryAction={
+                                                        <Checkbox
+                                                            edge="end"
+                                                            onChange={handleToggle(value)}
+                                                            checked={checked.indexOf(value) !== -1}
+                                                            inputProps={{ 'aria-labelledby': labelId }}
+                                                        />
+                                                    }
+                                                    disablePadding
+                                                >
+                                                    <ListItemButton>
+                                                        <ListItemAvatar>
+                                                            <Avatar
+                                                                alt={`Avatar n°${value + 1}`}
+                                                                src={`/static/images/avatar/${value + 1}.jpg`}
+                                                            />
+                                                        </ListItemAvatar>
+                                                        <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+                                                    </ListItemButton>
+                                                </ListItem>
+                                            );
+                                        })}
+                                    </List>
+                                </Grid>
+                                <TextField fullWidth id="outlined-basic" multiline rows={4} maxRows={8} autoComplete='none' variant="outlined" sx={{ mt: 1.5, mb: 2 }} />
+                                <Grid container justifyContent="-moz-initial">
+                                    <Grid xs={10}>
+                                        <Rating name="no-value" defaultValue={1} size="large" />
+                                    </Grid>
+                                    <Grid xs={2} sx={{
+                                        display: "flex",
+                                        flexDirection: 'row-reverse'
+                                    }}>
+                                        <Button variant="contained">Publicar</Button>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </Modal>
+                        <Modal
+                            open={open3}
+                            onClose={handleClose3}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description">
+                            <Box sx={style}>
+                                <Typography id="modal-modal-title" variant="h5" component="h2">
+                                    Modifica tu Reseña
+                                </Typography>
+                                <Grid container alignItems="center" justifyContent="center">
+                                    <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', maxHeight: 200, overflow:"auto", overflowX:"hidden" }}>
+                                        {[0, 1, 2, 3, 4, 5].map((value) => {
+                                            const labelId = `checkbox-list-secondary-label-${value}`;
+                                            return (
+                                                <ListItem
+                                                    key={value}
+                                                    secondaryAction={
+                                                        <Checkbox
+                                                            edge="end"
+                                                            onChange={handleToggle(value)}
+                                                            checked={checked.indexOf(value) !== -1}
+                                                            inputProps={{ 'aria-labelledby': labelId }}
+                                                        />
+                                                    }
+                                                    disablePadding
+                                                >
+                                                    <ListItemButton>
+                                                        <ListItemAvatar>
+                                                            <Avatar
+                                                                alt={`Avatar n°${value + 1}`}
+                                                                src={`/static/images/avatar/${value + 1}.jpg`}
+                                                            />
+                                                        </ListItemAvatar>
+                                                        <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+                                                    </ListItemButton>
+                                                </ListItem>
+                                            );
+                                        })}
+                                    </List>
+                                </Grid>
+                                <TextField fullWidth id="outlined-basic" multiline rows={4} maxRows={8} autoComplete='none' variant="outlined" sx={{ mt: 1.5, mb: 2 }} />
+                                <Grid container justifyContent="-moz-initial">
+                                    <Grid xs={10}>
+
+                                        <Rating name="no-value" defaultValue={1} size="large" />
+                                    </Grid>
+                                    <Grid xs={2} sx={{
+                                        display: "flex",
+                                        flexDirection: 'row-reverse'
+                                    }}>
+                                        <Button variant="contained">Actualizar</Button>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </Modal>
                         <Button sx={{ marginRight: "30px" }} onClick={handleOpen} variant="contained" endIcon={<SearchIcon />}>Buscar jugadores</Button>
                         <Modal
                             open={open}
@@ -123,7 +262,6 @@ export default function ShowGame() {
                                         <ActiveUsers></ActiveUsers>
                                     </Grid>
                                 </Grid>
-
                             </BoxModalActiveGames>
                         </Modal>
                     </Grid>
