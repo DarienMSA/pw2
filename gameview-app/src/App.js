@@ -1,24 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
+import UnloggedBar from "./Components/unloggedBar";
+import LoggedBar from "./Components/loggedBar";
+import { Fragment } from "react";
+import Chat from "./Pages/Chat";
+import Account from "./Pages/Account";
+import UpdateAccount from "./Pages/UpdateAccount";
+import ShowGame from "./Pages/ShowGame";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <LoggedBar></LoggedBar>
+      <Account></Account>
+    </Fragment>
   );
 }
 
