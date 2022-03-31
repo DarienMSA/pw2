@@ -11,6 +11,18 @@ const btheme = createTheme({
     },
     info: {
       main: '#cddc39'
+    },
+    navColor: {
+      main: "#1A374D",
+    },
+    white_gv: {
+      main: "#FFF2EF",
+    },
+    buttonPrimary: {
+      main: "#6998AB",
+    },
+    background_gv: {
+      main: "#B1D0E0",
     }
   },
 });

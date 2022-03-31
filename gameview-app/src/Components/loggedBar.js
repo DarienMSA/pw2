@@ -21,6 +21,8 @@ import NotifItem from './NavBar/NotifItem';
 
 const settings = ['Perfil', 'Cerrar sesión'];
 
+
+
 export default function LoggedBar() {
 
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -67,6 +69,11 @@ export default function LoggedBar() {
     const handleCloseNotifMobileMenu = () => {
         setAnchorElNotifMobile(null);
     };
+
+    const handleClickLogo = () => {
+        alert("me clicaste aaa");
+    };
+
 
 
 
@@ -158,7 +165,7 @@ export default function LoggedBar() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar sx={{ background: '#063970', position: 'static' }}>
+            <AppBar color='navColor' sx={{ position: 'static' }}>
                 <Toolbar sx={{ justifyContent: 'space-between' }}>
 
                     <Typography
@@ -167,14 +174,14 @@ export default function LoggedBar() {
                         component="div"
                         sx={{ display: { xs: 'none', sm: 'block' } }}
                     >
-                        GameView
+                        <img width={130} onClick={handleClickLogo} style={{ marginTop: 10, cursor: "pointer" }} src="https://media.discordapp.net/attachments/928138608894967828/958872190013567006/Logo_nav_noBG.png"></img>
                     </Typography>
                     <SearchBar />
 
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={4} color="error">
-                                <ChatIcon />
+                                <ChatIcon color={"white_gv"} />
                             </Badge>
                         </IconButton>
                         <IconButton
@@ -184,7 +191,7 @@ export default function LoggedBar() {
                             onClick={handleOpenNotifMenu}
                         >
                             <Badge badgeContent={17} color="error">
-                                <NotificationsIcon />
+                                <NotificationsIcon color={"white_gv"} />
                             </Badge>
                         </IconButton>
                         <Box sx={{ flexGrow: 0, marginLeft: '15px' }}>

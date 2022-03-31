@@ -4,6 +4,7 @@ import InputBase from '@mui/material/InputBase';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import SearchIcon from '@mui/icons-material/Search';
 import { Button, Stack } from '@mui/material';
+import { blue } from '@mui/material/colors';
 
 
 
@@ -11,9 +12,12 @@ export default function SearchBar() {
     const Search = styled('div')(({ theme }) => ({
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: alpha(theme.palette.common.white, 0.15),
+        backgroundColor: alpha("#FFF2EF", 0.15), //white_gv
         '&:hover': {
-            backgroundColor: alpha(theme.palette.common.white, 0.25),
+            backgroundColor: alpha("#FFF2EF", 0.25), //white_gv
+        },
+        "& .MuiInputBase-input": {
+            color: "#FFF2EF" //white_gv
         },
         marginRight: theme.spacing(2),
         marginLeft: '0',
@@ -53,16 +57,17 @@ export default function SearchBar() {
     return (
 
         <Stack direction="row" alignItems="center">
+
             <Search>
                 <SearchIconWrapper>
-                    <SportsEsportsIcon />
+                    <SportsEsportsIcon color={"white_gv"} />
                 </SearchIconWrapper>
                 <StyledInputBase
                     placeholder="Buscar videojuego..."
                     inputProps={{ 'aria-label': 'search' }}
                 />
             </Search>
-            <Button variant="contained">
+            <Button variant="contained" color="buttonPrimary">
                 <SearchIcon />
             </Button>
         </Stack>

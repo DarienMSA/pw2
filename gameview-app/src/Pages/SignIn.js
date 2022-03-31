@@ -1,6 +1,41 @@
-import { Avatar, Button, Grid, Link, Paper, TextField, Typography } from "@mui/material";
+import { alpha, Avatar, Button, Grid, Link, Paper, styled, TextField, Typography } from "@mui/material";
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
-import { useState } from "react";
+import { Fragment, useState } from "react";
+
+const SignInInput = styled(TextField)(({ theme }) => ({
+    "& .MuiInputLabel-root": {
+        color: "#FFF2EF" //white_gv
+    },
+    '& label.Mui-focused': {
+        color: "#FFF2EF"
+    },
+    '& .MuiInput-underline:after': {
+        borderBottomColor: '#FFF2EF',
+    },
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+            borderColor: '#FFF2EF',
+        },
+        '&:hover fieldset': {
+            borderColor: '#B1D0E0',
+        },
+        '&.Mui-focused fieldset': {
+            borderColor: '#FFF2EF',
+        },
+    },
+    "& .MuiOutlinedInput-input": {
+        color: "#FFF2EF"
+    }
+
+}));
+
+const WhiteButton = styled(Button)(({ theme }) => ({
+    background: "#FFF2EF", color: "black", borderColor: "#FFF2EF",
+    '&:hover': {
+        backgroundColor: alpha("#FFF2EF", 0.75), //white_gv
+    },
+
+}));
 
 function SignInScreen() {
 
@@ -49,24 +84,35 @@ function SignInScreen() {
     }
 
     return (
-        <Grid container alignItems="center" justifyContent="center" height="92vh">
-            <Paper elevation={8} style={paperStyle} sx={{ background: "secondary" }}>
-                <Grid align='center'>
-                    <Avatar style={avatarStyle}><CreateOutlinedIcon /></Avatar>
-                    <h2>Registrate</h2>
-                </Grid>
-                <TextField fullWidth required variant="standard" color="info" margin="dense" onChange={onNombreFChange} placeholder='Ingrese Usuario' label='Usuario' /><br />
-                <TextField fullWidth required variant="standard" color="info" margin="dense" onChange={onCorreoFChange} type='email' placeholder='Ingrese Correo' label='Correo' /><br />
-                <TextField fullWidth required variant="standard" color="info" margin="dense" onChange={onContraseñaFChange} type='password' placeholder='Ingrese Contraseña' label='Contraseña' /><br />
-                <TextField fullWidth required variant="standard" color="info" margin="dense" onChange={onRContraseñaFChange} type='password' placeholder='Confirme Contraseña' label='Confirme Contraseña' /><br />
-                <Button onClick={onRegister} style={btnStyle} size='large' fullWidth variant='outlined' color='success'>Registrar</Button>
-                <Typography>Ya tienes una cuenta ?
-                    <Link href="/memes">
-                        Ingresa
-                    </Link>
-                </Typography>
-            </Paper>
-        </Grid>
+        <Fragment>
+            <Grid container alignItems="center" justifyContent="center" height="92vh" bgcolor={"#E3EAEE"}>
+                < Paper elevation={8} style={paperStyle} sx={{ background: "#406882" }}>
+                    <Grid align='center'>
+                        <Grid my={3} item sx={12} container justifyContent={"center"} alignItems={"center"}>
+
+                            <img width={150} src="https://media.discordapp.net/attachments/928138608894967828/958875633096753152/Logo_noBG_2.png"></img>
+
+                        </Grid>
+                        <Typography variant="h4" fontWeight={"bold"} color={"#FFF2EF"}>Registrate</Typography>
+                    </Grid>
+                    <SignInInput fullWidth required variant="outlined" margin="dense" onChange={onNombreFChange} placeholder='Ingrese Usuario' label='Usuario' /><br />
+                    <SignInInput fullWidth required variant="outlined" margin="dense" onChange={onCorreoFChange} type='email' placeholder='Ingrese Correo' label='Correo' /><br />
+                    <SignInInput fullWidth required variant="outlined" margin="dense" onChange={onContraseñaFChange} type='password' placeholder='Ingrese Contraseña' label='Contraseña' /><br />
+                    <SignInInput fullWidth required variant="outlined" margin="dense" onChange={onRContraseñaFChange} type='password' placeholder='Confirme Contraseña' label='Confirme Contraseña' /><br />
+                    <WhiteButton onClick={onRegister} style={btnStyle} size='large' fullWidth variant='contained'>Registrar</WhiteButton>
+                    <Typography color={"#FFF2EF"}>Ya tienes una cuenta?&nbsp;
+                        <Link color="inherit" href="/memes">
+                            Ingresa
+                        </Link>
+                    </Typography>
+
+
+
+
+                </Paper>
+            </Grid>
+        </Fragment >
+
     )
 }
 export default SignInScreen;
