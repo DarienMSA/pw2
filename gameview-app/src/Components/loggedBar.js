@@ -129,7 +129,6 @@ export default function LoggedBar() {
             <MenuItem>
                 <IconButton
                     size="large"
-
                     color="inherit"
                 >
                     <LogoutIcon />

@@ -1,4 +1,4 @@
-import { Grid, Paper, Stack, Typography } from '@mui/material'
+import { Divider, Grid, Paper, Stack, Typography } from '@mui/material'
 import React, { Fragment } from 'react'
 import Carousel from 'react-elastic-carousel'
 import "../../css/Carousel.css"
@@ -17,33 +17,35 @@ export default function Gamecollection(props) {
     ]
     return (
         <Fragment>
-            <Grid justifyContent="center">
-                <Paper elevation={8} style={paperStyle2} sx={{ background: "secondary" }}>
-                    <Typography variant="h4">
+            <Divider variant="middle" sx={{ mb: 1.5, mt: 0.5 }} />
+            <Grid justifyContent="center" >
+                <Paper elevation={0} style={paperStyle2} sx={{ background: "#E3EAEE" }}>
+                    <Typography mb={2} variant="h4">
                         {props.header}
                     </Typography>
                     <Stack direction="row" spacing={1}>
                         <Grid container>
                             <Carousel className='styling-example' breakPoints={CbreakPoints}>
-                                <CardGame image="./img/league.jpg" tittle="League of Legends" cat_1="MOBA" cat_2="Acción" />
-                                <CardGame image="./img/apex.jpg" tittle="Apex Legends" cat_1="Shooter" cat_2="Battle Royale" />
-                                <CardGame image="./img/battlefield4.jpg" tittle="Battlefield 4" cat_1="Shooter" cat_2="Acción" />
-                                <CardGame image="./img/skyrim.jpg" tittle="Skyrim" cat_1="Rol" cat_2="Aventura" />
-                                <CardGame image="./img/crash_ctr.jpg" tittle="Crash Team Racing" cat_1="Carreras" cat_2="Plataformas" />
-                                <CardGame image="./img/league.jpg" tittle="League of Legends" cat_1="MOBA" cat_2="Acción" />
-                                <CardGame image="./img/apex.jpg" tittle="Apex Legends" cat_1="Shooter" cat_2="Battle Royale" />
-                                <CardGame image="./img/battlefield4.jpg" tittle="Battlefield 4" cat_1="Shooter" cat_2="Acción" />
-                                <CardGame image="./img/skyrim.jpg" tittle="Skyrim" cat_1="Rol" cat_2="Aventura" />
-                                <CardGame image="./img/crash_ctr.jpg" tittle="Crash Team Racing" cat_1="Carreras" cat_2="Plataformas" />
-                                <CardGame image="./img/league.jpg" tittle="League of Legends" cat_1="MOBA" cat_2="Acción" />
-                                <CardGame image="./img/apex.jpg" tittle="Apex Legends" cat_1="Shooter" cat_2="Battle Royale" />
-                                <CardGame image="./img/battlefield4.jpg" tittle="Battlefield 4" cat_1="Shooter" cat_2="Acción" />
-                                <CardGame image="./img/skyrim.jpg" tittle="Skyrim" cat_1="Rol" cat_2="Aventura" />
-                                <CardGame image="./img/crash_ctr.jpg" tittle="Crash Team Racing" cat_1="Carreras" cat_2="Plataformas" />
+                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="League of Legends" cat_1="MOBA" cat_2="Acción" />
+                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Apex Legends" cat_1="Shooter" cat_2="Battle Royale" />
+                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Battlefield 4" cat_1="Shooter" cat_2="Acción" />
+                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Skyrim" cat_1="Rol" cat_2="Aventura" />
+                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Crash Team Racing" cat_1="Carreras" cat_2="Plataformas" />
+                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="League of Legends" cat_1="MOBA" cat_2="Acción" />
+                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Apex Legends" cat_1="Shooter" cat_2="Battle Royale" />
+                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Battlefield 4" cat_1="Shooter" cat_2="Acción" />
+                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Skyrim" cat_1="Rol" cat_2="Aventura" />
+                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Crash Team Racing" cat_1="Carreras" cat_2="Plataformas" />
+                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="League of Legends" cat_1="MOBA" cat_2="Acción" />
+                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Apex Legends" cat_1="Shooter" cat_2="Battle Royale" />
+                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Battlefield 4" cat_1="Shooter" cat_2="Acción" />
+                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Skyrim" cat_1="Rol" cat_2="Aventura" />
+                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Crash Team Racing" cat_1="Carreras" cat_2="Plataformas" />
                             </Carousel>
                         </Grid>
                     </Stack>
                 </Paper>
+
             </Grid>
 
 

@@ -1,6 +1,7 @@
 import { alpha, Avatar, Button, Grid, Link, Paper, styled, TextField, Typography } from "@mui/material";
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import { Fragment, useState } from "react";
+import { Box } from "@mui/system";
 
 const SignInInput = styled(TextField)(({ theme }) => ({
     "& .MuiInputLabel-root": {
@@ -39,7 +40,7 @@ const WhiteButton = styled(Button)(({ theme }) => ({
 
 function SignInScreen() {
 
-    const paperStyle = { padding: 20, height: 600, width: 320, margin: "20px auto" }
+    const paperStyle = { padding: 20, height: 600, width: 320 }
     const avatarStyle = { backgroundColor: '#1bbd7e' }
     const btnStyle = { margin: '16px 0' }
 
@@ -84,35 +85,27 @@ function SignInScreen() {
     }
 
     return (
-        <Fragment>
-            <Grid container alignItems="center" justifyContent="center" height="92vh" bgcolor={"#E3EAEE"}>
-                < Paper elevation={8} style={paperStyle} sx={{ background: "#406882" }}>
-                    <Grid align='center'>
-                        <Grid my={3} item sx={12} container justifyContent={"center"} alignItems={"center"}>
 
-                            <img width={150} src="https://media.discordapp.net/attachments/928138608894967828/958875633096753152/Logo_noBG_2.png"></img>
-
-                        </Grid>
-                        <Typography variant="h4" fontWeight={"bold"} color={"#FFF2EF"}>Registrate</Typography>
-                    </Grid>
-                    <SignInInput fullWidth required variant="outlined" margin="dense" onChange={onNombreFChange} placeholder='Ingrese Usuario' label='Usuario' /><br />
-                    <SignInInput fullWidth required variant="outlined" margin="dense" onChange={onCorreoFChange} type='email' placeholder='Ingrese Correo' label='Correo' /><br />
-                    <SignInInput fullWidth required variant="outlined" margin="dense" onChange={onContraseñaFChange} type='password' placeholder='Ingrese Contraseña' label='Contraseña' /><br />
-                    <SignInInput fullWidth required variant="outlined" margin="dense" onChange={onRContraseñaFChange} type='password' placeholder='Confirme Contraseña' label='Confirme Contraseña' /><br />
-                    <WhiteButton onClick={onRegister} style={btnStyle} size='large' fullWidth variant='contained'>Registrar</WhiteButton>
-                    <Typography color={"#FFF2EF"}>Ya tienes una cuenta?&nbsp;
-                        <Link color="inherit" href="/memes">
-                            Ingresa
-                        </Link>
-                    </Typography>
-
-
-
-
-                </Paper>
+        <Grid container alignItems="center" justifyContent="center" height="90vh">
+            <Grid sx={{ mt: 5 }} container align="center" justifyContent="center">
+                <img width={200} src="https://cdn.discordapp.com/attachments/928138608894967828/958891765342044160/Logo_nav_noBG__blue.png"></img>
             </Grid>
-        </Fragment >
-
+            < Paper elevation={8} style={paperStyle} sx={{ background: "#406882" }}>
+                <Grid sx={{ mt: 2, mb: 3 }} align='center'>
+                    <Typography variant="h4" fontWeight={"bold"} color={"#FFF2EF"}>Registrate</Typography>
+                </Grid>
+                <SignInInput fullWidth required variant="outlined" margin="dense" onChange={onNombreFChange} placeholder='Ingrese Usuario' label='Usuario' /><br />
+                <SignInInput fullWidth required variant="outlined" margin="dense" onChange={onCorreoFChange} type='email' placeholder='Ingrese Correo' label='Correo' /><br />
+                <SignInInput fullWidth required variant="outlined" margin="dense" onChange={onContraseñaFChange} type='password' placeholder='Ingrese Contraseña' label='Contraseña' /><br />
+                <SignInInput fullWidth required variant="outlined" sx={{ mb: 2 }} margin="dense" onChange={onRContraseñaFChange} type='password' placeholder='Confirme Contraseña' label='Confirme Contraseña' /><br />
+                <WhiteButton onClick={onRegister} style={btnStyle} size='large' fullWidth variant='contained'>Registrar</WhiteButton>
+                <Typography color={"#FFF2EF"}>Ya tienes una cuenta?&nbsp;
+                    <Link color="inherit" href="/memes">
+                        Ingresa
+                    </Link>
+                </Typography>
+            </Paper>
+        </Grid>
     )
 }
 export default SignInScreen;

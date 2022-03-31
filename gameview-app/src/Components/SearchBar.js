@@ -6,8 +6,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Button, Stack } from '@mui/material';
 import { blue } from '@mui/material/colors';
 
-
-
 export default function SearchBar() {
     const Search = styled('div')(({ theme }) => ({
         position: 'relative',
@@ -55,9 +53,7 @@ export default function SearchBar() {
 
 
     return (
-
         <Stack direction="row" alignItems="center">
-
             <Search>
                 <SearchIconWrapper>
                     <SportsEsportsIcon color={"white_gv"} />

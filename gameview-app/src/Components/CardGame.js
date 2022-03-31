@@ -11,17 +11,17 @@ export default function CardGame(props) {
     };
 
     return (
-        <Card elevation={6} sx={{ minWidth: 160, maxWidth:200, margin: 1}}>
+        <Card elevation={6} sx={{ minWidth: 160, maxWidth: 200, margin: 1 }}>
             <CardActionArea>
                 <CardMedia
                     component="img"
                     height="260"
                     image={props.image}
-                    alt="Crash" 
-                    />
+                    alt="Crash"
+                />
             </CardActionArea>
-            <CardContent sx={{ padding: 1}}>
-                
+            <CardContent sx={{ padding: 1 }}>
+
                 <Typography variant="button" component="div" sx={{
                     display: '-webkit-box',
                     overflow: 'hidden',
@@ -33,10 +33,10 @@ export default function CardGame(props) {
                         {props.tittle}
                     </Link>
                 </Typography>
-                <Divider variant="middle"  sx={{ mb: 1.5, mt: 0.5 }}/>
+                <Divider variant="middle" sx={{ mb: 1.5, mt: 0.5 }} />
                 <Stack direction="row" spacing={0.5} justifyContent="center">
-                    <Chip sx={{ minWidth: 0.35}} label={props.cat_1} onClick={handleClick} color="secondary" size="small" />
-                    <Chip sx={{ minWidth: 0.35}} label={props.cat_2} onClick={handleClick} color="secondary" size="small" />
+                    <Chip sx={{ minWidth: 0.35 }} label={props.cat_1} onClick={handleClick} color="info" size="small" />
+                    <Chip sx={{ minWidth: 0.35 }} label={props.cat_2} onClick={handleClick} color="info" size="small" />
                 </Stack>
             </CardContent>
         </Card>

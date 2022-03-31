@@ -11,14 +11,14 @@ import { ThemeProvider } from "@mui/material";
 import btheme from "./Components/GameView-Theme";
 import LogInScreen from "./Pages/LogIn";
 import SignInScreen from "./Pages/SignIn";
-
+import "./App.css"
 
 function App() {
   return (
     <Fragment>
       <ThemeProvider theme={btheme}>
         <LoggedBar></LoggedBar>
-        <SignInScreen></SignInScreen>
+        <Home></Home>
       </ThemeProvider>
     </Fragment>
   );

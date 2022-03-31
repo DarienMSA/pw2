@@ -10,7 +10,7 @@ const btheme = createTheme({
       main: '#ab6116',
     },
     info: {
-      main: '#cddc39'
+      main: '#6998AB'
     },
     navColor: {
       main: "#1A374D",
