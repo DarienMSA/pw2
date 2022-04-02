@@ -47,7 +47,7 @@ export default function Chat() {
 
             <Grid container maxHeight="93vh">
 
-                <Grid item xs={12} md={3} backgroundColor="#063970" style={{ overflow: "auto", maxHeight: "93vh" }}>
+                <Grid item xs={12} md={3} backgroundColor="#1A374D" style={{ overflow: "auto", maxHeight: "93vh" }}>
                     <StyledAutocomplete
                         id="combo-box-demo"
                         options={usedList}
@@ -65,7 +65,7 @@ export default function Chat() {
 
 
                 </Grid>
-                <Grid container xs={12} md={9} style={{ maxHeight: "93vh" }}>
+                <Grid container xs={12} md={9} style={{ maxHeight: "93vh", background: "#E3EAEE" }}>
                     <Grid item xs={12} style={{
                         height: "86vh", borderStyle: 'groove',
                         borderWidth: "5px",

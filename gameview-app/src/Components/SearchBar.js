@@ -64,7 +64,7 @@ export default function SearchBar() {
                 />
             </Search>
             <Button variant="contained" color="buttonPrimary">
-                <SearchIcon />
+                <SearchIcon color={"white_gv"} />
             </Button>
         </Stack>
     )

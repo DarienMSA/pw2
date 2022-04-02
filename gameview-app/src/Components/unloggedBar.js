@@ -18,6 +18,10 @@ export default function UnloggedBar() {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    const handleClickLogo = () => {
+        alert("me clicaste aaa");
+    };
+
     const mobileMenuId = 'primary-search-account-menu-mobile';
 
     const renderMobileMenu = (
@@ -52,21 +56,19 @@ export default function UnloggedBar() {
     );
 
 
-    const handlerOnClick = (e) => {
-        alert("hola");
-    }
-
     return (
         <Fragment>
-            <AppBar sx={{ background: '#063970', position: 'static' }}>
+            <AppBar color='navColor' sx={{ position: 'static' }}>
                 <Toolbar sx={{ justifyContent: 'space-between' }}>
                     <Typography
                         variant="h6"
                         noWrap
                         component="div"
-                        sx={{ display: { xs: 'none', sm: 'block' } }}>GameView</Typography>
+                        sx={{ display: { xs: 'none', sm: 'block' } }}>
+                        <img width={130} onClick={handleClickLogo} style={{ marginTop: 10, cursor: "pointer" }} src="https://media.discordapp.net/attachments/928138608894967828/958872190013567006/Logo_nav_noBG.png"></img>
+                    </Typography>
                     <SearchBar />
-                    <Stack direction="row" alignItems="center" sx={{ display: { xs: 'none', md: 'flex' } }}>
+                    <Stack color='#FFF2EF' direction="row" alignItems="center" sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <Button sx={{ marginLeft: "auto" }} color="inherit" endIcon={<LoginIcon />}>
                             INICIAR SESIÓN{" "}
                         </Button>
@@ -76,12 +78,13 @@ export default function UnloggedBar() {
                     </Stack>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
+
                             size="large"
                             aria-label="show more"
                             aria-controls={mobileMenuId}
                             aria-haspopup="true"
                             onClick={handleMobileMenuOpen}
-                            color="inherit"
+                            color="white_gv"
                         >
                             <MoreIcon />
                         </IconButton>

@@ -99,7 +99,7 @@ function SignInScreen() {
                 <SignInInput fullWidth required variant="outlined" margin="dense" onChange={onContraseñaFChange} type='password' placeholder='Ingrese Contraseña' label='Contraseña' /><br />
                 <SignInInput fullWidth required variant="outlined" sx={{ mb: 2 }} margin="dense" onChange={onRContraseñaFChange} type='password' placeholder='Confirme Contraseña' label='Confirme Contraseña' /><br />
                 <WhiteButton onClick={onRegister} style={btnStyle} size='large' fullWidth variant='contained'>Registrar</WhiteButton>
-                <Typography color={"#FFF2EF"}>Ya tienes una cuenta?&nbsp;
+                <Typography color={"#FFF2EF"}>¿Ya tienes una cuenta?&nbsp;
                     <Link color="inherit" href="/memes">
                         Ingresa
                     </Link>

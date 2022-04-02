@@ -18,7 +18,7 @@ function App() {
     <Fragment>
       <ThemeProvider theme={btheme}>
         <LoggedBar></LoggedBar>
-        <Home></Home>
+        <Chat></Chat>
       </ThemeProvider>
     </Fragment>
   );

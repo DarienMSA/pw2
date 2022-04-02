@@ -55,7 +55,7 @@ function LogInScreen() {
                 <SignInInput fullWidth required color='info' margin='dense' variant="outlined" placeholder='Ingrese Contraseña' label='Contraseña' /><br />
 
                 <WhiteButton href="/login" style={btnStyle} size='large' fullWidth variant='outlined' color='success'>Ingresar</WhiteButton>
-                <Typography color={"#FFF2EF"} >Ya tienes una cuenta ?&nbsp;
+                <Typography color={"#FFF2EF"} >¿Ya tienes una cuenta?&nbsp;
                     <Link color="inherit" href="#">
                         Ingresa
                     </Link>

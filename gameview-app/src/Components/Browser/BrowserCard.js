@@ -40,7 +40,7 @@ export default function BrowserCard(props) {
     const classes = styles();
 
     return (
-        <Fragment>  
+        <Fragment>
             <Paper elevation={6} sx={{ width: 720, margin: 1 }}>
                 <CardActionArea onClick={handleOpen} sx={{ display: "flex", alignContent: "flex-start" }}>
                     <CardMedia className={classes.tr}
@@ -61,11 +61,11 @@ export default function BrowserCard(props) {
                             {props.tittle}
                         </Typography>
                         <Stack direction="row" padding={1} spacing={0.5} sx={{ margin: 1, maxWidth: 460, overflow: "auto", overflowY: "hidden" }}>
-                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_1} onClick={handleClick} color="secondary" size="small" />
-                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_2} onClick={handleClick} color="secondary" size="small" />
-                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_3} onClick={handleClick} color="secondary" size="small" />
-                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_3} onClick={handleClick} color="secondary" size="small" />
-                            <Chip label="+" onClick={handleClick} color="secondary" size="small" />
+                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_1} onClick={handleClick} color="info" size="small" />
+                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_2} onClick={handleClick} color="info" size="small" />
+                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_3} onClick={handleClick} color="info" size="small" />
+                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_3} onClick={handleClick} color="info" size="small" />
+                            <Chip label="+" onClick={handleClick} color="info" size="small" />
                         </Stack>
                         <Divider variant="middle" sx={{ mb: 1.5, mt: 0.5 }} />
                         <Typography sx={{

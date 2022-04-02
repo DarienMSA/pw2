@@ -24,7 +24,7 @@ const StyledGrid = styled(Grid)(() => ({
     borderColor: "#063970",
     marginTop: "5px",
     marginBottom: "5px",
-    backgroundColor: "#E3FFFF",
+    backgroundColor: "#6998AB", //#B1D0E0
     '&:hover': {
         cursor: "pointer",
         backgroundColor: "#AFC3DF",

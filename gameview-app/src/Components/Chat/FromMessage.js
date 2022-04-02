@@ -9,7 +9,12 @@ import { Box } from '@mui/system';
 
 const FromMessagePaper = styled(Paper)(({ theme }) => ({
     backgroundColor: "#063970",
+    borderRadius: 0,
+    borderStartEndRadius: 25,
+    borderStartStartRadius: 25,
+    borderEndStartRadius: 25,
     color: "white",
+    marginRight: 20,
     [theme.breakpoints.down('md')]: {
         maxWidth: "25vh"
     },
@@ -24,9 +29,9 @@ const FromMessagePaper = styled(Paper)(({ theme }) => ({
 
 export default function FromMessage() {
     return (
-        <Fragment sx={{ backgroundColor: "#9193A1" }} >
-            <Grid container margin={1} direction="row-reverse" sx={{ marginTop: "25px" }}>
-                <FromMessagePaper elevation={4}>
+        <Fragment>
+            <Grid container margin={1} direction="row-reverse" justifyContent={"flex-start"} sx={{ marginTop: "25px" }}>
+                <FromMessagePaper >
                     <Typography margin={2}>Muchas gracias por contestarme.Muchas gracias por contestarme.Muchas gracias por contestarme.Muchas gracias por contestarme.</Typography>
                     <Box textAlign="end">
                         <Typography variant="caption" margin={2}>01:40pm</Typography>

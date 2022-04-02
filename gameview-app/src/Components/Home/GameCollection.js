@@ -1,8 +1,21 @@
-import { Divider, Grid, Paper, Stack, Typography } from '@mui/material'
+import { Divider, Grid, Paper, Stack, styled, Typography } from '@mui/material'
 import React, { Fragment } from 'react'
 import Carousel from 'react-elastic-carousel'
 import "../../css/Carousel.css"
 import CardGame from '../CardGame'
+
+const StyledCarousel = styled(Carousel)(({ theme }) => ({
+
+
+    '& .rec-arrow': {
+        background: "#406882",
+        color: "#FFF2EF",
+    },
+    '& .rec-dot_active': {
+        borderColor: "red",
+        background: "#406882",
+    }
+}));
 
 export default function Gamecollection(props) {
 
@@ -25,7 +38,7 @@ export default function Gamecollection(props) {
                     </Typography>
                     <Stack direction="row" spacing={1}>
                         <Grid container>
-                            <Carousel className='styling-example' breakPoints={CbreakPoints}>
+                            <StyledCarousel className='styling-example' breakPoints={CbreakPoints}>
                                 <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="League of Legends" cat_1="MOBA" cat_2="Acción" />
                                 <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Apex Legends" cat_1="Shooter" cat_2="Battle Royale" />
                                 <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Battlefield 4" cat_1="Shooter" cat_2="Acción" />
@@ -41,7 +54,7 @@ export default function Gamecollection(props) {
                                 <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Battlefield 4" cat_1="Shooter" cat_2="Acción" />
                                 <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Skyrim" cat_1="Rol" cat_2="Aventura" />
                                 <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Crash Team Racing" cat_1="Carreras" cat_2="Plataformas" />
-                            </Carousel>
+                            </StyledCarousel>
                         </Grid>
                     </Stack>
                 </Paper>
