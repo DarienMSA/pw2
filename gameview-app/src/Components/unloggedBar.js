@@ -1,9 +1,10 @@
 import React, { Fragment } from 'react'
-import { AppBar, Box, Button, IconButton, Menu, MenuItem, Stack, Tab, Tabs, Toolbar, Typography } from '@mui/material'
+import { AppBar, Box, Button, IconButton, Menu, MenuItem, Stack, Tab, Tabs, ThemeProvider, Toolbar, Typography } from '@mui/material'
 import PersonAddAltRoundedIcon from '@mui/icons-material/PersonAddAltRounded';
 import LoginIcon from '@mui/icons-material/Login';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import SearchBar from './SearchBar';
+import btheme from './GameView-Theme';
 
 export default function UnloggedBar() {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -57,41 +58,43 @@ export default function UnloggedBar() {
 
 
     return (
-        <Fragment>
-            <AppBar color='navColor' sx={{ position: 'static' }}>
-                <Toolbar sx={{ justifyContent: 'space-between' }}>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{ display: { xs: 'none', sm: 'block' } }}>
-                        <img width={130} onClick={handleClickLogo} style={{ marginTop: 10, cursor: "pointer" }} src="https://media.discordapp.net/attachments/928138608894967828/958872190013567006/Logo_nav_noBG.png"></img>
-                    </Typography>
-                    <SearchBar />
-                    <Stack color='#FFF2EF' direction="row" alignItems="center" sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <Button sx={{ marginLeft: "auto" }} color="inherit" endIcon={<LoginIcon />}>
-                            INICIAR SESIÓN{" "}
-                        </Button>
-                        <Button sx={{ marginLeft: "10px" }} color="inherit" endIcon={<PersonAddAltRoundedIcon />}>
-                            REGISTRARSE{" "}
-                        </Button>
-                    </Stack>
-                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
+        <ThemeProvider theme={btheme}>
+            <Fragment>
+                <AppBar color='navColor' sx={{ position: 'static' }}>
+                    <Toolbar sx={{ justifyContent: 'space-between' }}>
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            component="div"
+                            sx={{ display: { xs: 'none', sm: 'block' } }}>
+                            <img width={130} onClick={handleClickLogo} style={{ marginTop: 10, cursor: "pointer" }} src="https://media.discordapp.net/attachments/928138608894967828/958872190013567006/Logo_nav_noBG.png"></img>
+                        </Typography>
+                        <SearchBar />
+                        <Stack color='#FFF2EF' direction="row" alignItems="center" sx={{ display: { xs: 'none', md: 'flex' } }}>
+                            <Button sx={{ marginLeft: "auto" }} color="inherit" endIcon={<LoginIcon />}>
+                                INICIAR SESIÓN{" "}
+                            </Button>
+                            <Button sx={{ marginLeft: "10px" }} color="inherit" endIcon={<PersonAddAltRoundedIcon />}>
+                                REGISTRARSE{" "}
+                            </Button>
+                        </Stack>
+                        <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                            <IconButton
 
-                            size="large"
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="white_gv"
-                        >
-                            <MoreIcon />
-                        </IconButton>
-                    </Box>
-                </Toolbar>
-            </AppBar>
-            {renderMobileMenu}
-        </Fragment>
+                                size="large"
+                                aria-label="show more"
+                                aria-controls={mobileMenuId}
+                                aria-haspopup="true"
+                                onClick={handleMobileMenuOpen}
+                                color="white_gv"
+                            >
+                                <MoreIcon />
+                            </IconButton>
+                        </Box>
+                    </Toolbar>
+                </AppBar>
+                {renderMobileMenu}
+            </Fragment>
+        </ThemeProvider>
     )
 }

@@ -16,8 +16,9 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import SearchBar from './SearchBar';
 import ChatIcon from '@mui/icons-material/Chat';
-import { Avatar, Divider, Tooltip } from '@mui/material';
+import { Avatar, Divider, ThemeProvider, Tooltip } from '@mui/material';
 import NotifItem from './NavBar/NotifItem';
+import btheme from './GameView-Theme';
 
 const settings = ['Perfil', 'Cerrar sesión'];
 
@@ -163,118 +164,122 @@ export default function LoggedBar() {
 
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar color='navColor' sx={{ position: 'static' }}>
-                <Toolbar sx={{ justifyContent: 'space-between' }}>
+        <ThemeProvider theme={btheme}>
 
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{ display: { xs: 'none', sm: 'block' } }}
-                    >
-                        <img width={130} onClick={handleClickLogo} style={{ marginTop: 10, cursor: "pointer" }} src="https://media.discordapp.net/attachments/928138608894967828/958872190013567006/Logo_nav_noBG.png"></img>
-                    </Typography>
-                    <SearchBar />
 
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={4} color="error">
-                                <ChatIcon color={"white_gv"} />
-                            </Badge>
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            aria-label="show 17 new notifications"
-                            color="inherit"
-                            onClick={handleOpenNotifMenu}
+            <Box sx={{ flexGrow: 1 }}>
+                <AppBar color='navColor' sx={{ position: 'static' }}>
+                    <Toolbar sx={{ justifyContent: 'space-between' }}>
+
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            component="div"
+                            sx={{ display: { xs: 'none', sm: 'block' } }}
                         >
-                            <Badge badgeContent={17} color="error">
-                                <NotificationsIcon color={"white_gv"} />
-                            </Badge>
-                        </IconButton>
-                        <Box sx={{ flexGrow: 0, marginLeft: '15px' }}>
-                            <Tooltip title="Open settings">
-                                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                    <Avatar alt="Remy Sharp" src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg" />
-                                </IconButton>
-                            </Tooltip>
-                            <Menu
-                                sx={{ mt: '45px' }}
-                                id="menu-appbar"
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
+                            <img width={130} onClick={handleClickLogo} style={{ marginTop: 10, cursor: "pointer" }} src="https://media.discordapp.net/attachments/928138608894967828/958872190013567006/Logo_nav_noBG.png"></img>
+                        </Typography>
+                        <SearchBar />
+
+                        <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                                <Badge badgeContent={4} color="error">
+                                    <ChatIcon color={"white_gv"} />
+                                </Badge>
+                            </IconButton>
+                            <IconButton
+                                size="large"
+                                aria-label="show 17 new notifications"
+                                color="inherit"
+                                onClick={handleOpenNotifMenu}
                             >
-                                {settings.map((setting) => (
-                                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                        <Typography textAlign="center">{setting}</Typography>
+                                <Badge badgeContent={17} color="error">
+                                    <NotificationsIcon color={"white_gv"} />
+                                </Badge>
+                            </IconButton>
+                            <Box sx={{ flexGrow: 0, marginLeft: '15px' }}>
+                                <Tooltip title="Open settings">
+                                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                        <Avatar alt="Remy Sharp" src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg" />
+                                    </IconButton>
+                                </Tooltip>
+                                <Menu
+                                    sx={{ mt: '45px' }}
+                                    id="menu-appbar"
+                                    anchorEl={anchorElUser}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={Boolean(anchorElUser)}
+                                    onClose={handleCloseUserMenu}
+                                >
+                                    {settings.map((setting) => (
+                                        <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                                            <Typography textAlign="center">{setting}</Typography>
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
+                                <Menu
+                                    sx={{ mt: '45px' }}
+                                    id="menu-appbar"
+                                    anchorEl={anchorElNotif}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={Boolean(anchorElNotif)}
+                                    onClose={handleCloseNotifMenu}
+                                >
+                                    <Divider variant="middle" />
+                                    <MenuItem key={1} onClick={handleCloseNotifMenu}>
+                                        <NotifItem />
                                     </MenuItem>
-                                ))}
-                            </Menu>
-                            <Menu
-                                sx={{ mt: '45px' }}
-                                id="menu-appbar"
-                                anchorEl={anchorElNotif}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorElNotif)}
-                                onClose={handleCloseNotifMenu}
-                            >
-                                <Divider variant="middle" />
-                                <MenuItem key={1} onClick={handleCloseNotifMenu}>
-                                    <NotifItem />
-                                </MenuItem>
-                                <Divider variant="middle" />
-                                <Divider variant="middle" />
-                                <MenuItem key={2} onClick={handleCloseNotifMenu}>
-                                    <NotifItem />
-                                </MenuItem>
-                                <Divider variant="middle" />
-                                <Divider variant="middle" />
-                                <MenuItem key={3} onClick={handleCloseNotifMenu}>
-                                    <NotifItem />
-                                </MenuItem>
-                                <Divider variant="middle" />
-                                <Divider variant="middle" />
-                                <MenuItem key={4} onClick={handleCloseNotifMenu}>
-                                    <NotifItem />
-                                </MenuItem>
-                                <Divider variant="middle" />
-                            </Menu>
+                                    <Divider variant="middle" />
+                                    <Divider variant="middle" />
+                                    <MenuItem key={2} onClick={handleCloseNotifMenu}>
+                                        <NotifItem />
+                                    </MenuItem>
+                                    <Divider variant="middle" />
+                                    <Divider variant="middle" />
+                                    <MenuItem key={3} onClick={handleCloseNotifMenu}>
+                                        <NotifItem />
+                                    </MenuItem>
+                                    <Divider variant="middle" />
+                                    <Divider variant="middle" />
+                                    <MenuItem key={4} onClick={handleCloseNotifMenu}>
+                                        <NotifItem />
+                                    </MenuItem>
+                                    <Divider variant="middle" />
+                                </Menu>
+                            </Box>
                         </Box>
-                    </Box>
-                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="white_gv"
-                        >
-                            <MoreIcon />
-                        </IconButton>
-                    </Box>
-                </Toolbar>
-            </AppBar>
-            {renderMobileMenu}
-        </Box>
+                        <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                            <IconButton
+                                size="large"
+                                aria-label="show more"
+                                aria-controls={mobileMenuId}
+                                aria-haspopup="true"
+                                onClick={handleMobileMenuOpen}
+                                color="white_gv"
+                            >
+                                <MoreIcon />
+                            </IconButton>
+                        </Box>
+                    </Toolbar>
+                </AppBar>
+                {renderMobileMenu}
+            </Box>
+        </ThemeProvider>
     )
 }

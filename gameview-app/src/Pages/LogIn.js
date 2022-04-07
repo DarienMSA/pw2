@@ -1,5 +1,6 @@
-import { alpha, styled, Avatar, Button, Grid, Link, Paper, TextField, Typography } from "@mui/material";
+import { alpha, styled, Avatar, Button, Grid, Link, Paper, TextField, Typography, ThemeProvider } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import btheme from "../Components/GameView-Theme";
 
 const SignInInput = styled(TextField)(({ theme }) => ({
     "& .MuiInputLabel-root": {
@@ -43,25 +44,27 @@ function LogInScreen() {
     const btnStyle = { margin: '16px 0' }
 
     return (
-        <Grid container alignItems="center" justifyContent="center" height="80vh">
-            <Grid sx={{ mt: 5 }} container align="center" justifyContent="center">
-                <img width={200} src="https://cdn.discordapp.com/attachments/928138608894967828/958891765342044160/Logo_nav_noBG__blue.png"></img>
-            </Grid>
-            <Paper elevation={8} style={paperStyle} sx={{ background: "#406882" }}>
-                <Grid sx={{ mt: 2, mb: 4 }} align='center'>
-                    <Typography variant="h4" fontWeight={"bold"} color={"#FFF2EF"}>Registrate</Typography>
+        <ThemeProvider theme={btheme}>
+            <Grid container alignItems="center" justifyContent="center" height="80vh">
+                <Grid sx={{ mt: 5 }} container align="center" justifyContent="center">
+                    <img width={200} src="https://cdn.discordapp.com/attachments/928138608894967828/958891765342044160/Logo_nav_noBG__blue.png"></img>
                 </Grid>
-                <SignInInput fullWidth required color='info' margin='dense' variant="outlined" placeholder='Ingrese Usuario' label='Usuario' /><br />
-                <SignInInput fullWidth required color='info' margin='dense' variant="outlined" placeholder='Ingrese Contraseña' label='Contraseña' /><br />
+                <Paper elevation={8} style={paperStyle} sx={{ background: "#406882" }}>
+                    <Grid sx={{ mt: 2, mb: 4 }} align='center'>
+                        <Typography variant="h4" fontWeight={"bold"} color={"#FFF2EF"}>Registrate</Typography>
+                    </Grid>
+                    <SignInInput fullWidth required color='info' margin='dense' variant="outlined" placeholder='Ingrese Usuario' label='Usuario' /><br />
+                    <SignInInput fullWidth required color='info' margin='dense' variant="outlined" placeholder='Ingrese Contraseña' label='Contraseña' /><br />
 
-                <WhiteButton href="/login" style={btnStyle} size='large' fullWidth variant='outlined' color='success'>Ingresar</WhiteButton>
-                <Typography color={"#FFF2EF"} >¿Ya tienes una cuenta?&nbsp;
-                    <Link color="inherit" href="#">
-                        Ingresa
-                    </Link>
-                </Typography>
-            </Paper>
-        </Grid>
+                    <WhiteButton href="/login" style={btnStyle} size='large' fullWidth variant='outlined' color='success'>Ingresar</WhiteButton>
+                    <Typography color={"#FFF2EF"} >¿Ya tienes una cuenta?&nbsp;
+                        <Link color="inherit" href="#">
+                            Ingresa
+                        </Link>
+                    </Typography>
+                </Paper>
+            </Grid>
+        </ThemeProvider>
     )
 }
 

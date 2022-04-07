@@ -1,9 +1,10 @@
-import { Divider, Grid, styled, alpha, InputBase, Autocomplete, TextField, IconButton } from '@mui/material'
+import { Divider, Grid, styled, alpha, InputBase, Autocomplete, TextField, IconButton, ThemeProvider } from '@mui/material'
 import React, { Fragment } from 'react'
 import ToMessage from '../Components/Chat/ToMessage';
 import SendIcon from '@mui/icons-material/Send';
 import UserPreview from '../Components/Chat/UserPreview'
 import FromMessage from '../Components/Chat/FromMessage';
+import btheme from '../Components/GameView-Theme';
 
 //style={{ borderStyle: "solid", borderColor: "blue", borderWidth: "1px" }}
 
@@ -50,70 +51,72 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 export default function Chat() {
 
     return (
-        <Fragment>
+        <ThemeProvider theme={btheme}>
+            <Fragment>
 
-            <Grid container maxHeight="93vh">
+                <Grid container maxHeight="93vh">
 
-                <Grid item xs={12} md={3} backgroundColor="#1A374D" style={{ overflow: "auto", overflowX: "hidden", maxHeight: "93vh" }}>
-                    <StyledAutocomplete
-                        id="combo-box-demo"
-                        options={usedList}
-                        renderInput={(params) => <TextField {...params} label="Buscar usuarios..." />}
+                    <Grid item xs={12} md={3} backgroundColor="#1A374D" style={{ overflow: "auto", overflowX: "hidden", maxHeight: "93vh" }}>
+                        <StyledAutocomplete
+                            id="combo-box-demo"
+                            options={usedList}
+                            renderInput={(params) => <TextField {...params} label="Buscar usuarios..." />}
 
-                    />
-                    <UserPreview></UserPreview>
+                        />
+                        <UserPreview></UserPreview>
 
-                    <UserPreview></UserPreview>
+                        <UserPreview></UserPreview>
 
-                    <UserPreview></UserPreview>
+                        <UserPreview></UserPreview>
 
-                    <UserPreview></UserPreview>
-
-
-
-                </Grid>
-                <Grid container xs={12} md={9} style={{ maxHeight: "93vh", background: "#E3EAEE" }}>
-                    <Grid item xs={12} style={{
-                        height: "86vh", borderStyle: 'solid',
-                        borderWidth: "5px",
-                        borderColor: "#1A374D", overflow: "auto", overflowX: "hidden", display: "flex",
-                        flexDirection: "column-reverse"
-                    }} >
-                        <ToMessage />
-                        <FromMessage />
-                        <ToMessage />
-                        <ToMessage />
-                        <ToMessage />
-                        <FromMessage />
-                        <FromMessage />
-                        <ToMessage />
-                        <FromMessage />
+                        <UserPreview></UserPreview>
 
 
 
                     </Grid>
+                    <Grid container xs={12} md={9} style={{ maxHeight: "93vh", background: "#E3EAEE" }}>
+                        <Grid item xs={12} style={{
+                            height: "86vh", borderStyle: 'solid',
+                            borderWidth: "5px",
+                            borderColor: "#1A374D", overflow: "auto", overflowX: "hidden", display: "flex",
+                            flexDirection: "column-reverse"
+                        }} >
+                            <ToMessage />
+                            <FromMessage />
+                            <ToMessage />
+                            <ToMessage />
+                            <ToMessage />
+                            <FromMessage />
+                            <FromMessage />
+                            <ToMessage />
+                            <FromMessage />
 
-                    <Grid container item xs={12} style={{
-                        height: "7vh", borderStyle: 'solid',
-                        borderWidth: "5px",
-                        borderColor: "#1A374D", overflow: "auto", overflowX: "hidden"
-                    }}
-                        direction="row"
-                        justifyContent="center"
-                        alignItems="center">
-                        <Grid xs={11}>
-                            <StyledTextField id="filled-basic" label="Escribe un mensaje..." variant="filled" />
+
+
                         </Grid>
-                        <Grid xs={1} textAlign="center">
-                            <IconButton color="from_message" component="span">
-                                <SendIcon />
-                            </IconButton>
+
+                        <Grid container item xs={12} style={{
+                            height: "7vh", borderStyle: 'solid',
+                            borderWidth: "5px",
+                            borderColor: "#1A374D", overflow: "auto", overflowX: "hidden"
+                        }}
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center">
+                            <Grid xs={11}>
+                                <StyledTextField id="filled-basic" label="Escribe un mensaje..." variant="filled" />
+                            </Grid>
+                            <Grid xs={1} textAlign="center">
+                                <IconButton color="from_message" component="span">
+                                    <SendIcon />
+                                </IconButton>
+                            </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
 
-            </Grid>
-        </Fragment >
+                </Grid>
+            </Fragment >
+        </ThemeProvider>
     )
 }
 
