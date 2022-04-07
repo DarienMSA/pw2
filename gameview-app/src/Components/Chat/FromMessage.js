@@ -31,14 +31,14 @@ export default function FromMessage() {
     return (
         <Fragment>
             <Grid container margin={1} direction="row-reverse" justifyContent={"flex-start"} sx={{ marginTop: "25px" }}>
-                <FromMessagePaper >
+                <FromMessagePaper elevation={2}>
                     <Typography margin={2}>Muchas gracias por contestarme.Muchas gracias por contestarme.Muchas gracias por contestarme.Muchas gracias por contestarme.</Typography>
                     <Box textAlign="end">
                         <Typography variant="caption" margin={2}>01:40pm</Typography>
                     </Box>
                 </FromMessagePaper>
             </Grid>
-            <Divider variant="middle" sx={{ marginTop: "25px" }} />
+
         </Fragment>
     )
 }

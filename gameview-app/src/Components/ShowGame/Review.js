@@ -24,7 +24,35 @@ const ReviewGrid = styled(Grid)(({ theme }) => ({
         width: "70%"
     },
     [theme.breakpoints.up('lg')]: {
-        width: "60%"
+        width: "60%",
+        marginRight: 230
+    },
+
+}));
+
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+    [theme.breakpoints.down('md')]: {
+        width: 150, height: 150
+    },
+    [theme.breakpoints.up('md')]: {
+        width: 150, height: 150,
+        marginRight: 100
+    },
+    [theme.breakpoints.up('lg')]: {
+        width: 150, height: 150
+    },
+
+}));
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    [theme.breakpoints.down('md')]: {
+    },
+    [theme.breakpoints.up('md')]: {
+
+        marginRight: 100
+    },
+    [theme.breakpoints.up('lg')]: {
+
     },
 
 }));
@@ -39,27 +67,27 @@ export default function Review() {
     const handleOpen2 = () => setOpen2(true);
     const handleClose2 = () => setOpen2(false);
     return (
-        <ReviewGrid container sx={{ borderStyle: "solid", borderWidth: "5px", backgroundColor: "black", borderRadius: 16 }} my={10}>
-            <Grid container item xs={12} md={4} alignItems={"center"} justifyContent={"center"}>
+        <ReviewGrid container sx={{ borderRadius: 16 }} my={2} alignItems={"center"} justifyContent={"center"}>
+            <Grid container item xs={12} md={2} alignItems={"center"} justifyContent={"center"}>
                 <Box item>
-                    <Avatar sx={{ width: 150, height: 150 }} src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg"></Avatar>
+                    <StyledAvatar src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg"></StyledAvatar>
                 </Box>
-                <Box item width={"100%"} textAlign={"center"}>
-                    <Typography sx={{ color: "white" }} variant={"caption"} component="legend" fontWeight={"bold"}>3.5</Typography>
-                    <Rating precision={0.5} sx={{ borderColor: "white" }} name="read-only" value={3.5} readOnly
+                <StyledBox item width={"100%"} textAlign={"center"}>
+                    <Typography variant={"caption"} component="legend" fontWeight={"bold"}>3.5</Typography>
+                    <Rating precision={0.5} name="read-only" value={3.5} readOnly
                         emptyIcon={
-                            <StarBorderIcon fontSize="inherit" sx={{ color: "white" }} />
+                            <StarBorderIcon fontSize="inherit" />
                         } />
-                </Box>
+                </StyledBox>
 
 
 
             </Grid>
             <Grid item xs={12} md={8}>
-                <Typography color="white" variant='h5' textAlign={"left"} mt={3} fontWeight={"bold"} style={{ fontFamily: 'Ubuntu' }}>Darien Miguel Sánchez Arévalo</Typography>
-                <Typography mb={2} variant="caption" component={"h1"} color={"white"}>25/02/2022</Typography>
+                <Typography variant='h5' textAlign={"left"} mt={3} fontWeight={"bold"} style={{ fontFamily: 'Ubuntu' }}>Darien Miguel Sánchez Arévalo</Typography>
+                <Typography mb={2} variant="caption" component={"h1"} >25/02/2022</Typography>
                 <Divider sx={{ marginTop: "15px", marginBottom: "15px", background: "gray" }}> </Divider>
-                <Typography color="white" variant="p" textAlign={"left"} mt={3}>Elden Ring es un videojuego de rol de acción desarrollado por FromSoftware y publicado por Bandai Namco Entertainment. El videojuego surge de una colaboración entre el director y diseñador Hidetaka Miyazaki y el novelista de fantasía George R. R. Martin. Fue lanzado a nivel mundial el 25 de febrero de 2022, fecha revelada durante el evento Summer Game Fest, para las plataformas Xbox One, Xbox Series X/S, Microsoft Windows, PlayStation 4 y PlayStation 5.</Typography>
+                <Typography variant="p" textAlign={"left"} mt={3}>Elden Ring es un videojuego de rol de acción desarrollado por FromSoftware y publicado por Bandai Namco Entertainment. El videojuego surge de una colaboración entre el director y diseñador Hidetaka Miyazaki y el novelista de fantasía George R. R. Martin. Fue lanzado a nivel mundial el 25 de febrero de 2022, fecha revelada durante el evento Summer Game Fest, para las plataformas Xbox One, Xbox Series X/S, Microsoft Windows, PlayStation 4 y PlayStation 5.</Typography>
                 <Grid item xs={12} container alignItems={"center"} justifyContent={"space-between"} my={5}>
                     <AvatarGroup total={24}>
                         <Avatar alt="Remy Sharp" src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg" />
@@ -67,7 +95,7 @@ export default function Review() {
                         <Avatar alt="Agnes Walker" src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg" />
                         <Avatar alt="Trevor Henderson" src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg" />
                     </AvatarGroup>
-                    <Button onClick={handleOpen} sx={{ marginRight: 5 }} variant="contained">Comentarios</Button>
+                    <Button onClick={handleOpen} sx={{ marginRight: 5, color: "#FFF2EF" }} color={"buttonPrimary"} variant="contained">Comentarios</Button>
                     <Modal
                         open={open}
                         onClose={handleClose}
@@ -88,7 +116,7 @@ export default function Review() {
                                 }}>
                                 <Comment />
                             </Box>
-                            <Button onClick={handleOpen2} sx={{ marginRight: 5 }} variant="contained">Comentar</Button>
+                            <Button onClick={handleOpen2} sx={{ marginRight: 5, color: "#FFF2EF" }} color="buttonPrimary" variant="contained">Comentar</Button>
                             <Modal
                                 open={open2}
                                 onClose={handleClose2}
@@ -104,7 +132,7 @@ export default function Review() {
                                             display: "flex",
                                             flexDirection: 'row-reverse'
                                         }}>
-                                            <Button variant="contained">Publicar</Button>
+                                            <Button color="buttonPrimary" sx={{ color: "#FFF2EF" }} variant="contained">Publicar</Button>
                                         </Grid>
                                     </Grid>
                                 </Box>

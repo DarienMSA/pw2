@@ -40,6 +40,13 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
     marginBottom: "15px"
 }));
 
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    width: "100%",
+    "& .MuiFilledInput-root": {
+        backgroundColor: "#E3EAEE",
+    }
+}));
+
 export default function Chat() {
 
     return (
@@ -47,7 +54,7 @@ export default function Chat() {
 
             <Grid container maxHeight="93vh">
 
-                <Grid item xs={12} md={3} backgroundColor="#1A374D" style={{ overflow: "auto", maxHeight: "93vh" }}>
+                <Grid item xs={12} md={3} backgroundColor="#1A374D" style={{ overflow: "auto", overflowX: "hidden", maxHeight: "93vh" }}>
                     <StyledAutocomplete
                         id="combo-box-demo"
                         options={usedList}
@@ -67,32 +74,38 @@ export default function Chat() {
                 </Grid>
                 <Grid container xs={12} md={9} style={{ maxHeight: "93vh", background: "#E3EAEE" }}>
                     <Grid item xs={12} style={{
-                        height: "86vh", borderStyle: 'groove',
+                        height: "86vh", borderStyle: 'solid',
                         borderWidth: "5px",
-                        borderColor: "#063970", overflow: "auto", overflowX: "hidden"
+                        borderColor: "#1A374D", overflow: "auto", overflowX: "hidden", display: "flex",
+                        flexDirection: "column-reverse"
                     }} >
                         <ToMessage />
                         <FromMessage />
                         <ToMessage />
+                        <ToMessage />
+                        <ToMessage />
+                        <FromMessage />
+                        <FromMessage />
+                        <ToMessage />
+                        <FromMessage />
+
 
 
                     </Grid>
 
                     <Grid container item xs={12} style={{
-                        height: "7vh", borderStyle: 'groove',
+                        height: "7vh", borderStyle: 'solid',
                         borderWidth: "5px",
-                        borderColor: "#063970", overflow: "auto", overflowX: "hidden"
+                        borderColor: "#1A374D", overflow: "auto", overflowX: "hidden"
                     }}
                         direction="row"
                         justifyContent="center"
                         alignItems="center">
                         <Grid xs={11}>
-                            <TextField sx={{
-                                width: "100%"
-                            }} id="filled-basic" label="Escribe un mensaje..." variant="filled" />
+                            <StyledTextField id="filled-basic" label="Escribe un mensaje..." variant="filled" />
                         </Grid>
                         <Grid xs={1} textAlign="center">
-                            <IconButton color="primary" aria-label="upload picture" component="span">
+                            <IconButton color="from_message" component="span">
                                 <SendIcon />
                             </IconButton>
                         </Grid>

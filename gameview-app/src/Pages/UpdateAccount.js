@@ -14,6 +14,30 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import PanoramaIcon from '@mui/icons-material/Panorama';
 import DescriptionIcon from '@mui/icons-material/Description';
 
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    '& label.Mui-focused': {
+        color: "#FFF2EF"
+    },
+    '& .MuiInput-underline:after': {
+        borderBottomColor: '#FFF2EF',
+    },
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+            borderColor: 'black',
+        },
+        '&:hover fieldset': {
+            borderColor: '#B1D0E0',
+        },
+        '&.Mui-focused fieldset': {
+            borderColor: '#FFF2EF',
+        },
+    },
+    "& .MuiOutlinedInput-input": {
+        color: "#FFF2EF"
+    }
+
+}));
+
 const StyledBox = styled(Box)(({ theme }) => ({
 
     [theme.breakpoints.down('md')]: {
@@ -122,18 +146,20 @@ export default function UpdateAccount() {
     return (
         <StyledBox>
             <Typography variant="h3" mb={5}>Cuenta</Typography>
-            <AppBar position="static">
+            <AppBar position="static" color='navColor'>
                 <Tabs
                     value={value}
                     onChange={handleChange}
-                    indicatorColor="secondary"
+                    indicatorColor="white_gv"
                     textColor="inherit"
                     variant="fullWidth"
                     aria-label="full width tabs example"
+                    TabIndicatorProps={{ style: { background: "white" } }}
+
                 >
-                    <Tab label="Seguridad de la cuenta" {...a11yProps(0)} />
-                    <Tab label="Datos personales" {...a11yProps(1)} />
-                    <Tab label="Redes Sociales" {...a11yProps(2)} />
+                    <Tab label={<span style={{ color: '#FFF2EF' }}>Seguridad de la cuenta</span>} {...a11yProps(0)} />
+                    <Tab label={<span style={{ color: '#FFF2EF' }}>Datos personales</span>} {...a11yProps(1)} />
+                    <Tab label={<span style={{ color: '#FFF2EF' }}>Redes sociales</span>} {...a11yProps(2)} />
                 </Tabs>
             </AppBar>
             <SwipeableViews
@@ -146,7 +172,7 @@ export default function UpdateAccount() {
                     <Stack direction="row" alignItems="start" spacing={2}>
                         <DisabledTextField type={"email"} helperText="Edita tu correo electrónico" id="edit-email" label="Correo electrónico" variant="outlined" fullWidth defaultValue={"sadarien@gmail.com"} disabled />
                         <label htmlFor="edit-email">
-                            <IconButton onClick={handleOpenModalEmail} color="primary" component="span">
+                            <IconButton onClick={handleOpenModalEmail} color="buttonPrimary" component="span">
                                 <EditIcon />
                             </IconButton>
                         </label>
@@ -168,17 +194,17 @@ export default function UpdateAccount() {
                                         Modificar correo
                                     </Typography>
                                     <Typography id="transition-modal-description-email" sx={{ mt: 2 }}>
-                                        <TextField sx={{ marginY: 5 }} type={"email"} helperText="Introduce un nuevo correo electrónico" id="edit-email" label="Correo electrónico" variant="outlined" fullWidth />
-                                        <TextField sx={{ marginY: 5 }} type={"password"} helperText="Escribe tu contraseña" id="edit-email" label="Verifica contraseña" variant="outlined" fullWidth />
+                                        <StyledTextField sx={{ marginY: 5 }} type={"email"} helperText="Introduce un nuevo correo electrónico" id="edit-email" label="Correo electrónico" variant="outlined" fullWidth />
+                                        <StyledTextField sx={{ marginY: 5 }} type={"password"} helperText="Escribe tu contraseña" id="edit-email" label="Verifica contraseña" variant="outlined" fullWidth />
                                     </Typography>
-                                    <Button variant={"contained"} endIcon={<SaveAltIcon />}>Guardar cambios</Button>
+                                    <Button variant={"contained"} color={"buttonPrimary"} sx={{ color: "white" }} endIcon={<SaveAltIcon />}>Guardar cambios</Button>
                                 </Box>
                             </Fade>
                         </Modal>
 
                         <DisabledTextField type={"password"} helperText="Edita tu contraseña" id="edit-password" label="Contraseña" variant="outlined" fullWidth defaultValue={"---------"} disabled />
                         <label htmlFor="edit-password">
-                            <IconButton onClick={handleOpenModalPass} color="primary" component="span">
+                            <IconButton onClick={handleOpenModalPass} color="buttonPrimary" component="span">
                                 <EditIcon />
                             </IconButton>
                         </label>
@@ -200,10 +226,10 @@ export default function UpdateAccount() {
                                         Modificar contraseña
                                     </Typography>
                                     <Typography id="transition-modal-description-pass" sx={{ mt: 2 }}>
-                                        <TextField sx={{ marginY: 5 }} type={"password"} helperText="Introduce una nueva contraseña" id="edit-password" label="Contraseña" variant="outlined" fullWidth />
-                                        <TextField sx={{ marginY: 5 }} type={"password"} helperText="Escribe tu contraseña" id="edit-email" label="Verifica contraseña" variant="outlined" fullWidth />
+                                        <StyledTextField sx={{ marginY: 5 }} type={"password"} helperText="Introduce una nueva contraseña" id="edit-password" label="Contraseña" variant="outlined" fullWidth />
+                                        <StyledTextField sx={{ marginY: 5 }} type={"password"} helperText="Escribe tu contraseña" id="edit-email" label="Verifica contraseña" variant="outlined" fullWidth />
                                     </Typography>
-                                    <Button variant={"contained"} endIcon={<SaveAltIcon />}>Guardar cambios</Button>
+                                    <Button variant={"contained"} color={"buttonPrimary"} sx={{ color: "white" }} endIcon={<SaveAltIcon />}>Guardar cambios</Button>
                                 </Box>
                             </Fade>
                         </Modal>
@@ -216,6 +242,7 @@ export default function UpdateAccount() {
                             <TextField
                                 id="input-with-icon-textfield"
                                 label="Nombre"
+                                color={"info"}
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
@@ -236,7 +263,7 @@ export default function UpdateAccount() {
                             <Grid item xs={12}>
                                 <label htmlFor="contained-button-file">
                                     <StyledInput accept="image/*" id="contained-button-file" multiple type="file" />
-                                    <Button variant="contained" component="span" endIcon={<PanoramaIcon />}>
+                                    <Button variant="contained" component="span" color={"buttonPrimary"} sx={{ color: "white" }} endIcon={<PanoramaIcon />}>
                                         Subir imagen
                                     </Button>
                                 </label>
@@ -251,6 +278,7 @@ export default function UpdateAccount() {
                                 id="date"
                                 label="Fecha de nacimiento"
                                 type="date"
+                                color={"info"}
                                 defaultValue="2017-05-24"
                                 fullWidth
                                 InputLabelProps={{
@@ -261,7 +289,7 @@ export default function UpdateAccount() {
                         </Grid>
 
                         <Grid container item xs={12} justifyContent="center" alignItems="center" >
-                            <Typography sx={{ marginTop: "100px", marginBottom: "30px" }} htmlFor="descriptionAccount"> Introduce tu descripción.
+                            <Typography variant={"h6"} sx={{ marginTop: "100px", marginBottom: "30px" }} htmlFor="descriptionAccount"> Introduce tu descripción.
                             </Typography>
                             <TextareaAutosize
                                 aria-label=""
@@ -297,9 +325,9 @@ export default function UpdateAccount() {
                                         </Typography>
                                         <Typography id="transition-modal-description-pass" sx={{ mt: 2 }}>
 
-                                            <TextField sx={{ marginY: 5 }} type={"password"} helperText="Escribe tu contraseña" id="edit-email" label="Verifica contraseña" variant="outlined" fullWidth />
+                                            <StyledTextField sx={{ marginY: 5 }} type={"password"} helperText="Escribe tu contraseña" id="edit-email" label="Verifica contraseña" variant="outlined" fullWidth />
                                         </Typography>
-                                        <Button variant={"contained"} endIcon={<SaveAltIcon />}>Guardar cambios</Button>
+                                        <Button variant={"contained"} color={"buttonPrimary"} sx={{ color: "white" }} endIcon={<SaveAltIcon />}>Guardar cambios</Button>
                                     </Box>
                                 </Fade>
                             </Modal>
@@ -311,7 +339,7 @@ export default function UpdateAccount() {
                 <TabPanel value={value} index={2} dir={theme.direction}>
                     <TextField
                         id="input-with-icon-textfield"
-                        sx={{ marginY: "50px" }}
+                        sx={{ marginY: "50px" }} color={"info"}
                         helperText="Introduce el enlace a tu cuenta."
                         InputProps={{
                             startAdornment: (
@@ -328,7 +356,7 @@ export default function UpdateAccount() {
                     <TextField
                         id="input-with-icon-textfield"
                         helperText="Introduce el enlace a tu cuenta."
-                        sx={{ marginY: "50px" }}
+                        sx={{ marginY: "50px" }} color={"info"}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -343,7 +371,7 @@ export default function UpdateAccount() {
 
                     <TextField
                         id="input-with-icon-textfield"
-                        sx={{ marginY: "50px" }}
+                        sx={{ marginY: "50px" }} color={"info"}
                         helperText="Introduce el enlace a tu cuenta."
                         InputProps={{
                             startAdornment: (
@@ -359,8 +387,8 @@ export default function UpdateAccount() {
 
                     <TextField
                         id="input-with-icon-textfield"
-                        helperText="Introduce tu ID de Discord. Ej: Prueba #1111"
-                        sx={{ marginY: "50px" }}
+                        helperText="Introduce tu ID de Discord. Ej: Prueba#1111"
+                        sx={{ marginY: "50px" }} color={"info"}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -398,9 +426,9 @@ export default function UpdateAccount() {
                                 </Typography>
                                 <Typography id="transition-modal-description-pass" sx={{ mt: 2 }}>
 
-                                    <TextField sx={{ marginY: 5 }} type={"password"} helperText="Escribe tu contraseña" id="edit-email" label="Verifica contraseña" variant="outlined" fullWidth />
+                                    <StyledTextField sx={{ marginY: 5 }} type={"password"} helperText="Escribe tu contraseña" id="edit-email" label="Verifica contraseña" variant="outlined" fullWidth />
                                 </Typography>
-                                <Button variant={"contained"} endIcon={<SaveAltIcon />}>Guardar cambios</Button>
+                                <Button variant={"contained"} color={"buttonPrimary"} sx={{ color: "white" }} endIcon={<SaveAltIcon />}>Guardar cambios</Button>
                             </Box>
                         </Fade>
                     </Modal>

@@ -11,7 +11,7 @@ export default function CardGame(props) {
     };
 
     return (
-        <Card elevation={6} sx={{ minWidth: 160, maxWidth: 200, margin: 1 }}>
+        <Card elevation={6} sx={{ minWidth: 140, maxWidth: 180, margin: 1 }}>
             <CardActionArea>
                 <CardMedia
                     component="img"

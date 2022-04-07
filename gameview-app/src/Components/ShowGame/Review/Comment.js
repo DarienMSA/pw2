@@ -10,7 +10,7 @@ export default function Comment() {
                     <Avatar sx={{ bgcolor: blue[500] }}>N</Avatar>
                 </Grid>
                 <Grid xs={10}>
-                    <Typography sx={{ ml: 1 }} id="modal-modal-title" variant="h6" component="h6">
+                    <Typography sx={{ ml: 1 }} id="modal-modal-title" variant="h6" component="h6" style={{ fontFamily: 'Ubuntu' }}>
                         Nora
                     </Typography>
                     <Typography sx={{ ml: 1.5 }} id="modal-modal-title" variant="caption" component="div">
@@ -24,7 +24,7 @@ export default function Comment() {
 
                 </Grid>
                 <Grid container sx={{ display: "flex", flexDirection: 'row-reverse' }}>
-                    <Button size="small" variant="contained">Modificar</Button>
+                    <Button size="small" color="warning" variant="contained">Modificar</Button>
                 </Grid >
             </Grid>
         </Paper>

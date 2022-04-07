@@ -1,7 +1,49 @@
-import { Avatar, Box, Grid, IconButton, Menu, MenuItem, Snackbar, Typography } from '@mui/material'
+import { Avatar, Box, Grid, IconButton, Menu, MenuItem, Snackbar, styled, Typography } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react'
 
+const StyledTypography = styled(Typography)(({ theme }) => ({
+    [theme.breakpoints.down('md')]: {
+        maxWidth: "280px"
+    },
+    [theme.breakpoints.up('md')]: {
+
+
+    },
+    [theme.breakpoints.up('lg')]: {
+
+    },
+
+}));
+
+const StyledAvatar2 = styled(Avatar)(({ theme }) => ({
+    marginRight: 20, marginLeft: 2, marginY: 2,
+    [theme.breakpoints.down('md')]: {
+        width: 40, height: 40,
+    },
+    [theme.breakpoints.up('md')]: {
+        width: 70, height: 70,
+
+    },
+    [theme.breakpoints.up('lg')]: {
+        width: 70, height: 70,
+    },
+
+}));
+
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+    [theme.breakpoints.down('md')]: {
+        marginLeft: 0,
+    },
+    [theme.breakpoints.up('md')]: {
+        marginLeft: 100,
+
+    },
+    [theme.breakpoints.up('lg')]: {
+        marginLeft: 150,
+    },
+
+}));
 
 
 export default function ActiveUsers() {
@@ -99,13 +141,13 @@ export default function ActiveUsers() {
         </Menu>
     );
     return (
-        <Grid container sx={{ borderStyle: "solid", borderWidth: 5, borderRadius: 5, marginY: 1 }} alignItems={"center"} justifyContent={"space-between"}>
+        <Grid container sx={{ marginY: 3 }} alignItems={"center"}>
 
-            <Avatar sx={{ marginLeft: 2, marginY: 2, width: 70, height: 70 }} src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg" ></Avatar>
-            <Typography variant="h5">
+            <StyledAvatar2 sx={{}} src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg" ></StyledAvatar2>
+            <StyledTypography mb={3} variant="h5" color={"white"} noWrap>
                 Darien Miguel Sánchez Arévalo
-            </Typography>
-            <Avatar sx={{ marginRight: 2, marginTop: 5, cursor: "pointer" }} onClick={handleSocialWebsOpen} aria-controls={SocialWebsMenu}>+</Avatar>
+            </StyledTypography>
+            <StyledAvatar sx={{ marginTop: 5, cursor: "pointer", bgcolor: "#6998AB", height: 30, width: 30 }} onClick={handleSocialWebsOpen} aria-controls={SocialWebsMenu}>+</StyledAvatar>
 
 
             {renderSocialWebMenu}

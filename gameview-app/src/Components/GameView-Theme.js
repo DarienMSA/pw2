@@ -23,6 +23,9 @@ const btheme = createTheme({
     },
     background_gv: {
       main: "#B1D0E0",
+    },
+    from_message: {
+      main: "#063970",
     }
   },
 });

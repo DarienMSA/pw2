@@ -19,11 +19,10 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const StyledGrid = styled(Grid)(() => ({
-    borderStyle: 'groove',
-    borderWidth: "5px",
-    borderColor: "#063970",
+
     marginTop: "5px",
-    marginBottom: "5px",
+    marginBottom: "10px",
+    marginLeft: "5px",
     backgroundColor: "#6998AB", //#B1D0E0
     '&:hover': {
         cursor: "pointer",

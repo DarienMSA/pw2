@@ -2,6 +2,38 @@ import { Avatar, Button, Chip, Divider, Grid, IconButton, Paper, Snackbar, style
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react'
 import ActiveGame from '../Components/Account/ActiveGame';
+import Gamecollection from '../Components/Home/GameCollection';
+import CardGame from '../Components/CardGame';
+import Carousel from 'react-elastic-carousel';
+
+const StyledCarousel = styled(Carousel)(({ theme }) => ({
+
+
+    '& .rec-arrow': {
+        background: "#406882",
+        color: "#FFF2EF",
+    },
+    '& .rec-dot_active': {
+        borderColor: "red",
+        background: "#406882",
+    }
+}));
+
+const CbreakPoints = [
+    { width: 1, itemsToShow: 1 },
+    { width: 550, itemsToShow: 3, itemsToScroll: 3 },
+    { width: 768, itemsToShow: 4, itemsToScroll: 4 },
+    { width: 960, itemsToShow: 5, itemsToScroll: 5 },
+    { width: 1200, itemsToShow: 6, itemsToScroll: 6 }
+]
+
+const CbreakPointsActive = [
+    { width: 1, itemsToShow: 1 },
+    { width: 550, itemsToShow: 2, itemsToScroll: 2 },
+    { width: 768, itemsToShow: 3, itemsToScroll: 3 },
+    { width: 960, itemsToShow: 4, itemsToScroll: 4 },
+    { width: 1200, itemsToShow: 5, itemsToScroll: 5 }
+]
 
 export default function Account() {
 
@@ -57,8 +89,11 @@ export default function Account() {
     }));
 
     return (
-        <Grid container direction="row">
-            <Grid container item xs={12} md={3} direction={"column"}
+        <Grid container direction="row" >
+            <Grid container item xs={12} md={3} direction={"column"} sx={{
+                borderRightWidth: "5px", borderTopWidth: "0px", borderBottomWidth: "0px", borderLeftWidth: "0px",
+                borderColor: "#1A374D", borderStyle: "solid"
+            }}
                 justifyContent="center"
                 alignItems="center"
             >
@@ -109,29 +144,52 @@ export default function Account() {
 
 
             </Grid>
-            <Divider ml={3} mr={2} orientation="vertical" flexItem />
-            <Grid container item xs={12} md={8} direction="row">
+
+            <Grid container item xs={12} md={9} paddingLeft={3} direction="row">
 
                 <Grid item xs={12}>
-                    <Typography variant='h2' textAlign={"center"} mt={3} fontWeight={"bold"} style={{ fontFamily: 'Ubuntu' }}>Darien Miguel Sánchez Arévalo</Typography>
+                    <Typography variant='h2' textAlign={"center"} mt={3} fontWeight={"bold"} fontSize={50} >Darien Miguel Sánchez Arévalo</Typography>
                     <Divider variant="middle" sx={{ marginTop: "15px", marginBottom: "15px" }}> <Chip label="DESCRIPCIÓN" /> </Divider>
-                    <Typography variant="h6" textAlign={"center"}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim dui, a sodales turpis volutpat vel. In ornare, felis non sagittis cursus, magna risus tristique ex, non porttitor est nisl ut lectus. Morbi vulputate nibh est, id ultricies orci pharetra tincidunt. Nunc nibh elit, ultrices sit amet augue eu, viverra consequat erat.</Typography>
+                    <Typography variant="h6" textAlign={"center"} >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim dui, a sodales turpis volutpat vel. In ornare, felis non sagittis cursus, magna risus tristique ex, non porttitor est nisl ut lectus. Morbi vulputate nibh est, id ultricies orci pharetra tincidunt. Nunc nibh elit, ultrices sit amet augue eu, viverra consequat erat.</Typography>
                     <Divider variant="middle" sx={{ marginTop: "15px", marginBottom: "15px" }}> <Chip label="JUEGOS RESEÑADOS" /> </Divider>
                     <Grid container direction="row"
                         justifyContent="center"
                         alignItems="center">
-                        <Typography variant="caption" mb={5} mt={5}>No has reseñado ningún juego</Typography>
-
+                        <StyledCarousel className='styling-example' breakPoints={CbreakPoints}>
+                            <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="League of Legends" cat_1="MOBA" cat_2="Acción" />
+                            <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Apex Legends" cat_1="Shooter" cat_2="Battle Royale" />
+                            <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Battlefield 4" cat_1="Shooter" cat_2="Acción" />
+                            <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Skyrim" cat_1="Rol" cat_2="Aventura" />
+                            <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Crash Team Racing" cat_1="Carreras" cat_2="Plataformas" />
+                            <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="League of Legends" cat_1="MOBA" cat_2="Acción" />
+                            <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Apex Legends" cat_1="Shooter" cat_2="Battle Royale" />
+                            <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Battlefield 4" cat_1="Shooter" cat_2="Acción" />
+                            <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Skyrim" cat_1="Rol" cat_2="Aventura" />
+                            <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Crash Team Racing" cat_1="Carreras" cat_2="Plataformas" />
+                            <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="League of Legends" cat_1="MOBA" cat_2="Acción" />
+                            <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Apex Legends" cat_1="Shooter" cat_2="Battle Royale" />
+                            <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Battlefield 4" cat_1="Shooter" cat_2="Acción" />
+                            <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Skyrim" cat_1="Rol" cat_2="Aventura" />
+                            <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Crash Team Racing" cat_1="Carreras" cat_2="Plataformas" />
+                        </StyledCarousel>
                     </Grid>
                     <Divider variant="middle" sx={{ marginTop: "15px", marginBottom: "15px" }}> <Chip label="JUEGOS ACTIVOS" /> </Divider>
                     <Grid container direction="row"
                         justifyContent="center"
-                        alignItems="center">
-                        <ActiveGame></ActiveGame>
-                        <ActiveGame></ActiveGame>
-                        <ActiveGame></ActiveGame>
-                        <ActiveGame></ActiveGame>
-                        <ActiveGame></ActiveGame>
+                        alignItems="center"
+                        marginBottom={5}>
+                        <StyledCarousel breakPoints={CbreakPointsActive}>
+                            <ActiveGame></ActiveGame>
+                            <ActiveGame></ActiveGame>
+                            <ActiveGame></ActiveGame>
+                            <ActiveGame></ActiveGame>
+                            <ActiveGame></ActiveGame>
+                            <ActiveGame></ActiveGame>
+                            <ActiveGame></ActiveGame>
+                            <ActiveGame></ActiveGame>
+                            <ActiveGame></ActiveGame>
+                        </StyledCarousel>
+
 
                     </Grid>
                 </Grid>

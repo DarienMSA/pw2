@@ -28,12 +28,12 @@ export default function ToMessage() {
     return (
         <Fragment>
             <Grid container margin={1} sx={{ marginTop: "25px" }}>
-                <ToMessagePaper  >
+                <ToMessagePaper elevation={2}>
                     <Typography margin={2}>Muchas gracias por contestarme.Muchas gracias por contestarme.Muchas gracias por contestarme.Muchas gracias por contestarme.</Typography>
                     <Typography variant="caption" margin={2}>01:40pm</Typography>
                 </ToMessagePaper>
             </Grid>
-            <Divider variant="middle" sx={{ marginTop: "25px" }} />
+
         </Fragment>
     )
 }
