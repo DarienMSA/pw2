@@ -1,6 +1,7 @@
 
 import { alpha, Avatar, Badge, Divider, Grid, styled, Typography } from '@mui/material'
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -33,8 +34,14 @@ const StyledGrid = styled(Grid)(() => ({
 
 
 export default function UserPreview() {
+    const navigate = useNavigate();
+
+    const navigateFunction = url => () => {
+        navigate(url);
+
+    };
     return (
-        <StyledGrid container>
+        <StyledGrid container onClick={navigateFunction("/chat?v=123")}>
 
             <Grid container item xs={3} sm={3} md={3} marginTop={3} marginBottom={3}
                 direction="row"

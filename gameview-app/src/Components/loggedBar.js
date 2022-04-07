@@ -19,12 +19,14 @@ import ChatIcon from '@mui/icons-material/Chat';
 import { Avatar, Divider, ThemeProvider, Tooltip } from '@mui/material';
 import NotifItem from './NavBar/NotifItem';
 import btheme from './GameView-Theme';
+import { useNavigate } from 'react-router-dom';
 
 const settings = ['Perfil', 'Cerrar sesión'];
 
 
 
 export default function LoggedBar() {
+    const navigate = useNavigate();
 
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -71,8 +73,12 @@ export default function LoggedBar() {
         setAnchorElNotifMobile(null);
     };
 
-    const handleClickLogo = () => {
-        alert("me clicaste aaa");
+
+    const navigateFunction = url => () => {
+        handleCloseUserMenu();
+        handleCloseNotifMobileMenu();
+        navigate(url);
+
     };
 
 
@@ -116,18 +122,19 @@ export default function LoggedBar() {
                 </IconButton>
                 <p>Notificaciones</p>
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={navigateFunction("/account")}>
                 <IconButton
                     size="large"
 
                     color="inherit"
+
                 >
                     <AccountCircle />
                 </IconButton>
                 <p>Perfil</p>
             </MenuItem>
 
-            <MenuItem>
+            <MenuItem onClick={navigateFunction("/")}>
                 <IconButton
                     size="large"
                     color="inherit"
@@ -177,12 +184,12 @@ export default function LoggedBar() {
                             component="div"
                             sx={{ display: { xs: 'none', sm: 'block' } }}
                         >
-                            <img width={130} onClick={handleClickLogo} style={{ marginTop: 10, cursor: "pointer" }} src="https://media.discordapp.net/attachments/928138608894967828/958872190013567006/Logo_nav_noBG.png"></img>
+                            <img width={130} onClick={navigateFunction("/")} style={{ marginTop: 10, cursor: "pointer" }} src="https://media.discordapp.net/attachments/928138608894967828/958872190013567006/Logo_nav_noBG.png"></img>
                         </Typography>
                         <SearchBar />
 
                         <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                            <IconButton size="large" aria-label="show 4 new mails" color="inherit" onClick={navigateFunction("/chat")}>
                                 <Badge badgeContent={4} color="error">
                                     <ChatIcon color={"white_gv"} />
                                 </Badge>
@@ -219,11 +226,12 @@ export default function LoggedBar() {
                                     open={Boolean(anchorElUser)}
                                     onClose={handleCloseUserMenu}
                                 >
-                                    {settings.map((setting) => (
-                                        <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                            <Typography textAlign="center">{setting}</Typography>
-                                        </MenuItem>
-                                    ))}
+                                    <MenuItem onClick={navigateFunction("/account")}>
+                                        <Typography textAlign="center">Perfil</Typography>
+                                    </MenuItem>
+                                    <MenuItem onClick={navigateFunction("/")}>
+                                        <Typography textAlign="center">Cerrar sesión</Typography>
+                                    </MenuItem>
                                 </Menu>
                                 <Menu
                                     sx={{ mt: '45px' }}

@@ -5,8 +5,22 @@ import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import SearchIcon from '@mui/icons-material/Search';
 import { Button, Stack } from '@mui/material';
 import { blue } from '@mui/material/colors';
+import { useNavigate } from 'react-router-dom';
 
 export default function SearchBar() {
+    const navigate = useNavigate();
+
+    const navigateFunction = url => () => {
+        let v = document.getElementById("browseValue");
+        if (v.value != "") {
+            navigate(url + "?v=" + v.value);
+        } else {
+            navigate(url);
+        }
+
+
+    };
+
     const Search = styled('div')(({ theme }) => ({
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
@@ -52,6 +66,7 @@ export default function SearchBar() {
     }));
 
 
+
     return (
         <Stack direction="row" alignItems="center">
             <Search>
@@ -59,11 +74,12 @@ export default function SearchBar() {
                     <SportsEsportsIcon color={"white_gv"} />
                 </SearchIconWrapper>
                 <StyledInputBase
+                    id="browseValue"
                     placeholder="Buscar videojuego..."
                     inputProps={{ 'aria-label': 'search' }}
                 />
             </Search>
-            <Button variant="contained" color="buttonPrimary">
+            <Button onClick={navigateFunction("/browse")} variant="contained" color="buttonPrimary">
                 <SearchIcon color={"white_gv"} />
             </Button>
         </Stack>

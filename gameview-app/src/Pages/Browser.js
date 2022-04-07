@@ -1,9 +1,11 @@
 import { alpha, Divider, Grid, Pagination, styled, ThemeProvider, Typography } from '@mui/material'
 import React, { Fragment } from 'react'
+import { useLocation } from 'react-router-dom';
 import BrowserCard from '../Components/Browser/BrowserCard'
 import btheme from '../Components/GameView-Theme';
 
 const StyledPagination = styled(Pagination)(({ theme }) => ({
+
 
 
     '& .MuiPaginationItem-root': {
@@ -15,6 +17,9 @@ const StyledPagination = styled(Pagination)(({ theme }) => ({
 }));
 
 export default function Browser() {
+    const { search } = useLocation();
+    const searchParams = new URLSearchParams((search));
+
     return (
         <ThemeProvider theme={btheme}>
 
@@ -23,14 +28,20 @@ export default function Browser() {
 
                 <Grid container>
                     <Grid>
-                        <Typography variant="h4" sx={{ mt: 2.5, ml: 25 }}>
-                            Resultados de Búsqueda: Death By Daylight
-                        </Typography>
+
+                        {searchParams.has("v") && (
+                            <Typography variant="h4" sx={{ mt: 2.5, ml: 25 }}>Resultados de Búsqueda: {searchParams.get("v")}</Typography>
+                        )}
+                        {searchParams.has("v") || (
+                            <Typography variant="h4" sx={{ mt: 2.5, ml: 25 }}>Mostrándose todos los juegos:</Typography>
+                        )}
+
+
                     </Grid>
                 </Grid>
                 <Divider variant="inset" sx={{ mb: 1.5, mt: 0.5 }} />
                 <Grid container justifyContent="center">
-                    <BrowserCard image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="League of Legends" cat_1="MOBA" cat_2="Acción" cat_3="Amigos" />
+                    <BrowserCard image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="League of Legends" cat_1="MOBA" cat_2="Acción" cat_3="Amigos" id="123" />
                     <BrowserCard image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Dead by Daylight" cat_1="Terror" cat_2="Supervivencia" cat_3="Amigos" />
                     <BrowserCard image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Apex Legends" cat_1="Shooter" cat_2="Battle Royale" cat_3="Amigos" />
                     <BrowserCard image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Battlefield 4" cat_1="Shooter" cat_2="Acción" cat_3="Amigos" />

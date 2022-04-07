@@ -6,6 +6,7 @@ import Gamecollection from '../Components/Home/GameCollection';
 import CardGame from '../Components/CardGame';
 import Carousel from 'react-elastic-carousel';
 import btheme from '../Components/GameView-Theme';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const StyledCarousel = styled(Carousel)(({ theme }) => ({
 
@@ -37,8 +38,15 @@ const CbreakPointsActive = [
 ]
 
 export default function Account() {
-
+    const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
+    const { search } = useLocation();
+    const searchParams = new URLSearchParams((search));
+
+    const navigateFunction = url => () => {
+        navigate(url);
+
+    };
 
     const handleClick = d => () => {
         console.log(d);
@@ -140,9 +148,13 @@ export default function Account() {
                         </Grid>
                     </Paper>
 
-                    <Grid item mt={5} mb={5}>
-                        <Button fullWidth variant={"contained"} color="warning">Modificar</Button>
-                    </Grid>
+                    {searchParams.has("u") || (
+                        <Grid item mt={5} mb={5}>
+                            <Button fullWidth variant={"contained"} color="warning" onClick={navigateFunction("/account/update")}>Modificar</Button>
+                        </Grid>
+                    )}
+
+
 
 
                 </Grid>

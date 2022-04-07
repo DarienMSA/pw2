@@ -6,6 +6,7 @@ import React, { useState } from 'react'
 import ActiveUsers from '../Components/ShowGame/ActiveUsers';
 import Review from '../Components/ShowGame/Review';
 import btheme from '../Components/GameView-Theme';
+import { useNavigate } from 'react-router-dom';
 
 const style = {
     position: 'absolute',
@@ -80,6 +81,7 @@ const StyledStack = styled(Stack)(({ theme }) => ({
 
 export default function ShowGame() {
     const [value, setValue] = useState(4);
+    const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -93,6 +95,10 @@ export default function ShowGame() {
     const handleClose3 = () => setOpen3(false);
 
     const [checked, setChecked] = React.useState([1]);
+
+    const navigateFunction = url => () => {
+        navigate(url)
+    };
 
     const handleToggle = (value) => () => {
         const currentIndex = checked.indexOf(value);
@@ -133,25 +139,25 @@ export default function ShowGame() {
                             <Divider variant="middle" sx={{ marginTop: "15px", marginBottom: "15px", background: "gray" }}> </Divider>
                             <Typography mb={2} variant="h6" component={"h1"} >FromSoftware | 25/02/2022</Typography>
                             <StyledStack sx={{ overflow: "auto", paddingBottom: 2 }} direction={"row"} spacing={.5}>
-                                <Chip color="secondary" label="Fantasía Oscura" />
-                                <Chip color="secondary" label="Rol" />
-                                <Chip color="secondary" label="Difícil" />
-                                <Chip color="secondary" label="Mundo abierto" />
-                                <Chip color="secondary" label="Fantasía Oscura" />
-                                <Chip color="secondary" label="Rol" />
-                                <Chip color="secondary" label="Difícil" />
-                                <Chip color="secondary" label="Mundo abierto" />
-                                <Chip color="secondary" label="Fantasía Oscura" />
-                                <Chip color="secondary" label="Rol" />
-                                <Chip color="secondary" label="Difícil" />
-                                <Chip color="secondary" label="Mundo abierto" />
+                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Fantasía Oscura" />
+                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Rol" />
+                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Difícil" />
+                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Mundo abierto" />
+                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Fantasía Oscura" />
+                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Rol" />
+                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Difícil" />
+                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Mundo abierto" />
+                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Fantasía Oscura" />
+                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Rol" />
+                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Difícil" />
+                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Mundo abierto" />
                             </StyledStack>
 
                             <Typography variant="h6" textAlign={"left"} my={3}>Elden Ring es un videojuego de rol de acción desarrollado por FromSoftware y publicado por Bandai Namco Entertainment. El videojuego surge de una colaboración entre el director y diseñador Hidetaka Miyazaki y el novelista de fantasía George R. R. Martin. Fue lanzado a nivel mundial el 25 de febrero de 2022, fecha revelada durante el evento Summer Game Fest, para las plataformas Xbox One, Xbox Series X/S, Microsoft Windows, PlayStation 4 y PlayStation 5.</Typography>
                         </Grid>
                         <Grid item container xs={12} justifyContent="flex-end" alignItems="flex-end">
                             <Button onClick={handleOpen2} sx={{ marginRight: "30px", marginY: 1 }} variant="contained" color="warning" endIcon={<AddCircleIcon />}>Crear Reseña</Button>
-                            <Button onClick={handleOpen3} sx={{ marginRight: "30px", marginY: 1 }} variant="contained" color="warning" endIcon={<AddCircleIcon />}>Modificar Rseña</Button>
+                            <Button onClick={handleOpen3} sx={{ marginRight: "30px", marginY: 1 }} variant="contained" color="warning" endIcon={<AddCircleIcon />}>Modificar Reseña</Button>
 
                             <Modal
                                 open={open2}
@@ -207,7 +213,7 @@ export default function ShowGame() {
                                     />
                                     <Grid container justifyContent="-moz-initial" mt={2}>
                                         <Grid xs={10}>
-                                            <Rating name="no-value" defaultValue={1} size="large" />
+                                            <Rating precision={0.5} name="no-value" defaultValue={1} size="large" />
                                         </Grid>
                                         <Grid xs={2} sx={{
                                             display: "flex",
@@ -271,15 +277,17 @@ export default function ShowGame() {
                                         }}
                                     />
                                     <Grid container justifyContent="-moz-initial" mt={2}>
-                                        <Grid xs={10}>
+                                        <Grid xs={6}>
 
-                                            <Rating name="no-value" defaultValue={1} size="large" />
+                                            <Rating precision={0.5} name="no-value" defaultValue={1} size="large" />
                                         </Grid>
-                                        <Grid xs={2} sx={{
+                                        <Grid xs={6} sx={{
                                             display: "flex",
                                             flexDirection: 'row-reverse'
                                         }}>
-                                            <Button variant="contained" color="buttonPrimary" sx={{ color: "#FFF2EF" }}>Actualizar</Button>
+                                            <Button variant="contained" color="error" sx={{ color: "#FFF2EF" }}>Eliminar</Button>
+                                            <Button variant="contained" color="buttonPrimary" sx={{ color: "#FFF2EF", marginRight: 5 }}>Actualizar</Button>
+
                                         </Grid>
                                     </Grid>
                                 </Box>

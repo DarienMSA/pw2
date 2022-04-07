@@ -1,6 +1,7 @@
 import { Avatar, Box, Button, CardActionArea, CardContent, CardMedia, Chip, Divider, Grid, Modal, Paper, Rating, Stack, TextField, Typography } from '@mui/material'
 import { blue } from '@mui/material/colors';
 import React, { Fragment } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const style = {
     position: 'absolute',
@@ -16,34 +17,18 @@ const style = {
 };
 
 export default function BrowserCard(props) {
+    const navigation = useNavigate();
 
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-
-    const handleClick = () => {
-        console.info('You clicked the Chip.');
-    };
-    const handleClick2 = () => {
-        console.info('Click tittle');
+    const navigationFunction = url => () => {
+        navigation(url)
     };
 
-    const styles = theme => ({
-        tr: {
-            margin: 1,
-            '&:hover': {
-                margin: 0.5,
-            },
-        },
-    });
-
-    const classes = styles();
 
     return (
         <Fragment>
             <Paper elevation={6} sx={{ width: 720, margin: 1 }}>
-                <CardActionArea onClick={handleOpen} sx={{ display: "flex", alignContent: "flex-start" }}>
-                    <CardMedia className={classes.tr}
+                <CardActionArea onClick={navigationFunction("/browse/" + props.id)} sx={{ display: "flex", alignContent: "flex-start" }}>
+                    <CardMedia
                         component="img"
                         height="220px"
                         sx={{ width: 260, borderRadius: 1, margin: 1 }}
@@ -57,15 +42,15 @@ export default function BrowserCard(props) {
                             WebkitBoxOrient: 'vertical',
                             WebkitLineClamp: 1,
                             marginLeft: .5
-                        }} onClick={handleClick2}>
+                        }}>
                             {props.tittle}
                         </Typography>
                         <Stack direction="row" padding={1} spacing={0.5} sx={{ margin: 1, maxWidth: 460, overflow: "auto", overflowY: "hidden" }}>
-                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_1} onClick={handleClick} color="info" size="small" />
-                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_2} onClick={handleClick} color="info" size="small" />
-                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_3} onClick={handleClick} color="info" size="small" />
-                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_3} onClick={handleClick} color="info" size="small" />
-                            <Chip label="+" onClick={handleClick} color="info" size="small" />
+                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_1} color="info" size="small" />
+                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_2} color="info" size="small" />
+                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_3} color="info" size="small" />
+                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_3} color="info" size="small" />
+                            <Chip label="+" color="info" size="small" />
                         </Stack>
                         <Divider variant="middle" sx={{ mb: 1.5, mt: 0.5 }} />
                         <Typography sx={{

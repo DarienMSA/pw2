@@ -2,6 +2,7 @@ import { Avatar, AvatarGroup, Box, Button, Divider, Grid, Modal, Rating, styled,
 import React from 'react'
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import Comment from './Review/Comment';
+import { useNavigate } from 'react-router-dom';
 
 const style = {
     position: 'absolute',
@@ -31,6 +32,7 @@ const ReviewGrid = styled(Grid)(({ theme }) => ({
 }));
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
+    cursor: "pointer",
     [theme.breakpoints.down('md')]: {
         width: 150, height: 150
     },
@@ -58,6 +60,12 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 export default function Review() {
+    const navigate = useNavigate();
+
+    const navigateFunction = url => () => {
+        navigate(url);
+
+    };
 
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -70,7 +78,7 @@ export default function Review() {
         <ReviewGrid container sx={{ borderRadius: 16 }} my={2} alignItems={"center"} justifyContent={"center"}>
             <Grid container item xs={12} md={2} alignItems={"center"} justifyContent={"center"}>
                 <Box item>
-                    <StyledAvatar src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg"></StyledAvatar>
+                    <StyledAvatar onClick={navigateFunction("/account?u=" + "nombreUsu")} src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg"></StyledAvatar>
                 </Box>
                 <StyledBox item width={"100%"} textAlign={"center"}>
                     <Typography variant={"caption"} component="legend" fontWeight={"bold"}>3.5</Typography>
