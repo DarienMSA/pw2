@@ -1,6 +1,8 @@
-import { Avatar, AvatarGroup, Box, Button, Divider, Grid, Modal, Rating, styled, TextField, Typography } from '@mui/material'
+import { Avatar, AvatarGroup, Box, Button, Divider, Grid, IconButton, Modal, Rating, styled, TextField, Typography } from '@mui/material'
 import React from 'react'
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import Comment from './Review/Comment';
 import { useNavigate } from 'react-router-dom';
 
@@ -96,7 +98,8 @@ export default function Review() {
                 <Typography mb={2} variant="caption" component={"h1"} >25/02/2022</Typography>
                 <Divider sx={{ marginTop: "15px", marginBottom: "15px", background: "gray" }}> </Divider>
                 <Typography variant="p" textAlign={"left"} mt={3}>Elden Ring es un videojuego de rol de acción desarrollado por FromSoftware y publicado por Bandai Namco Entertainment. El videojuego surge de una colaboración entre el director y diseñador Hidetaka Miyazaki y el novelista de fantasía George R. R. Martin. Fue lanzado a nivel mundial el 25 de febrero de 2022, fecha revelada durante el evento Summer Game Fest, para las plataformas Xbox One, Xbox Series X/S, Microsoft Windows, PlayStation 4 y PlayStation 5.</Typography>
-                <Grid item xs={12} container alignItems={"center"} justifyContent={"space-between"} my={5}>
+
+                <Grid item xs={12} container alignItems={"center"} justifyContent={"space-between"} mt={3}>
                     <AvatarGroup total={24}>
                         <Avatar alt="Remy Sharp" src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg" />
                         <Avatar alt="Travis Howard" src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg" />
@@ -148,7 +151,10 @@ export default function Review() {
                         </Box>
                     </Modal>
                 </Grid>
-
+                <Grid item xs={12} container alignItems={"start"} justifyContent={"start"} mt={1}>
+                    <IconButton variant="p" textAlign={"left"} color="buttonPrimary"><ThumbUpIcon /></IconButton>
+                    <IconButton sx={{ mr: 5 }} variant="p" textAlign={"left"} color="warning"><ThumbDownIcon /></IconButton>
+                </Grid>
 
             </Grid>
         </ReviewGrid>
