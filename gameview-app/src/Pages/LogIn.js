@@ -1,6 +1,7 @@
 import { alpha, styled, Avatar, Button, Grid, Link, Paper, TextField, Typography, ThemeProvider } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import btheme from "../Components/GameView-Theme";
+import { useNavigate } from "react-router-dom";
 
 const SignInInput = styled(TextField)(({ theme }) => ({
     "& .MuiInputLabel-root": {
@@ -38,6 +39,12 @@ const WhiteButton = styled(Button)(({ theme }) => ({
 }));
 
 function LogInScreen() {
+    const navigate = useNavigate();
+
+    const navigateFunction = url => () => {
+        navigate(url);
+
+    };
 
     const paperStyle = { padding: 20, height: 420, width: 280, margin: "20px auto" }
     const avatarStyle = { backgroundColor: '#1bbd7e' }
@@ -51,15 +58,15 @@ function LogInScreen() {
                 </Grid>
                 <Paper elevation={8} style={paperStyle} sx={{ background: "#406882" }}>
                     <Grid sx={{ mt: 2, mb: 4 }} align='center'>
-                        <Typography variant="h4" fontWeight={"bold"} color={"#FFF2EF"}>Registrate</Typography>
+                        <Typography variant="h4" fontWeight={"bold"} color={"#FFF2EF"}>Inicia sesión</Typography>
                     </Grid>
                     <SignInInput fullWidth required color='info' margin='dense' variant="outlined" placeholder='Ingrese Usuario' label='Usuario' /><br />
                     <SignInInput fullWidth required color='info' margin='dense' variant="outlined" placeholder='Ingrese Contraseña' label='Contraseña' /><br />
 
-                    <WhiteButton href="/login" style={btnStyle} size='large' fullWidth variant='outlined' color='success'>Ingresar</WhiteButton>
-                    <Typography color={"#FFF2EF"} >¿Ya tienes una cuenta?&nbsp;
-                        <Link color="inherit" href="#">
-                            Ingresa
+                    <WhiteButton href="/login" style={btnStyle} size='large' fullWidth variant='outlined' color='success' onClick={navigateFunction("/")}>Ingresar</WhiteButton>
+                    <Typography color={"#FFF2EF"} >¿Aún no tienes una cuenta?&nbsp;
+                        <Link onClick={navigateFunction("/signin")} color="inherit" href="#">
+                            Regístrate
                         </Link>
                     </Typography>
                 </Paper>

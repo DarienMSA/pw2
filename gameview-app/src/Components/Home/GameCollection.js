@@ -31,7 +31,7 @@ export default function Gamecollection(props) {
     return (
         <Fragment>
             <Divider variant="middle" sx={{ mb: 1.5, mt: 0.5 }} />
-            <Grid container>
+            <Grid container textAlign={props.alignText} justifyContent={"left"} alignItems={"left"}>
                 <Paper elevation={0} style={paperStyle2} sx={{ background: "#E3EAEE" }}>
                     <Typography mb={2} variant="h4" fontWeight={"bold"} fontFamily={"Ubuntu"}>
                         {props.header}

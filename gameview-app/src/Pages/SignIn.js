@@ -1,8 +1,9 @@
-import { alpha, Avatar, Button, Grid, Link, Paper, styled, TextField, ThemeProvider, Typography } from "@mui/material";
+import { alpha, Avatar, Button, Grid, Link, Paper, Popover, styled, TextField, ThemeProvider, Typography } from "@mui/material";
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import { Fragment, useState } from "react";
 import { Box } from "@mui/system";
 import btheme from "../Components/GameView-Theme";
+import { useNavigate } from "react-router-dom";
 
 const SignInInput = styled(TextField)(({ theme }) => ({
     "& .MuiInputLabel-root": {
@@ -40,6 +41,25 @@ const WhiteButton = styled(Button)(({ theme }) => ({
 }));
 
 function SignInScreen() {
+    const navigate = useNavigate();
+
+    const navigateFunction = url => () => {
+
+        navigate(url);
+
+    };
+
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handlePopoverOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
 
     const paperStyle = { padding: 20, height: 600, width: 320 }
     const avatarStyle = { backgroundColor: '#1bbd7e' }
@@ -97,11 +117,39 @@ function SignInScreen() {
                     </Grid>
                     <SignInInput fullWidth required variant="outlined" margin="dense" onChange={onNombreFChange} placeholder='Ingrese Usuario' label='Usuario' /><br />
                     <SignInInput fullWidth required variant="outlined" margin="dense" onChange={onCorreoFChange} type='email' placeholder='Ingrese Correo' label='Correo' /><br />
-                    <SignInInput fullWidth required variant="outlined" margin="dense" onChange={onContraseñaFChange} type='password' placeholder='Ingrese Contraseña' label='Contraseña' /><br />
+                    <SignInInput aria-owns={open ? 'mouse-over-popover' : undefined}
+                        aria-haspopup="true"
+                        onMouseEnter={handlePopoverOpen}
+                        onMouseLeave={handlePopoverClose} fullWidth required variant="outlined" margin="dense" onChange={onContraseñaFChange} type='password' placeholder='Ingrese Contraseña' label='Contraseña' /><br />
+                    <Popover
+                        id="mouse-over-popover"
+                        sx={{
+                            pointerEvents: 'none',
+                        }}
+                        open={open}
+                        anchorEl={anchorEl}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                        }}
+                        onClose={handlePopoverClose}
+                        disableRestoreFocus
+                    >
+                        <Typography sx={{ p: 1 }}>La contraseña debe contener:</Typography>
+                        <Typography sx={{ p: 1 }}>mínimo 8 caracteres</Typography>
+                        <Typography sx={{ p: 1 }}>una mayúscula</Typography>
+                        <Typography sx={{ p: 1 }}>una minúscula</Typography>
+                        <Typography sx={{ p: 1 }}>un número </Typography>
+                        <Typography sx={{ p: 1 }}>un carácter especial: @#$%^+*!=</Typography>
+                    </Popover>
                     <SignInInput fullWidth required variant="outlined" sx={{ mb: 2 }} margin="dense" onChange={onRContraseñaFChange} type='password' placeholder='Confirme Contraseña' label='Confirme Contraseña' /><br />
                     <WhiteButton onClick={onRegister} style={btnStyle} size='large' fullWidth variant='contained'>Registrar</WhiteButton>
                     <Typography color={"#FFF2EF"}>¿Ya tienes una cuenta?&nbsp;
-                        <Link color="inherit" href="/memes">
+                        <Link onClick={navigateFunction("/login")} color="inherit" sx={{ cursor: "pointer" }}>
                             Ingresa
                         </Link>
                     </Typography>

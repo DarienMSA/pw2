@@ -5,6 +5,7 @@ import SendIcon from '@mui/icons-material/Send';
 import UserPreview from '../Components/Chat/UserPreview'
 import FromMessage from '../Components/Chat/FromMessage';
 import btheme from '../Components/GameView-Theme';
+import { useLocation } from 'react-router-dom';
 
 //style={{ borderStyle: "solid", borderColor: "blue", borderWidth: "1px" }}
 
@@ -49,6 +50,8 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 }));
 
 export default function Chat() {
+    const { search } = useLocation();
+    const searchParams = new URLSearchParams((search));
 
     return (
         <ThemeProvider theme={btheme}>
@@ -81,15 +84,20 @@ export default function Chat() {
                             borderColor: "#1A374D", overflow: "auto", overflowX: "hidden", display: "flex",
                             flexDirection: "column-reverse"
                         }} >
-                            <ToMessage />
-                            <FromMessage />
-                            <ToMessage />
-                            <ToMessage />
-                            <ToMessage />
-                            <FromMessage />
-                            <FromMessage />
-                            <ToMessage />
-                            <FromMessage />
+                            {searchParams.has("v") && (
+                                <>
+                                    <ToMessage />
+                                    <FromMessage />
+                                    <ToMessage />
+                                    <ToMessage />
+                                    <ToMessage />
+                                    <FromMessage />
+                                    <FromMessage />
+                                    <ToMessage />
+                                    <FromMessage />
+                                </>
+                            )}
+
 
 
 

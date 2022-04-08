@@ -17,9 +17,9 @@ export default function Home() {
                         Explora , reseña, puntúa y encuentra nuevos jugadores
                     </Typography>
                 </Grid>
-                <Gamecollection header="Más Recientes" />
-                <Gamecollection header="Mejores Votados" />
-                <Gamecollection header="Más Reseñados" />
+                <Gamecollection header="Más Recientes" alignText="left" />
+                <Gamecollection header="Mejores Votados" alignText="center" />
+                <Gamecollection header="Más Reseñados" alignText="right" />
             </Grid>
         </ThemeProvider>
     )

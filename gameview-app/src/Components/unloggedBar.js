@@ -5,8 +5,10 @@ import LoginIcon from '@mui/icons-material/Login';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import SearchBar from './SearchBar';
 import btheme from './GameView-Theme';
+import { useNavigate } from 'react-router-dom';
 
 export default function UnloggedBar() {
+    const navigate = useNavigate();
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -19,9 +21,12 @@ export default function UnloggedBar() {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
-    const handleClickLogo = () => {
-        alert("me clicaste aaa");
+    const navigateFunction = url => () => {
+        handleMobileMenuClose();
+        navigate(url);
+
     };
+
 
     const mobileMenuId = 'primary-search-account-menu-mobile';
 
@@ -41,13 +46,13 @@ export default function UnloggedBar() {
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
-            <MenuItem>
+            <MenuItem onClick={navigateFunction("/login")}>
                 <IconButton size="large" color="inherit">
                     <LoginIcon />
                 </IconButton>
                 <p>Iniciar sesión</p>
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={navigateFunction("/signin")}>
                 <IconButton size="large" color="inherit">
                     <PersonAddAltRoundedIcon />
                 </IconButton>
@@ -67,14 +72,14 @@ export default function UnloggedBar() {
                             noWrap
                             component="div"
                             sx={{ display: { xs: 'none', sm: 'block' } }}>
-                            <img width={130} onClick={handleClickLogo} style={{ marginTop: 10, cursor: "pointer" }} src="https://media.discordapp.net/attachments/928138608894967828/958872190013567006/Logo_nav_noBG.png"></img>
+                            <img width={130} onClick={navigateFunction("/")} style={{ marginTop: 10, cursor: "pointer" }} src="https://media.discordapp.net/attachments/928138608894967828/958872190013567006/Logo_nav_noBG.png"></img>
                         </Typography>
                         <SearchBar />
                         <Stack color='#FFF2EF' direction="row" alignItems="center" sx={{ display: { xs: 'none', md: 'flex' } }}>
-                            <Button sx={{ marginLeft: "auto" }} color="inherit" endIcon={<LoginIcon />}>
+                            <Button onClick={navigateFunction("/login")} sx={{ marginLeft: "auto" }} color="inherit" endIcon={<LoginIcon />}>
                                 INICIAR SESIÓN{" "}
                             </Button>
-                            <Button sx={{ marginLeft: "10px" }} color="inherit" endIcon={<PersonAddAltRoundedIcon />}>
+                            <Button onClick={navigateFunction("/signin")} sx={{ marginLeft: "10px" }} color="inherit" endIcon={<PersonAddAltRoundedIcon />}>
                                 REGISTRARSE{" "}
                             </Button>
                         </Stack>

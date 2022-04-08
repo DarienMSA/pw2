@@ -169,16 +169,16 @@ export default function ShowGame() {
                                     </Typography>
                                     <Grid container alignItems="center" justifyContent="center">
                                         <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', maxHeight: 200, overflow: "auto", overflowX: "hidden" }}>
-                                            {[0, 1, 2, 3, 4, 5].map((value) => {
-                                                const labelId = `checkbox-list-secondary-label-${value}`;
+                                            {badgeList.map((badge) => {
+                                                const labelId = `checkbox-list-secondary-label-${badge.index}`;
                                                 return (
                                                     <ListItem
-                                                        key={value}
+                                                        key={badge.index}
                                                         secondaryAction={
                                                             <Checkbox
                                                                 edge="end"
-                                                                onChange={handleToggle(value)}
-                                                                checked={checked.indexOf(value) !== -1}
+                                                                onChange={handleToggle(badge.index)}
+                                                                checked={checked.indexOf(badge.index) !== -1}
                                                                 inputProps={{ 'aria-labelledby': labelId }}
                                                             />
                                                         }
@@ -187,11 +187,11 @@ export default function ShowGame() {
                                                         <ListItemButton>
                                                             <ListItemAvatar>
                                                                 <Avatar
-                                                                    alt={`Avatar n°${value + 1}`}
-                                                                    src={`/static/images/avatar/${value + 1}.jpg`}
+                                                                    alt={badge.name}
+                                                                    src={badge.image}
                                                                 />
                                                             </ListItemAvatar>
-                                                            <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+                                                            <ListItemText id={labelId} primary={badge.name} />
                                                         </ListItemButton>
                                                     </ListItem>
                                                 );
@@ -235,16 +235,16 @@ export default function ShowGame() {
                                     </Typography>
                                     <Grid container alignItems="center" justifyContent="center">
                                         <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', maxHeight: 200, overflow: "auto", overflowX: "hidden" }}>
-                                            {[0, 1, 2, 3, 4, 5].map((value) => {
-                                                const labelId = `checkbox-list-secondary-label-${value}`;
+                                            {badgeList.map((badge) => {
+                                                const labelId = `checkbox-list-secondary-label-${badge.index}`;
                                                 return (
                                                     <ListItem
-                                                        key={value}
+                                                        key={badge.index}
                                                         secondaryAction={
                                                             <Checkbox
                                                                 edge="end"
-                                                                onChange={handleToggle(value)}
-                                                                checked={checked.indexOf(value) !== -1}
+                                                                onChange={handleToggle(badge.index)}
+                                                                checked={checked.indexOf(badge.index) !== -1}
                                                                 inputProps={{ 'aria-labelledby': labelId }}
                                                             />
                                                         }
@@ -253,11 +253,11 @@ export default function ShowGame() {
                                                         <ListItemButton>
                                                             <ListItemAvatar>
                                                                 <Avatar
-                                                                    alt={`Avatar n°${value + 1}`}
-                                                                    src={`/static/images/avatar/${value + 1}.jpg`}
+                                                                    alt={badge.name}
+                                                                    src={badge.image}
                                                                 />
                                                             </ListItemAvatar>
-                                                            <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+                                                            <ListItemText id={labelId} primary={badge.name} />
                                                         </ListItemButton>
                                                     </ListItem>
                                                 );
@@ -352,3 +352,14 @@ export default function ShowGame() {
         </ThemeProvider>
     )
 }
+
+
+const badgeList = [
+    { index: 1, name: "Depredador: Colector profesional de kills", image: "./Assets/sacrifical-dagger.png" },
+    { index: 2, name: "Cazador de tesoros: El mejor looteador del condado", image: "./Assets/sacrifical-dagger.png" },
+    { index: 3, name: "Estrella Fugaz: Recoge todos los objetos en menos de 39 segundos", image: "./Assets/sacrifical-dagger.png" },
+    { index: 4, name: "A la siguiente: Se el primero en morir", image: "./Assets/sacrifical-dagger.png" },
+    { index: 5, name: "Campeón: Gana un total de 50 partidas", image: "./Assets/sacrifical-dagger.png" },
+    { index: 6, name: "A paso lento: Asesino de cuerpo a cuerpo", image: "./Assets/sacrifical-dagger.png" }
+
+]
