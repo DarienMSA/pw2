@@ -84,7 +84,7 @@ export default function Chat() {
                             borderColor: "#1A374D", overflow: "auto", overflowX: "hidden", display: "flex",
                             flexDirection: "column-reverse"
                         }} >
-                            {searchParams.has("v") && (
+                            {searchParams.has("c") && (
                                 <>
                                     <ToMessage />
                                     <FromMessage />

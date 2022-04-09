@@ -41,7 +41,7 @@ export default function UserPreview() {
 
     };
     return (
-        <StyledGrid container onClick={navigateFunction("/chat?v=123")}>
+        <StyledGrid container onClick={navigateFunction("/chat?c=123")}>
 
             <Grid container item xs={3} sm={3} md={3} marginTop={3} marginBottom={3}
                 direction="row"
