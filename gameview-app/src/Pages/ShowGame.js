@@ -7,6 +7,9 @@ import ActiveUsers from '../Components/ShowGame/ActiveUsers';
 import Review from '../Components/ShowGame/Review';
 import btheme from '../Components/GameView-Theme';
 import { useNavigate } from 'react-router-dom';
+import imageBadge from '../Assets/icon.png';
+import LoggedBar from '../Components/loggedBar';
+import UnloggedBar from '../Components/unloggedBar';
 
 const style = {
     position: 'absolute',
@@ -94,6 +97,8 @@ export default function ShowGame() {
     const handleOpen3 = () => setOpen3(true);
     const handleClose3 = () => setOpen3(false);
 
+    const session = localStorage.getItem("UserSession");
+
     const [checked, setChecked] = React.useState([1]);
 
     const navigateFunction = url => () => {
@@ -115,6 +120,7 @@ export default function ShowGame() {
     //
     return (
         <ThemeProvider theme={btheme}>
+            {session !== null ? <LoggedBar></LoggedBar> : <UnloggedBar></UnloggedBar>}
             <Grid container>
                 <Grid container item xs={12} m={5} justifyContent={"center"} >
                     <Grid item container xs={12} md={3} justifyContent={"center"} alignItems={"center"} my={5} >
@@ -355,11 +361,11 @@ export default function ShowGame() {
 
 
 const badgeList = [
-    { index: 1, name: "Depredador: Colector profesional de kills", image: "./Assets/sacrifical-dagger.png" },
-    { index: 2, name: "Cazador de tesoros: El mejor looteador del condado", image: "./Assets/sacrifical-dagger.png" },
-    { index: 3, name: "Estrella Fugaz: Recoge todos los objetos en menos de 39 segundos", image: "./Assets/sacrifical-dagger.png" },
-    { index: 4, name: "A la siguiente: Se el primero en morir", image: "./Assets/sacrifical-dagger.png" },
-    { index: 5, name: "Campeón: Gana un total de 50 partidas", image: "./Assets/sacrifical-dagger.png" },
-    { index: 6, name: "A paso lento: Asesino de cuerpo a cuerpo", image: "./Assets/sacrifical-dagger.png" }
+    { index: 1, name: "Depredador: Colector profesional de kills", image: imageBadge },
+    { index: 2, name: "Cazador de tesoros: El mejor looteador del condado", image: imageBadge },
+    { index: 3, name: "Estrella Fugaz: Recoge todos los objetos en menos de 39 segundos", image: imageBadge },
+    { index: 4, name: "A la siguiente: Se el primero en morir", image: imageBadge },
+    { index: 5, name: "Campeón: Gana un total de 50 partidas", image: imageBadge },
+    { index: 6, name: "A paso lento: Asesino de cuerpo a cuerpo", image: imageBadge }
 
 ]

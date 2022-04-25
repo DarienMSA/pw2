@@ -3,6 +3,8 @@ import React, { Fragment } from 'react'
 import { useLocation } from 'react-router-dom';
 import BrowserCard from '../Components/Browser/BrowserCard'
 import btheme from '../Components/GameView-Theme';
+import LoggedBar from '../Components/loggedBar';
+import UnloggedBar from '../Components/unloggedBar';
 
 const StyledPagination = styled(Pagination)(({ theme }) => ({
 
@@ -19,10 +21,11 @@ const StyledPagination = styled(Pagination)(({ theme }) => ({
 export default function Browser() {
     const { search } = useLocation();
     const searchParams = new URLSearchParams((search));
+    const session = localStorage.getItem("UserSession");
 
     return (
         <ThemeProvider theme={btheme}>
-
+            {session !== null ? <LoggedBar></LoggedBar> : <UnloggedBar></UnloggedBar>}
 
             <Fragment>
 

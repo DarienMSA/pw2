@@ -1,47 +1,64 @@
 import { Avatar, Button, Chip, Divider, Grid, IconButton, Paper, Snackbar, styled, ThemeProvider, Typography } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
-import React from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import ActiveGame from '../Components/Account/ActiveGame';
 import Gamecollection from '../Components/Home/GameCollection';
 import CardGame from '../Components/CardGame';
 import Carousel from 'react-elastic-carousel';
 import btheme from '../Components/GameView-Theme';
 import { useLocation, useNavigate } from 'react-router-dom';
+import LoggedBar from '../Components/loggedBar';
+import UnloggedBar from '../Components/unloggedBar';
+import { GetUser } from '../Services/UserServices';
 
-const StyledCarousel = styled(Carousel)(({ theme }) => ({
 
-
-    '& .rec-arrow': {
-        background: "#406882",
-        color: "#FFF2EF",
-    },
-    '& .rec-dot_active': {
-        borderColor: "red",
-        background: "#406882",
-    }
-}));
-
-const CbreakPoints = [
-    { width: 1, itemsToShow: 1 },
-    { width: 550, itemsToShow: 3, itemsToScroll: 3 },
-    { width: 768, itemsToShow: 4, itemsToScroll: 4 },
-    { width: 960, itemsToShow: 5, itemsToScroll: 5 },
-    { width: 1200, itemsToShow: 6, itemsToScroll: 6 }
-]
-
-const CbreakPointsActive = [
-    { width: 1, itemsToShow: 1 },
-    { width: 550, itemsToShow: 2, itemsToScroll: 2 },
-    { width: 768, itemsToShow: 3, itemsToScroll: 3 },
-    { width: 960, itemsToShow: 4, itemsToScroll: 4 },
-    { width: 1200, itemsToShow: 5, itemsToScroll: 5 }
-]
 
 export default function Account() {
     const navigate = useNavigate();
-    const [open, setOpen] = React.useState(false);
+    const [openDiscordMessage, setOpenDiscordMessage] = React.useState(false);
     const { search } = useLocation();
     const searchParams = new URLSearchParams((search));
+    const session = localStorage.getItem("UserSession");
+
+
+    const [user, setUser] = useState({})
+    const [userSocial, setUserSocial] = useState({})
+    const [discordMessage, setDiscordMessage] = useState("");
+
+    useEffect(() => {
+        if (session === null) {
+            navigate("/")
+        } else {
+            async function getUser() {
+                let id;
+                if (searchParams.has("u"))
+                    id = searchParams.get("u");
+                else
+                    id = session;
+
+                const data = await GetUser(id);
+                if (data.birthday === null)
+                    data.birthday = "";
+
+                setUser(data);
+                setUserSocial(data.social);
+                if (data.email) {
+                    if (data.social.discord !== "")
+                        setDiscordMessage("La cuenta se ha copiado en el portapapeles (" + data.social.discord + ")")
+                    else
+                        setDiscordMessage("El usuario no tiene disponible su cuenta de Discord");
+                } else {
+                    navigate("/")
+                }
+            }
+            getUser();
+        }
+
+
+
+    }, []);
+
+
 
     const navigateFunction = url => () => {
         navigate(url);
@@ -49,9 +66,11 @@ export default function Account() {
     };
 
     const handleClick = d => () => {
-        console.log(d);
-        navigator.clipboard.writeText(d);
-        setOpen(true);
+        if (d != "") {
+            navigator.clipboard.writeText(d);
+        }
+        setOpenDiscordMessage(true);
+
     };
 
     const handleClose = (event, reason) => {
@@ -59,7 +78,7 @@ export default function Account() {
             return;
         }
 
-        setOpen(false);
+        setOpenDiscordMessage(false);
     };
 
     const ProfileImg = styled(Avatar)(({ theme }) => ({
@@ -74,6 +93,11 @@ export default function Account() {
         },
 
     }));
+
+    const onClickSocialMedia = url => () => {
+        if (url !== "")
+            window.open(url, '_blank');
+    }
 
     const action = (
         <React.Fragment>
@@ -97,8 +121,38 @@ export default function Account() {
         },
     }));
 
+    const StyledCarousel = styled(Carousel)(({ theme }) => ({
+
+
+        '& .rec-arrow': {
+            background: "#406882",
+            color: "#FFF2EF",
+        },
+        '& .rec-dot_active': {
+            borderColor: "red",
+            background: "#406882",
+        }
+    }));
+
+    const CbreakPoints = [
+        { width: 1, itemsToShow: 1 },
+        { width: 550, itemsToShow: 3, itemsToScroll: 3 },
+        { width: 768, itemsToShow: 4, itemsToScroll: 4 },
+        { width: 960, itemsToShow: 5, itemsToScroll: 5 },
+        { width: 1200, itemsToShow: 6, itemsToScroll: 6 }
+    ]
+
+    const CbreakPointsActive = [
+        { width: 1, itemsToShow: 1 },
+        { width: 550, itemsToShow: 2, itemsToScroll: 2 },
+        { width: 768, itemsToShow: 3, itemsToScroll: 3 },
+        { width: 960, itemsToShow: 4, itemsToScroll: 4 },
+        { width: 1200, itemsToShow: 5, itemsToScroll: 5 }
+    ]
+
     return (
         <ThemeProvider theme={btheme}>
+            {session !== null ? <LoggedBar></LoggedBar> : <UnloggedBar></UnloggedBar>}
             <Grid container direction="row" >
                 <Grid container item xs={12} md={3} direction={"column"} sx={{
                     borderRightWidth: "5px", borderTopWidth: "0px", borderBottomWidth: "0px", borderLeftWidth: "0px",
@@ -108,13 +162,18 @@ export default function Account() {
                     alignItems="center"
                 >
                     <Grid item mt={5} >
-                        <ProfileImg src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg"></ProfileImg>
+
+                        <ProfileImg src={user.profilePic}></ProfileImg>
+
                     </Grid>
 
-                    <Grid item mb={5} mt={5}>
-                        <Typography mb={2} mt={2}>Correo: <Typography display="inline" fontWeight={"bold"}>sadarien@gmail.com </Typography></Typography>
-                        <Typography mb={2} mt={2}>Juegos Reseñados: <Typography display="inline" fontWeight={"bold"}>23 </Typography></Typography>
-                        <Typography mb={2} mt={2}>Fecha de nacimiento: <Typography display="inline" fontWeight={"bold"}>1998/09/19 </Typography></Typography>
+                    <Grid item mb={5} mt={5} textAlign={"center"}>
+                        <Typography mb={2} mt={2}>Correo: </Typography> <Typography display="inline" fontWeight={"bold"}> {user.email} </Typography>
+                        <Typography mb={2} mt={2}>Juegos Reseñados: </Typography> <Typography display="inline" fontWeight={"bold"}>23 </Typography>
+                        {
+                            user.birthday != "" ? <Fragment> <Typography mb={2} mt={2}>Fecha de nacimiento: </Typography> <Typography display="inline" fontWeight={"bold"}>{user.birthday} </Typography> </Fragment> : <Typography sx={{ display: "none" }}></Typography>
+                        }
+
                     </Grid>
 
 
@@ -124,24 +183,24 @@ export default function Account() {
                         >
                             <Grid container item xs={6} md={12} lg={6} justifyContent="center" mt={5} mb={5}
                                 alignItems="center">
-                                <SocialMedia src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1024px-Facebook_Logo_%282019%29.png"></SocialMedia>
+                                <SocialMedia onClick={onClickSocialMedia(userSocial.facebook)} src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1024px-Facebook_Logo_%282019%29.png"></SocialMedia>
                             </Grid>
                             <Grid container item xs={6} md={12} lg={6} justifyContent="center" mt={5} mb={5}
                                 alignItems="center">
-                                <SocialMedia src="http://assets.stickpng.com/images/580b57fcd9996e24bc43c53e.png"></SocialMedia>
+                                <SocialMedia onClick={onClickSocialMedia(userSocial.twitter)} src="http://assets.stickpng.com/images/580b57fcd9996e24bc43c53e.png"></SocialMedia>
                             </Grid>
                             <Grid container item xs={6} md={12} lg={6} justifyContent="center" mt={5} mb={5}
                                 alignItems="center">
-                                <SocialMedia src="http://assets.stickpng.com/images/580b57fcd9996e24bc43c521.png"></SocialMedia>
+                                <SocialMedia onClick={onClickSocialMedia(userSocial.instagram)} src="http://assets.stickpng.com/images/580b57fcd9996e24bc43c521.png"></SocialMedia>
                             </Grid>
                             <Grid container item xs={6} md={12} lg={6} justifyContent="center" mt={5} mb={5}
                                 alignItems="center">
-                                <SocialMedia onClick={handleClick("Daze#7023")} src="https://logodownload.org/wp-content/uploads/2017/11/discord-logo-7-1.png"></SocialMedia>
+                                <SocialMedia onClick={handleClick(userSocial.discord)} src="https://logodownload.org/wp-content/uploads/2017/11/discord-logo-7-1.png"></SocialMedia>
                                 <Snackbar
-                                    open={open}
+                                    open={openDiscordMessage}
                                     autoHideDuration={6000}
                                     onClose={handleClose}
-                                    message="La cuenta se ha copiado en el portapapeles (Daze#7023)"
+                                    message={discordMessage}
                                     action={action}
                                 />
                             </Grid>
@@ -162,9 +221,14 @@ export default function Account() {
                 <Grid container item xs={12} md={9} paddingLeft={3} direction="row">
 
                     <Grid item xs={12}>
-                        <Typography variant='h2' textAlign={"center"} mt={3} fontWeight={"bold"} fontSize={50} >Darien Miguel Sánchez Arévalo</Typography>
+                        <Typography variant='h2' textAlign={"center"} mt={3} fontWeight={"bold"} fontSize={50} >{user.name}</Typography>
                         <Divider variant="middle" sx={{ marginTop: "15px", marginBottom: "15px" }}> <Chip label="DESCRIPCIÓN" /> </Divider>
-                        <Typography variant="h6" textAlign={"center"} >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim dui, a sodales turpis volutpat vel. In ornare, felis non sagittis cursus, magna risus tristique ex, non porttitor est nisl ut lectus. Morbi vulputate nibh est, id ultricies orci pharetra tincidunt. Nunc nibh elit, ultrices sit amet augue eu, viverra consequat erat.</Typography>
+
+                        {
+                            user.desc != "" ? <Fragment><Typography variant="h6" textAlign={"center"} > {user.desc} </Typography></Fragment>
+                                : <Fragment><Typography variant="caption" component={"h6"} textAlign={"center"} > No hay descripción. </Typography></Fragment>
+                        }
+
                         <Divider variant="middle" sx={{ marginTop: "15px", marginBottom: "15px" }}> <Chip label="JUEGOS RESEÑADOS" /> </Divider>
                         <Grid container direction="row"
                             justifyContent="center"

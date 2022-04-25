@@ -6,6 +6,8 @@ import UserPreview from '../Components/Chat/UserPreview'
 import FromMessage from '../Components/Chat/FromMessage';
 import btheme from '../Components/GameView-Theme';
 import { useLocation } from 'react-router-dom';
+import LoggedBar from '../Components/loggedBar';
+import UnloggedBar from '../Components/unloggedBar';
 
 //style={{ borderStyle: "solid", borderColor: "blue", borderWidth: "1px" }}
 
@@ -52,9 +54,11 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 export default function Chat() {
     const { search } = useLocation();
     const searchParams = new URLSearchParams((search));
+    const session = localStorage.getItem("UserSession");
 
     return (
         <ThemeProvider theme={btheme}>
+            {session !== null ? <LoggedBar></LoggedBar> : <UnloggedBar></UnloggedBar>}
             <Fragment>
 
                 <Grid container maxHeight="93vh">

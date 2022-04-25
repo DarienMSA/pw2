@@ -15,7 +15,7 @@ exports.userBadges_getUserGameBadges = async (req, res) => {
     try {
         const { idUser, idGame } = req.params;
         const data = await _USER_BADGES_.find({ userId: idUser, gameId: idGame }).populate('badges');
-        if (data) {
+        if (data.length == 0) {
             res.send(data);
         } else {
             res.send({

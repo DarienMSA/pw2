@@ -40,7 +40,17 @@ exports.user_create = async (req, res) => {
         const { body } = req;
 
         //validación de información.
-        if (!validateEmail(body.email)) {
+        const userDB = await _USER_.find({ email: body.email });
+        if (userDB.length != 0) {
+            console.log(userDB)
+            res.send({
+                message: "Ya existe un usuario con ese correo.",
+                code: "UE04-C"
+            })
+            console.error(`message: "Ya existe un usuario con ese correo.",
+            code: "UE04-C"`)
+        }
+        else if (!validateEmail(body.email)) {
             res.send({
                 message: "Ingresa un correo electrónico válido.",
                 code: "UE00-C"
@@ -164,7 +174,7 @@ exports.user_delete = async (req, res) => {
 exports.user_logIn = async (req, res) => {
     try {
         const { email, password } = req.params;
-        const userDB = await _USER_.find({ email, password });
+        const userDB = await _USER_.findOne({ email, password });
         if (userDB.length != 0) {
             res.send({
                 message: "Usuario encontrado",

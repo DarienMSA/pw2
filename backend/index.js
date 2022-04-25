@@ -1,7 +1,10 @@
 const _BODYPARSER_ = require("body-parser");
 const _EXPRESS_ = require("express");
+const _CORS_ = require("cors");
 const _APP_ = _EXPRESS_();
 const _PORT_ = 5000;
+
+_APP_.use(_CORS_());
 require('./models/connection')
 
 /** requires de las rutas */

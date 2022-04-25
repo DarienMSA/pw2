@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -20,6 +20,7 @@ import { Avatar, Divider, ThemeProvider, Tooltip } from '@mui/material';
 import NotifItem from './NavBar/NotifItem';
 import btheme from './GameView-Theme';
 import { useNavigate } from 'react-router-dom';
+import { GetUser } from '../Services/UserServices';
 
 const settings = ['Perfil', 'Cerrar sesión'];
 
@@ -32,8 +33,28 @@ export default function LoggedBar() {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [anchorElNotif, setAnchorElNotif] = React.useState(null);
     const [anchorElNotifMobile, setAnchorElNotifMobile] = React.useState(null);
+    const session = localStorage.getItem("UserSession");
+    const [user, setUser] = useState({})
 
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+
+    useEffect(() => {
+        async function getUser() {
+
+            const data = await GetUser(session);
+
+            if (data.email) {
+                setUser(data);
+            } else {
+                navigate("/")
+                console.log("error")
+            }
+        }
+        getUser();
+
+
+    }, []);
 
     const handleMobileMenuClose = () => {
         setMobileMoreAnchorEl(null);
@@ -73,6 +94,13 @@ export default function LoggedBar() {
         setAnchorElNotifMobile(null);
     };
 
+    const logOut = url => () => {
+        localStorage.removeItem("UserSession");
+        handleCloseUserMenu();
+        handleCloseNotifMobileMenu();
+        navigate(url);
+    }
+
 
     const navigateFunction = url => () => {
         handleCloseUserMenu();
@@ -80,6 +108,8 @@ export default function LoggedBar() {
         navigate(url);
 
     };
+
+
 
 
 
@@ -134,7 +164,7 @@ export default function LoggedBar() {
                 <p>Perfil</p>
             </MenuItem>
 
-            <MenuItem onClick={navigateFunction("/")}>
+            <MenuItem onClick={logOut("/login")}>
                 <IconButton
                     size="large"
                     color="inherit"
@@ -207,7 +237,7 @@ export default function LoggedBar() {
                             <Box sx={{ flexGrow: 0, marginLeft: '15px' }}>
                                 <Tooltip title="Open settings">
                                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                        <Avatar alt="Remy Sharp" src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg" />
+                                        <Avatar src={user.profilePic}></Avatar>
                                     </IconButton>
                                 </Tooltip>
                                 <Menu
@@ -229,7 +259,7 @@ export default function LoggedBar() {
                                     <MenuItem onClick={navigateFunction("/account")}>
                                         <Typography textAlign="center">Perfil</Typography>
                                     </MenuItem>
-                                    <MenuItem onClick={navigateFunction("/")}>
+                                    <MenuItem onClick={logOut("/login")}>
                                         <Typography textAlign="center">Cerrar sesión</Typography>
                                     </MenuItem>
                                 </Menu>

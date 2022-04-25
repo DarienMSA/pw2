@@ -14,6 +14,8 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import PanoramaIcon from '@mui/icons-material/Panorama';
 import DescriptionIcon from '@mui/icons-material/Description';
 import btheme from '../Components/GameView-Theme';
+import LoggedBar from '../Components/loggedBar';
+import UnloggedBar from '../Components/unloggedBar';
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     '& label.Mui-focused': {
@@ -121,6 +123,8 @@ export default function UpdateAccount() {
     const handleOpenModalPass = () => setOpenModalPass(true);
     const handleCloseModalPass = () => setOpenModalPass(false);
 
+    const session = localStorage.getItem("UserSession");
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -146,6 +150,7 @@ export default function UpdateAccount() {
 
     return (
         <ThemeProvider theme={btheme}>
+            {session !== null ? <LoggedBar></LoggedBar> : <UnloggedBar></UnloggedBar>}
             <StyledBox>
                 <Typography variant="h3" mb={5}>Cuenta</Typography>
                 <AppBar position="static" color='navColor'>
