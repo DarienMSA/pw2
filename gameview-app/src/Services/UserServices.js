@@ -28,6 +28,20 @@ export const CreateUser = async (data) => {
     }
 }
 
+export const UpdateUser = async (id, data) => {
+    try {
+        const response = await axios.put("/user/" + id, data);
+        if (response.status == 200) {
+            return response.data;
+        } else {
+            return []
+        }
+    } catch (err) {
+        console.error(err);
+        return err
+    }
+}
+
 export const LogIn = async (email, pass) => {
     try {
         const response = await axios.get("/user/" + email + "/" + pass);

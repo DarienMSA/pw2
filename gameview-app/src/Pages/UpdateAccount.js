@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@mui/material/styles';
@@ -16,6 +16,9 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import btheme from '../Components/GameView-Theme';
 import LoggedBar from '../Components/loggedBar';
 import UnloggedBar from '../Components/unloggedBar';
+import { GetUser, UpdateUser } from '../Services/UserServices';
+import { useNavigate } from 'react-router-dom';
+import { firebaseApp } from '../fb';
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     '& label.Mui-focused': {
@@ -113,6 +116,7 @@ function a11yProps(index) {
 }
 
 export default function UpdateAccount() {
+    const navigate = useNavigate();
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
     const [openModalEmail, setOpenModalEmail] = React.useState(false);
@@ -124,6 +128,31 @@ export default function UpdateAccount() {
     const handleCloseModalPass = () => setOpenModalPass(false);
 
     const session = localStorage.getItem("UserSession");
+    const [user, setUser] = useState({})
+    const [userSocials, setUserSocials] = useState({})
+    const [image, setImage] = useState("");
+    useEffect(() => {
+        if (session === null) {
+            navigate("/")
+        } else {
+            async function getUser() {
+
+                const data = await GetUser(session);
+
+                if (data.email) {
+                    setUser(data);
+                    setUserSocials(data.social)
+                } else {
+                    navigate("/")
+                    console.log("error")
+                }
+            }
+            getUser();
+        }
+
+
+
+    }, []);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -145,6 +174,146 @@ export default function UpdateAccount() {
             color: "black",
         }
     }));
+
+    const onImageChange = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setImage(event.target.files[0]);
+            setUser({
+                ...user,
+                "profilePic": URL.createObjectURL(event.target.files[0])
+            }
+            );
+        }
+    }
+
+    const handleOnChangePD = (e) => {
+        const { name, value } = e.target;
+
+        setUser({
+            ...user,
+            [name]: value
+        })
+    }
+
+    const handleOnChangeSM = (e) => {
+        const { name, value } = e.target;
+
+        setUserSocials({
+            ...userSocials,
+            [name]: value
+        })
+    }
+
+
+
+    const saveUser = async () => {
+        let updatedUser = user;
+        if (image !== "") {
+            const storageRef = firebaseApp.storage().ref();
+            const path = storageRef.child(updatedUser._id)
+            await path.put(image);
+            const url = await path.getDownloadURL();
+            updatedUser.profilePic = url;
+        }
+
+        const response = await UpdateUser(session, updatedUser);
+        if (response.data.email) {
+            setUser(updatedUser);
+        } else {
+            navigate("/")
+            console.log(response)
+        }
+
+    }
+
+
+
+    const validateFacebook = (pass) => {
+        return String(pass)
+            .match(
+                /(?:https?:\/\/)(?:www\.)(mbasic.facebook|m\.facebook|facebook|fb)\.(com|me)\/(?:(?:\w\.)*#!\/)?(?:pages\/)?(?:[\w\-\.]*\/)*([\w\-\.]*)/
+            );
+    };
+
+    const validateTwitter = (pass) => {
+        return String(pass)
+            .match(
+                /(?:https?:\/\/)(?:www\.)(mbasic.twitter|m\.twitter|twitter|fb)\.(com|me)\/(?:(?:\w\.)*#!\/)?(?:pages\/)?(?:[\w\-\.]*\/)*([\w\-\.]*)/
+            );
+    };
+
+    const validateInstagram = (pass) => {
+        return String(pass)
+            .match(
+                /(?:https?:\/\/)(?:www\.)(mbasic.instagram|m\.instagram|instagram|fb)\.(com|me)\/(?:(?:\w\.)*#!\/)?(?:pages\/)?(?:[\w\-\.]*\/)*([\w\-\.]*)/
+            );
+    };
+
+    const validateDiscord = (pass) => {
+        return String(pass)
+            .match(
+                /^.{3,32}#[0-9]{4}$/
+            );
+    };
+
+
+    const validateSocials = () => {
+        let bool = false;
+        document.getElementById("info-facebook").style.display = "none";
+        document.getElementById("info-twitter").style.display = "none";
+        document.getElementById("info-instagram").style.display = "none";
+        document.getElementById("info-discord").style.display = "none";
+        if (!validateFacebook(userSocials.facebook) && userSocials.facebook !== "") {
+            bool = true;
+            document.getElementById("info-facebook").style.display = "block";
+        }
+        if (!validateTwitter(userSocials.twitter) && userSocials.twitter !== "") {
+            bool = true;
+            document.getElementById("info-twitter").style.display = "block";
+        }
+        if (!validateInstagram(userSocials.instagram) && userSocials.instagram !== "") {
+            bool = true;
+            document.getElementById("info-instagram").style.display = "block";
+        }
+        if (!validateDiscord(userSocials.discord) && userSocials.discord !== "") {
+            bool = true;
+            document.getElementById("info-discord").style.display = "block";
+        }
+        if (!bool) {
+            handleOpenModalPass()
+        }
+    }
+
+    const validatePD = () => {
+        let bool = false;
+        document.getElementById("info-name").style.display = "none";
+        document.getElementById("info-desc").style.display = "none";
+        if (user.name.length <= 3 || user.name.length >= 31) {
+            bool = true;
+            document.getElementById("info-name").style.display = "block";
+        }
+        if (user.desc.length >= 201) {
+            bool = true;
+            document.getElementById("info-desc").style.display = "block";
+        }
+        if (!bool) {
+            handleOpenModalPass()
+        }
+    }
+
+    const saveUserSocialMedia = async () => {
+        let updatedUser = user;
+        updatedUser.social = userSocials;
+
+        const response = await UpdateUser(session, updatedUser);
+        if (response.data.email) {
+            setUser(updatedUser);
+        } else {
+            navigate("/")
+            console.log(response)
+        }
+
+    }
 
 
 
@@ -177,7 +346,7 @@ export default function UpdateAccount() {
                     <TabPanel value={value} index={0} dir={theme.direction}>
 
                         <Stack direction="row" alignItems="start" spacing={2}>
-                            <DisabledTextField type={"email"} helperText="Edita tu correo electrónico" id="edit-email" label="Correo electrónico" variant="outlined" fullWidth defaultValue={"sadarien@gmail.com"} disabled />
+                            <DisabledTextField type={"email"} helperText="Edita tu correo electrónico" id="edit-email" label="Correo electrónico" variant="outlined" fullWidth defaultValue={user.email} disabled />
                             <label htmlFor="edit-email">
                                 <IconButton onClick={handleOpenModalEmail} color="buttonPrimary" component="span">
                                     <EditIcon />
@@ -249,6 +418,8 @@ export default function UpdateAccount() {
                                 <TextField
                                     id="input-with-icon-textfield"
                                     label="Nombre"
+                                    name="name"
+                                    onChange={handleOnChangePD}
                                     color={"info"}
                                     InputProps={{
                                         startAdornment: (
@@ -259,17 +430,18 @@ export default function UpdateAccount() {
                                     }}
                                     variant="standard"
                                     fullWidth
-                                    defaultValue={"Darien Miguel Sánchez Arévalo"}
+                                    defaultValue={user.name}
                                 />
+                                <Typography variant="caption" color={"#F55353"} fontWeight="bold" id="info-name" sx={{ display: 'none' }}>El nombre debe ser entre 4 y 30 caracteres.</Typography>
                             </Grid>
 
                             <Grid container item xs={6} md={4} textAlign={"center"}>
                                 <Grid container item xs={12} justifyContent="center" alignItems="center" m={5}>
-                                    <Avatar sx={{ width: "100px", height: "100px" }} src='https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg' />
+                                    <Avatar id="AvatarProfile" sx={{ width: "100px", height: "100px" }} src={user.profilePic} />
                                 </Grid>
                                 <Grid item xs={12}>
                                     <label htmlFor="contained-button-file">
-                                        <StyledInput accept="image/*" id="contained-button-file" multiple type="file" />
+                                        <StyledInput accept="image/*" onChange={onImageChange} id="contained-button-file" multiple type="file" />
                                         <Button variant="contained" component="span" color={"buttonPrimary"} sx={{ color: "white" }} endIcon={<PanoramaIcon />}>
                                             Subir imagen
                                         </Button>
@@ -285,8 +457,10 @@ export default function UpdateAccount() {
                                     id="date"
                                     label="Fecha de nacimiento"
                                     type="date"
+                                    name="birthday"
+                                    onChange={handleOnChangePD}
                                     color={"info"}
-                                    defaultValue="2017-05-24"
+                                    defaultValue={user.birthday}
                                     fullWidth
                                     InputLabelProps={{
                                         shrink: true,
@@ -302,15 +476,18 @@ export default function UpdateAccount() {
                                     aria-label=""
                                     id="descriptionAccount"
                                     minRows={3}
+                                    name="desc"
+                                    onChange={handleOnChangePD}
                                     placeholder="Introduce tu descripción."
                                     style={{ width: "100%" }}
-                                    defaultValue={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim dui, a sodales turpis volutpat vel. In ornare, felis non sagittis cursus, magna risus tristique ex, non porttitor est nisl ut lectus. Morbi vulputate nibh est, id ultricies orci pharetra tincidunt. Nunc nibh elit, ultrices sit amet augue eu, viverra consequat erat."}
+                                    defaultValue={user.desc}
                                 />
+                                <Typography variant="caption" color={"#F55353"} fontWeight="bold" id="info-desc" sx={{ display: 'none' }}>La descripción debe tener un máximo de 200 carácteres.</Typography>
 
                             </Grid>
 
                             <Grid container item xs={12} justifyContent="center" alignItems="center" mt={15}>
-                                <Button onClick={handleOpenModalPass} variant={"contained"} color={"warning"} sx={{ width: "80%" }}>
+                                <Button onClick={validatePD} variant={"contained"} color={"warning"} sx={{ width: "80%" }}>
                                     GUARDAR CAMBIOS
                                 </Button>
 
@@ -334,7 +511,7 @@ export default function UpdateAccount() {
 
                                                 <StyledTextField sx={{ marginY: 5 }} type={"password"} helperText="Escribe tu contraseña" id="edit-email" label="Verifica contraseña" variant="outlined" fullWidth />
                                             </Typography>
-                                            <Button variant={"contained"} color={"buttonPrimary"} sx={{ color: "white" }} endIcon={<SaveAltIcon />}>Guardar cambios</Button>
+                                            <Button variant={"contained"} onClick={saveUser} color={"buttonPrimary"} sx={{ color: "white" }} endIcon={<SaveAltIcon />}>Guardar cambios</Button>
                                         </Box>
                                     </Fade>
                                 </Modal>
@@ -347,7 +524,7 @@ export default function UpdateAccount() {
                         <TextField
                             id="input-with-icon-textfield"
                             sx={{ marginY: "50px" }} color={"info"}
-                            helperText="Introduce el enlace a tu cuenta."
+                            helperText="Introduce el enlace a tu cuenta. Ej. https://www.facebook.com/mypage"
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -357,12 +534,15 @@ export default function UpdateAccount() {
                             }}
                             variant="standard"
                             fullWidth
-                            defaultValue={"twitter.com"}
+                            name="facebook"
+                            onChange={handleOnChangeSM}
+                            defaultValue={userSocials.facebook}
                         />
+                        <Typography variant="caption" color={"#F55353"} fontWeight="bold" id="info-facebook" sx={{ display: 'none' }}>Introduce un enlace de Facebook válido.</Typography>
 
                         <TextField
                             id="input-with-icon-textfield"
-                            helperText="Introduce el enlace a tu cuenta."
+                            helperText="Introduce el enlace a tu cuenta. Ej. https://twitter.com/mypage"
                             sx={{ marginY: "50px" }} color={"info"}
                             InputProps={{
                                 startAdornment: (
@@ -373,13 +553,16 @@ export default function UpdateAccount() {
                             }}
                             variant="standard"
                             fullWidth
-                            defaultValue={"instagram.com"}
+                            name="twitter"
+                            onChange={handleOnChangeSM}
+                            defaultValue={userSocials.twitter}
                         />
+                        <Typography variant="caption" color={"#F55353"} fontWeight="bold" id="info-twitter" sx={{ display: 'none' }}>Introduce un enlace de Twitter válido.</Typography>
 
                         <TextField
                             id="input-with-icon-textfield"
                             sx={{ marginY: "50px" }} color={"info"}
-                            helperText="Introduce el enlace a tu cuenta."
+                            helperText="Introduce el enlace a tu cuenta. Ej. https://www.instagram.com/mypage"
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -389,8 +572,13 @@ export default function UpdateAccount() {
                             }}
                             variant="standard"
                             fullWidth
-                            defaultValue={"facebook.com"}
+                            name="instagram"
+                            onChange={handleOnChangeSM}
+                            defaultValue={userSocials.instagram}
                         />
+
+                        <Typography variant="caption" color={"#F55353"} fontWeight="bold" id="info-instagram" sx={{ display: 'none' }}>Introduce un enlace de Instagram válido.</Typography>
+
 
                         <TextField
                             id="input-with-icon-textfield"
@@ -405,11 +593,14 @@ export default function UpdateAccount() {
                             }}
                             variant="standard"
                             fullWidth
-                            defaultValue={"Daze#7023"}
+                            name="discord"
+                            onChange={handleOnChangeSM}
+                            defaultValue={userSocials.discord}
                         />
+                        <Typography variant="caption" color={"#F55353"} fontWeight="bold" id="info-discord" sx={{ display: 'none' }}>Introduce un ID de Discord válido.</Typography>
 
                         <Box textAlign="center">
-                            <Button onClick={handleOpenModalPass} sx={{ width: "80%" }} variant={"contained"} color={"warning"}>
+                            <Button onClick={validateSocials} sx={{ width: "80%" }} variant={"contained"} color={"warning"}>
                                 GUARDAR CAMBIOS
                             </Button>
                         </Box>
@@ -435,7 +626,7 @@ export default function UpdateAccount() {
 
                                         <StyledTextField sx={{ marginY: 5 }} type={"password"} helperText="Escribe tu contraseña" id="edit-email" label="Verifica contraseña" variant="outlined" fullWidth />
                                     </Typography>
-                                    <Button variant={"contained"} color={"buttonPrimary"} sx={{ color: "white" }} endIcon={<SaveAltIcon />}>Guardar cambios</Button>
+                                    <Button variant={"contained"} onClick={saveUserSocialMedia} color={"buttonPrimary"} sx={{ color: "white" }} endIcon={<SaveAltIcon />}>Guardar cambios</Button>
                                 </Box>
                             </Fade>
                         </Modal>
