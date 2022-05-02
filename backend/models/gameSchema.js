@@ -12,7 +12,7 @@ const _GAME_SCHEMA_ = new _MONGOOSE_.Schema({
         type: String,
         required: true,
         minlength: 0,
-        maxlength: 300
+        maxlength: 1200
     },
     studio: {
         type: String,
@@ -35,6 +35,12 @@ const _GAME_SCHEMA_ = new _MONGOOSE_.Schema({
             ref: 'user'
         }
     ],
+    activeUsersLength: {
+        type: Number
+    },
+    reviewsLength: {
+        type: Number
+    },
     gameDuration: {
         type: String
     },

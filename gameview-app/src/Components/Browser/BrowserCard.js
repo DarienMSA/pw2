@@ -27,12 +27,12 @@ export default function BrowserCard(props) {
     return (
         <Fragment>
             <Paper elevation={6} sx={{ width: 720, margin: 1 }}>
-                <CardActionArea onClick={navigationFunction("/browse/" + props.id)} sx={{ display: "flex", alignContent: "flex-start" }}>
+                <CardActionArea onClick={navigationFunction("/browse/game?id=" + props.g._id)} sx={{ display: "flex", alignContent: "flex-start" }}>
                     <CardMedia
                         component="img"
                         height="220px"
                         sx={{ width: 260, borderRadius: 1, margin: 1 }}
-                        image={props.image}
+                        image={props.g.image}
                         alt="Crash"
                     />
                     <CardContent>
@@ -43,13 +43,15 @@ export default function BrowserCard(props) {
                             WebkitLineClamp: 1,
                             marginLeft: .5
                         }}>
-                            {props.tittle}
+                            {props.g.name}
                         </Typography>
                         <Stack direction="row" padding={1} spacing={0.5} sx={{ margin: 1, maxWidth: 460, overflow: "auto", overflowY: "hidden" }}>
-                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_1} color="info" size="small" />
-                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_2} color="info" size="small" />
-                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_3} color="info" size="small" />
-                            <Chip sx={{ minWidth: 0.15 }} label={props.cat_3} color="info" size="small" />
+                            {props.g.genres.map((genre, index) => (
+                                index < 4 && (
+                                    <Chip sx={{ minWidth: 0.15 }} label={genre.name} color="info" size="small" />
+                                )
+
+                            ))}
                             <Chip label="+" color="info" size="small" />
                         </Stack>
                         <Divider variant="middle" sx={{ mb: 1.5, mt: 0.5 }} />

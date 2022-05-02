@@ -5,6 +5,7 @@ const _REVIEW_ROUTER_ = require('../controllers/reviewController');
 
 _ROUTER_.get("/review", _REVIEW_ROUTER_.review_getall);
 _ROUTER_.get("/review/:id", _REVIEW_ROUTER_.review_getOne);
+_ROUTER_.get("/review/:idGame/:idUser", _REVIEW_ROUTER_.review_getUserGameReview);
 
 _ROUTER_.post("/review", _REVIEW_ROUTER_.review_create);
 

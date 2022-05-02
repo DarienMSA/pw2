@@ -13,10 +13,10 @@ export default function CardGame(props) {
         <Card elevation={6} sx={{ minWidth: 140, maxWidth: 180, margin: 1 }}>
             <CardActionArea>
                 <CardMedia
-                    onClick={navigateFunction("/browse/" + props.id)}
+                    onClick={navigateFunction("/browse/game?id=" + props.g._id)}
                     component="img"
                     height="260"
-                    image={props.image}
+                    image={props.g.image}
                     alt="Crash"
                 />
             </CardActionArea>
@@ -30,13 +30,14 @@ export default function CardGame(props) {
                     marginLeft: .5
                 }}>
                     <Link href='/memes' underline='none' color='inherit'>
-                        {props.tittle}
+                        {props.g.name}
                     </Link>
                 </Typography>
                 <Divider variant="middle" sx={{ mb: 1.5, mt: 0.5 }} />
                 <Stack direction="row" spacing={0.5} justifyContent="center">
-                    <Chip sx={{ minWidth: 0.35 }} label={props.cat_1} onClick={navigateFunction("/browse?v=" + props.cat_1)} color="info" size="small" />
-                    <Chip sx={{ minWidth: 0.35 }} label={props.cat_2} onClick={navigateFunction("/browse?v=" + props.cat_2)} color="info" size="small" />
+
+                    <Chip sx={{ minWidth: 0.35 }} label={props.g.genres[0].name} onClick={navigateFunction("/browse?v=" + props.g.genres[0].name)} color="info" size="small" />
+                    <Chip sx={{ minWidth: 0.35 }} label={props.g.genres[1].name} onClick={navigateFunction("/browse?v=" + props.g.genres[1].name)} color="info" size="small" />
                 </Stack>
             </CardContent>
         </Card>

@@ -2,14 +2,17 @@ import { Avatar, Checkbox, List, ListItem, ListItemButton, ListItemText, ListIte
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import SearchIcon from '@mui/icons-material/Search';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ActiveUsers from '../Components/ShowGame/ActiveUsers';
 import Review from '../Components/ShowGame/Review';
 import btheme from '../Components/GameView-Theme';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import imageBadge from '../Assets/icon.png';
 import LoggedBar from '../Components/loggedBar';
 import UnloggedBar from '../Components/unloggedBar';
+import { GetUser } from '../Services/UserServices';
+import { GetGameID } from '../Services/GameServices';
+import { GetReviewUserGame } from '../Services/ReviewServices';
 
 const style = {
     position: 'absolute',
@@ -30,13 +33,13 @@ const GameImage = styled(CardMedia)(({ theme }) => ({
         width: "400px"
     },
     [theme.breakpoints.up('md')]: {
-        height: "200px",
-        width: "200px",
+        height: "400px",
+        width: "250px",
         marginRight: 50
 
     },
     [theme.breakpoints.up('lg')]: {
-        height: "300px",
+        height: "400px",
         width: "300px",
         marginTop: 40
     },
@@ -96,10 +99,77 @@ export default function ShowGame() {
     const [open3, setOpen3] = React.useState(false);
     const handleOpen3 = () => setOpen3(true);
     const handleClose3 = () => setOpen3(false);
-
+    const { search } = useLocation();
+    const searchParams = new URLSearchParams((search));
     const session = localStorage.getItem("UserSession");
+    const [user, setUser] = useState({})
+    const [game, setGame] = useState({})
+    const [userReview, setUserReview] = useState({})
+    const [userHasReview, setUserHasReview] = useState(false)
+    const [genres, setGenres] = useState([])
+    const mountedRef = useRef(true)
 
     const [checked, setChecked] = React.useState([1]);
+    async function getUser() {
+
+        const data = await GetUser(session);
+
+        if (data.email) {
+            setUser(data);
+
+        } else {
+            navigate("/")
+            console.log("error")
+        }
+    }
+    async function getUser() {
+
+        const data = await GetUser(session);
+
+        if (data.email) {
+            setUser(data);
+
+        } else {
+            navigate("/")
+            console.log("error")
+        }
+    }
+    async function getUserGameReview() {
+
+        const data = await GetReviewUserGame(searchParams.get("id"), session);
+
+        if (data.content) {
+            setUserReview(data);
+            setUserHasReview(true);
+
+        } else {
+            setUserHasReview(false);
+        }
+    }
+    async function getGame() {
+
+        const data = await GetGameID(searchParams.get("id"));
+
+        if (data.launchDate) {
+            setGame(data);
+            setGenres(data.genres)
+
+        } else {
+            navigate("/")
+            console.log(data)
+        }
+    }
+
+    useEffect(() => {
+
+        getUser();
+        getGame();
+        getUserGameReview();
+
+        return () => {
+            mountedRef.current = false
+        }
+    }, []);
 
     const navigateFunction = url => () => {
         navigate(url)
@@ -122,18 +192,18 @@ export default function ShowGame() {
         <ThemeProvider theme={btheme}>
             {session !== null ? <LoggedBar></LoggedBar> : <UnloggedBar></UnloggedBar>}
             <Grid container>
-                <Grid container item xs={12} m={5} justifyContent={"center"} >
+                <Grid container item xs={12} justifyContent={"center"} >
                     <Grid item container xs={12} md={3} justifyContent={"center"} alignItems={"center"} my={5} >
                         <Box item>
                             <GameImage
                                 component="img"
-                                image="https://image.api.playstation.com/vulcan/ap/rnd/202110/2000/aGhopp3MHppi7kooGE2Dtt8C.png"
+                                image={game.image}
                                 alt="green iguana"
                             />
                         </Box>
                         <Box mt={5} width={"100%"} textAlign="center" >
-                            <Typography component="legend" fontWeight={"bold"}>Puntuación: 4.1</Typography>
-                            <Rating size="large" precision={0.5} sx={{ borderColor: "white" }} name="read-only" value={value} readOnly
+                            <Typography component="legend" fontWeight={"bold"}>Puntuación: {game.score}</Typography>
+                            <Rating size="large" precision={0.5} sx={{ borderColor: "white" }} name="read-only" value={game.score} readOnly
                                 emptyIcon={
                                     <StarBorderIcon fontSize="inherit" />
                                 } />
@@ -141,29 +211,32 @@ export default function ShowGame() {
                     </Grid>
                     <Grid item container xs={12} md={6} my={5} direction="row">
                         <Grid item xs={12}>
-                            <Typography variant='h2' textAlign={"left"} mt={3} fontWeight={"bold"} style={{ fontFamily: 'Ubuntu' }}>Elden Ring</Typography>
+                            <Typography variant='h2' textAlign={"left"} mt={3} fontWeight={"bold"} style={{ fontFamily: 'Ubuntu' }}>{game.name}</Typography>
                             <Divider variant="middle" sx={{ marginTop: "15px", marginBottom: "15px", background: "gray" }}> </Divider>
-                            <Typography mb={2} variant="h6" component={"h1"} >FromSoftware | 25/02/2022</Typography>
+                            <Typography mb={2} variant="h6" component={"h1"} >{game.studio} - {game.launchDate}</Typography>
                             <StyledStack sx={{ overflow: "auto", paddingBottom: 2 }} direction={"row"} spacing={.5}>
-                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Fantasía Oscura" />
-                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Rol" />
-                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Difícil" />
-                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Mundo abierto" />
-                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Fantasía Oscura" />
-                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Rol" />
-                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Difícil" />
-                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Mundo abierto" />
-                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Fantasía Oscura" />
-                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Rol" />
-                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Difícil" />
-                                <Chip color="info" onClick={navigateFunction("/browse?v=" + "algo")} label="Mundo abierto" />
+                                {
+                                    genres.map((genre, index) => (
+                                        <Chip color="info" onClick={navigateFunction("/browse?v=" + genre.name)} label={genre.name} />
+                                    ))
+                                }
                             </StyledStack>
 
-                            <Typography variant="h6" textAlign={"left"} my={3}>Elden Ring es un videojuego de rol de acción desarrollado por FromSoftware y publicado por Bandai Namco Entertainment. El videojuego surge de una colaboración entre el director y diseñador Hidetaka Miyazaki y el novelista de fantasía George R. R. Martin. Fue lanzado a nivel mundial el 25 de febrero de 2022, fecha revelada durante el evento Summer Game Fest, para las plataformas Xbox One, Xbox Series X/S, Microsoft Windows, PlayStation 4 y PlayStation 5.</Typography>
+                            <Typography variant="h6" textAlign={"left"} my={3}> {game.synopsis} </Typography>
                         </Grid>
                         <Grid item container xs={12} justifyContent="flex-end" alignItems="flex-end">
-                            <Button onClick={handleOpen2} sx={{ marginRight: "30px", marginY: 1 }} variant="contained" color="warning" endIcon={<AddCircleIcon />}>Crear Reseña</Button>
-                            <Button onClick={handleOpen3} sx={{ marginRight: "30px", marginY: 1 }} variant="contained" color="warning" endIcon={<AddCircleIcon />}>Modificar Reseña</Button>
+                            {
+                                userHasReview || (
+                                    <Button onClick={handleOpen2} sx={{ marginRight: "30px", marginY: 1 }} variant="contained" color="warning" endIcon={<AddCircleIcon />}>Crear Reseña</Button>
+                                )
+
+                            }
+                            {
+                                userHasReview && (
+                                    <Button onClick={handleOpen3} sx={{ marginRight: "30px", marginY: 1 }} variant="contained" color="warning" endIcon={<AddCircleIcon />}>Modificar Reseña</Button>
+                                )
+                            }
+
 
                             <Modal
                                 open={open2}
@@ -363,9 +436,15 @@ export default function ShowGame() {
 const badgeList = [
     { index: 1, name: "Depredador: Colector profesional de kills", image: imageBadge },
     { index: 2, name: "Cazador de tesoros: El mejor looteador del condado", image: imageBadge },
-    { index: 3, name: "Estrella Fugaz: Recoge todos los objetos en menos de 39 segundos", image: imageBadge },
+    { index: 3, name: "Estrella Fugaz: Recoge todos los objetos con un tiempo limitado.", image: imageBadge },
     { index: 4, name: "A la siguiente: Se el primero en morir", image: imageBadge },
     { index: 5, name: "Campeón: Gana un total de 50 partidas", image: imageBadge },
-    { index: 6, name: "A paso lento: Asesino de cuerpo a cuerpo", image: imageBadge }
+    { index: 6, name: "A paso lento: Asesino de cuerpo a cuerpo", image: imageBadge },
+    { index: 7, name: "Leyenda: Gana un total de 100 partidas", image: imageBadge },
+    { index: 8, name: "Más difícil: Ha ganado en la mayor dificultad", image: imageBadge },
+    { index: 9, name: "Sin muertes: Te has pasado el juego sin morir", image: imageBadge },
+    { index: 10, name: "Sin golpes: Te has pasado el juego sin ser golpeado ninguna vez", image: imageBadge },
+    { index: 11, name: "Veterano: Llevas jugando este juego +3 años.", image: imageBadge }
+
 
 ]

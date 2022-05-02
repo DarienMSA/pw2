@@ -4,8 +4,11 @@ const _ROUTER_ = _EXPRESS_.Router();
 const _GAME_ROUTER_ = require('../controllers/gameController');
 
 _ROUTER_.get("/game", _GAME_ROUTER_.game_getall);
+_ROUTER_.get("/game/sort/:sortBy", _GAME_ROUTER_.game_getall_sorted);
 _ROUTER_.get("/game/:id", _GAME_ROUTER_.game_getOne);
+_ROUTER_.get("/game/name/:name", _GAME_ROUTER_.game_getByName);
 _ROUTER_.get("/game/genre/:idGenre", _GAME_ROUTER_.game_getGamesByGenre);
+
 
 _ROUTER_.post("/game", _GAME_ROUTER_.game_create);
 

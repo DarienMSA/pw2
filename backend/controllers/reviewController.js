@@ -33,6 +33,46 @@ exports.review_getOne = async (req, res) => {
     }
 }
 
+exports.review_getOne = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = await _REVIEW_.findById(id);
+        if (data) {
+            res.send(data);
+        } else {
+            res.send({
+                message: "No se ha encontrado la reseña.",
+                code: "RE00"
+            })
+            console.error(`message: "No se ha encontrado la reseña.",
+            code: "RE00"`);
+        }
+    } catch (error) {
+        res.send(error);
+        console.error(error);
+    }
+}
+
+exports.review_getUserGameReview = async (req, res) => {
+    try {
+        const { idGame, idUser } = req.params;
+        const data = await _REVIEW_.findOne({ gameId: idGame, userId: idUser });
+        if (data) {
+            res.send(data);
+        } else {
+            res.send({
+                message: "No se ha encontrado la reseña.",
+                code: "RE00"
+            })
+            console.error(`message: "No se ha encontrado la reseña.",
+            code: "RE00"`);
+        }
+    } catch (error) {
+        res.send(error);
+        console.error(error);
+    }
+}
+
 exports.review_create = async (req, res) => {
     try {
         const { body } = req;
@@ -74,6 +114,11 @@ exports.review_create = async (req, res) => {
                                 console.error(err);
                                 res.send({ code: "RE03-C", message: err });
                             })
+                        await _GAME_.findOneAndUpdate(
+                            { _id: body.gameId },
+                            {
+                                $inc: { reviewsLength: 1 }
+                            });
                         res.send(newReview);
                     }
 
@@ -228,7 +273,11 @@ exports.review_delete = async (req, res) => {
         const reviewDB = await _REVIEW_.findById(id);
         if (reviewDB) {
             await _REVIEW_.deleteOne({ _id: id });
-
+            await _GAME_.findOneAndUpdate(
+                { _id: reviewDB.gameId },
+                {
+                    $inc: { reviewsLength: -1 }
+                });
             res.send({ message: "Registro eliminado exitosamente" });
         } else {
             res.send({

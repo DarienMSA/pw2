@@ -26,7 +26,7 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route exact path="/browse" element={<Browser />} />
-        <Route exact path="/browse/:idGame" element={<ShowGame />} />
+        <Route exact path="/browse/game" element={<ShowGame />} />
         <Route exact path="/signin" element={<SignInScreen />} />
         <Route exact path="/login" element={<LogInScreen />} />
         <Route exact path="/chat" element={<Chat />} />
