@@ -8,7 +8,14 @@ const _CHAT_SCHEMA_ = new _MONGOOSE_.Schema({
         }
     ],
     lastMessageDate: {
-        type: Date
+        type: String
+    },
+    lastMessage: {
+        type: String
+    },
+    lastMessageFrom: {
+        type: _MONGOOSE_.Schema.Types.ObjectId,
+        ref: 'user'
     },
     seen: {
         type: Boolean

@@ -4,7 +4,9 @@ const _ROUTER_ = _EXPRESS_.Router();
 const _USER_ROUTER_ = require('../controllers/userController');
 
 _ROUTER_.get("/user", _USER_ROUTER_.user_getall);
+_ROUTER_.get("/user/except/:id", _USER_ROUTER_.user_getAllExceptOne);
 _ROUTER_.get("/user/:id", _USER_ROUTER_.user_getOne);
+_ROUTER_.get("/user/email/:email", _USER_ROUTER_.user_getOneEmail);
 _ROUTER_.get("/user/:email/:password", _USER_ROUTER_.user_logIn);
 
 _ROUTER_.post("/user", _USER_ROUTER_.user_create);

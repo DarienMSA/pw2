@@ -7,9 +7,9 @@ const _USER_BADGES_SCHEMA_ = new _MONGOOSE_.Schema({
         ref: 'game'
     },
     userId: {
-        type: _MONGOOSE_.Schema.Types.ObjectId,
+        type: String,
         required: true,
-        ref: 'user'
+
     },
     badges: [
         {

@@ -5,6 +5,7 @@ const _COMMENT_ROUTER_ = require('../controllers/commentController');
 
 _ROUTER_.get("/comment", _COMMENT_ROUTER_.comment_getall);
 _ROUTER_.get("/comment/:id", _COMMENT_ROUTER_.comment_getOne);
+_ROUTER_.get("/comment/review/:id", _COMMENT_ROUTER_.comment_getReviewComments);
 
 _ROUTER_.post("/comment", _COMMENT_ROUTER_.comment_create);
 

@@ -8,13 +8,48 @@ exports.user_getall = async (req, res) => {
         res.send(error);
         console.error(error);
     }
-
 }
+
+exports.user_getAllExceptOne = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = await _USER_.find({ _id: { $ne: id } }).sort({ name: 1 });
+        res.send(data);
+    } catch (error) {
+        res.send(error);
+        console.error(error);
+    }
+}
+
 
 exports.user_getOne = async (req, res) => {
     try {
         const { id } = req.params;
         const data = await _USER_.findById(id);
+
+        if (data) {
+            res.send(data);
+        } else {
+            res.send({
+                message: "No se encontró el usuario con el ID introducido",
+                code: "UE00"
+            })
+            console.error(`message: "No se encontró el usuario con el ID introducido",
+            code: "UE00"`)
+        }
+
+
+    } catch (error) {
+        res.send(error);
+        console.error(error);
+    }
+
+}
+
+exports.user_getOneEmail = async (req, res) => {
+    try {
+        const { email } = req.params;
+        const data = await _USER_.findOne({ email: email });
 
         if (data) {
             res.send(data);
@@ -50,14 +85,14 @@ exports.user_create = async (req, res) => {
             console.error(`message: "Ya existe un usuario con ese correo.",
             code: "UE04-C"`)
         }
-        else if (!validateEmail(body.email)) {
+        /*else if (!validateEmail(body.email)) {
             res.send({
                 message: "Ingresa un correo electrónico válido.",
                 code: "UE00-C"
             })
             console.error(`message: "Ingresa un correo electrónico válido.",
             code: "UE00-C"`)
-        } else if (body.name.length <= 3 || body.name.length >= 31) {
+        }*/ else if (body.name.length <= 3 || body.name.length >= 31) {
             res.send({
                 message: "El nombre debe ser entre 4 y 30 caracteres.",
                 code: "UE01-C"
@@ -65,14 +100,14 @@ exports.user_create = async (req, res) => {
             console.error(`message: "El nombre debe ser entre 4 y 30 caracteres.",
             code: "UE01-C"`)
         }
-        else if (!validatePassword(body.password)) {
+        /*else if (!validatePassword(body.password)) {
             res.send({
                 message: "La contraseña debe cumplir con los requisitos",
                 code: "UE02-C"
             })
             console.error(`message: "La contraseña debe cumplir con los requisitos",
             code: "UE02-C"`)
-        }
+        }*/
         else {
             let newUser = new _USER_(body);
             await newUser
@@ -99,9 +134,9 @@ exports.user_update = async (req, res) => {
         const { id } = req.params;
         const { body } = req;
         //validación de información.
-        const userDB = await _USER_.findById(id);
+        const userDB = await _USER_.findOne({ email: id });
 
-        if (!validatePassword(body.password)) {
+        /*if (!validatePassword(body.password)) {
             res.send({
                 message: "La contraseña debe cumplir con los requisitos",
                 code: "UE02-C"
@@ -109,7 +144,7 @@ exports.user_update = async (req, res) => {
             console.error(`message: "La contraseña debe cumplir con los requisitos",
             code: "UE02-C"`)
         }
-        else if (body.name.length <= 3 || body.name.length >= 31) {
+        else*/ if (body.name.length <= 3 || body.name.length >= 31) {
             res.send({
                 message: "El nombre debe ser entre 4 y 30 caracteres.",
                 code: "UE01-C"
@@ -125,7 +160,7 @@ exports.user_update = async (req, res) => {
             code: "UE03-C"`)
         }
         else if (userDB) {
-            const data = await _USER_.findOneAndUpdate({ _id: id }, body, { returnOriginal: false });
+            const data = await _USER_.findOneAndUpdate({ email: id }, body, { returnOriginal: false });
             res.send({
                 message: "Registro actualizado exitosamente.",
                 data //lo mismo a data: data

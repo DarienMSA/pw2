@@ -1,11 +1,12 @@
 import React, { Fragment } from 'react'
 import { AppBar, Box, Button, IconButton, Menu, MenuItem, Stack, Tab, Tabs, ThemeProvider, Toolbar, Typography } from '@mui/material'
 import PersonAddAltRoundedIcon from '@mui/icons-material/PersonAddAltRounded';
-import LoginIcon from '@mui/icons-material/Login';
+
 import MoreIcon from '@mui/icons-material/MoreVert';
 import SearchBar from './SearchBar';
 import btheme from './GameView-Theme';
 import { useNavigate } from 'react-router-dom';
+import { LoginButton, LoginMenuItem } from './Auth0/LoginButton';
 
 export default function UnloggedBar() {
     const navigate = useNavigate();
@@ -46,12 +47,7 @@ export default function UnloggedBar() {
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
-            <MenuItem onClick={navigateFunction("/login")}>
-                <IconButton size="large" color="inherit">
-                    <LoginIcon />
-                </IconButton>
-                <p>Iniciar sesión</p>
-            </MenuItem>
+            <LoginMenuItem></LoginMenuItem>
             <MenuItem onClick={navigateFunction("/signin")}>
                 <IconButton size="large" color="inherit">
                     <PersonAddAltRoundedIcon />
@@ -76,12 +72,7 @@ export default function UnloggedBar() {
                         </Typography>
                         <SearchBar />
                         <Stack color='#FFF2EF' direction="row" alignItems="center" sx={{ display: { xs: 'none', md: 'flex' } }}>
-                            <Button onClick={navigateFunction("/login")} sx={{ marginLeft: "auto" }} color="inherit" endIcon={<LoginIcon />}>
-                                INICIAR SESIÓN{" "}
-                            </Button>
-                            <Button onClick={navigateFunction("/signin")} sx={{ marginLeft: "10px" }} color="inherit" endIcon={<PersonAddAltRoundedIcon />}>
-                                REGISTRARSE{" "}
-                            </Button>
+                            <LoginButton></LoginButton>
                         </Stack>
                         <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                             <IconButton

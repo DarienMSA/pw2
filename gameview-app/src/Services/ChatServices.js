@@ -1,8 +1,8 @@
 import { axiosBase as axios } from "./Config";
 
-export const GetGameID = async (id) => {
+export const GetUserChats = async (id) => {
     try {
-        const response = await axios.get("/game/" + id);
+        const response = await axios.get("/chat/user/" + id);
         if (response.status == 200) {
             return response.data;
         } else {
@@ -14,9 +14,9 @@ export const GetGameID = async (id) => {
     }
 }
 
-export const IsUserActive = async (id, idUser) => {
+export const GetUsersChats = async (id1, id2) => {
     try {
-        const response = await axios.get(`/game/active/${id}/${idUser}`);
+        const response = await axios.get("/chat/user/" + id1 + "/" + id2);
         if (response.status == 200) {
             return response.data;
         } else {
@@ -28,9 +28,9 @@ export const IsUserActive = async (id, idUser) => {
     }
 }
 
-export const GetUserActiveGames = async (idUser) => {
+export const CreateChat = async (body) => {
     try {
-        const response = await axios.get(`/game/activeGames/${idUser}`);
+        const response = await axios.post("/chat", body);
         if (response.status == 200) {
             return response.data;
         } else {
@@ -42,9 +42,9 @@ export const GetUserActiveGames = async (idUser) => {
     }
 }
 
-export const GetGamesSortedBy = async (sortedBy) => {
+export const GetChatLog = async (id) => {
     try {
-        const response = await axios.get("/game/sort/" + sortedBy);
+        const response = await axios.get("/chatLog/chat/" + id);
         if (response.status == 200) {
             return response.data;
         } else {
@@ -56,9 +56,9 @@ export const GetGamesSortedBy = async (sortedBy) => {
     }
 }
 
-export const GetGamesByName = async (v) => {
+export const CreateChatLog = async (body) => {
     try {
-        const response = await axios.get("/game/searchName/" + v);
+        const response = await axios.post("/chatLog/", body);
         if (response.status == 200) {
             return response.data;
         } else {
@@ -70,9 +70,9 @@ export const GetGamesByName = async (v) => {
     }
 }
 
-export const GetGamesByCategory = async (v) => {
+export const AddMessage = async (body, id) => {
     try {
-        const response = await axios.get("/game/genre/" + v);
+        const response = await axios.put("/chatLog/" + id, body);
         if (response.status == 200) {
             return response.data;
         } else {
@@ -84,9 +84,9 @@ export const GetGamesByCategory = async (v) => {
     }
 }
 
-export const AddActiveUser = async (id, idUser) => {
+export const SetSeenChat = async (id, seen) => {
     try {
-        const response = await axios.put(`/game/${id}/addUser/${idUser}`);
+        const response = await axios.put(`/chat/${id}/${seen}`);
         if (response.status == 200) {
             return response.data;
         } else {
@@ -98,9 +98,9 @@ export const AddActiveUser = async (id, idUser) => {
     }
 }
 
-export const RemoveActiveUser = async (id, idUser) => {
+export const GetSeenChat = async (id) => {
     try {
-        const response = await axios.put(`/game/${id}/removeUser/${idUser}`);
+        const response = await axios.get(`/chat/user/hasSeen/${id}`);
         if (response.status == 200) {
             return response.data;
         } else {

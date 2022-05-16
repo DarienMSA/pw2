@@ -14,8 +14,9 @@ exports.userBadges_getall = async (req, res) => {
 exports.userBadges_getUserGameBadges = async (req, res) => {
     try {
         const { idUser, idGame } = req.params;
-        const data = await _USER_BADGES_.find({ userId: idUser, gameId: idGame }).populate('badges');
-        if (data.length == 0) {
+        const data = await _USER_BADGES_.findOne({ userId: idUser, gameId: idGame }).populate('badges');
+        console.log(data);
+        if (data) {
             res.send(data);
         } else {
             res.send({
@@ -85,7 +86,8 @@ exports.userBadges_create = async (req, res) => {
                     console.error(err);
                     res.send({ code: "UBE01-C", message: err });
                 })
-            res.send(newUserBadges);
+            const response = await _USER_BADGES_.findById(newUserBadges._id).populate('badges');
+            res.send(response);
         } else {
             res.send({
                 message: "Ya hay un medallas inscritas en el juego de ese usuario.",
@@ -100,6 +102,31 @@ exports.userBadges_create = async (req, res) => {
 
     } catch (error) {
         res.send(error);
+        console.error(error);
+    }
+}
+
+exports.userBadges_update = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { body } = req;
+        const userBadgesDB = await _USER_BADGES_.findById(id);
+        if (userBadgesDB) {
+            const data = await _USER_BADGES_.findOneAndUpdate({ _id: id }, body, { returnOriginal: false }).populate('badges');
+            res.send({
+                message: "Registro actualizado exitosamente.",
+                data //lo mismo a data: data
+            })
+        } else {
+            res.send({
+                message: "No se ha encontrado las medallas del usuario del juego seleccionado.",
+                code: "UBE00"
+            })
+            console.error(`message: "No se ha encontrado las medallas del usuario del juego seleccionado.",
+            code: "UBE00"`);
+        }
+    } catch (error) {
+        res.send(error)
         console.error(error);
     }
 }

@@ -48,7 +48,7 @@ export default function BrowserCard(props) {
                         <Stack direction="row" padding={1} spacing={0.5} sx={{ margin: 1, maxWidth: 460, overflow: "auto", overflowY: "hidden" }}>
                             {props.g.genres.map((genre, index) => (
                                 index < 4 && (
-                                    <Chip sx={{ minWidth: 0.15 }} label={genre.name} color="info" size="small" />
+                                    <Chip key={index} sx={{ minWidth: 0.15 }} label={genre.name} color="info" size="small" />
                                 )
 
                             ))}
@@ -62,10 +62,7 @@ export default function BrowserCard(props) {
                             WebkitBoxOrient: 'vertical',
                             WebkitLineClamp: 4,
                         }} variant="body2" color="text.secondary">
-                            League of Legends es un videojuego del género multijugador de arena de batalla en línea y deporte electrónico
-                            el cual fue desarrollado por Riot Games para Microsoft Windows y OS X y para consolas digitales.
-                            League of Legends es un videojuego del género multijugador de arena de batalla en línea y deporte electrónico
-                            el cual fue desarrollado por Riot Games para Microsoft Windows y OS X y para consolas digitales.
+                            {props.g.synopsis}
                         </Typography>
                     </CardContent>
                 </CardActionArea>

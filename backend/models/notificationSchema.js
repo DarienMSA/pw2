@@ -5,14 +5,11 @@ const _NOTIFICATION_SCHEMA_ = new _MONGOOSE_.Schema({
         type: _MONGOOSE_.Schema.Types.ObjectId,
         ref: 'user'
     },
-    notifications: [
-        {
-            origin: { type: String },
-            from: { type: _MONGOOSE_.Schema.Types.ObjectId, ref: 'user' },
-            active: { type: Boolean },
-            date: { type: Date }
-        }
-    ]
+    origin: { type: String },
+    fromUser: { type: _MONGOOSE_.Schema.Types.ObjectId, ref: 'user' },
+    fromGame: { type: _MONGOOSE_.Schema.Types.ObjectId, ref: 'game' },
+    active: { type: Boolean },
+    date: { type: String }
 });
 
 const _NOTIFICATION_ = _MONGOOSE_.model("notification", _NOTIFICATION_SCHEMA_);

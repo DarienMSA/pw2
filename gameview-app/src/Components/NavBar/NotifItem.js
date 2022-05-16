@@ -1,8 +1,55 @@
 import { Avatar, Grid, Typography } from '@mui/material'
-import ChatIcon from '@mui/icons-material/Chat';
-import React from 'react'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import logoImage from '../../Assets/logo_gameview.png';
+import React, { useEffect, useState } from 'react'
+import CelebrationIcon from '@mui/icons-material/Celebration';
+import ForumIcon from '@mui/icons-material/Forum';
+export default function NotifItem(props) {
+  const [notifItem, setNotifItem] = useState({})
 
-export default function NotifItem() {
+  const structureNotification = () => {
+    switch (props.notif.origin) {
+      case "comment":
+        setNotifItem({
+          image: props.notif.fromUser.profilePic,
+          title: `¡Han comentado tu reseña!`,
+          description: `${props.notif.fromUser.name} ha comentado tu reseña de ${props.notif.fromGame.name}.`,
+          date: props.notif.date,
+          icon: <ForumIcon sx={{ width: "15px", height: "15px" }} />
+        })
+        break;
+      case "like":
+        setNotifItem({
+          image: props.notif.fromUser.profilePic,
+          title: `¡Tu reseña la han encontrado útil!`,
+          description: `${props.notif.fromUser.name} le ha gustado tu reseña de ${props.notif.fromGame.name}.`,
+          date: props.notif.date,
+          icon: <ThumbUpIcon sx={{ width: "15px", height: "15px" }} />
+        })
+        break;
+      case "welcome":
+        setNotifItem({
+          image: logoImage,
+          title: `¡Bienvenido a GameView!`,
+          description: "",
+          date: props.notif.date,
+          icon: <CelebrationIcon sx={{ width: "15px", height: "15px" }} />
+        })
+        break;
+      default:
+        console.log("default")
+        return false;
+    }
+  }
+
+  useEffect(() => {
+
+    structureNotification();
+  }, []);
+
+  if (!Object.keys(notifItem).length) return (<h1></h1>)
+
+
   return (
     <Grid container maxWidth={400} direction="row"
     >
@@ -11,7 +58,7 @@ export default function NotifItem() {
         direction="row"
         justifyContent="center"
         alignItems="center">
-        <Avatar alt="Remy Sharp" src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg" />
+        <Avatar src={notifItem.image} />
       </Grid>
 
       <Grid item container xs={10}
@@ -19,8 +66,9 @@ export default function NotifItem() {
         justifyContent="center"
         alignItems="center">
 
-        <Typography fontWeight={"bold"} gutterBottom noWrap> ¡Bienvenido a GameView! </Typography>
-        <Typography variant="caption" noWrap> <ChatIcon sx={{ width: "15px", height: "15px" }} />  24/03/2022 </Typography>
+        <Typography fontWeight={"bold"} variant="p" gutterBottom noWrap> {notifItem.title} </Typography>
+        <Typography variant="caption" noWrap>  {notifItem.description}  </Typography>
+        <Typography variant="caption" noWrap> {notifItem.icon}  {notifItem.date} </Typography>
       </Grid>
 
     </Grid>

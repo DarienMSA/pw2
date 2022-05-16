@@ -39,12 +39,25 @@ exports.game_getall_sorted = async (req, res) => {
 
 }
 
+exports.game_getByName = async (req, res) => {
+    try {
+        const { value } = req.params;
+        const data = await _GAME_.find({ name: { $regex: '.*' + value + '.*', $options: '-i' } }).populate("genres");
+        console.log("data", data)
+        res.send(data);
+
+    } catch (error) {
+        res.send(error);
+        console.error(error)
+    }
+}
+
 
 
 exports.game_getOne = async (req, res) => {
     try {
         const { id } = req.params;
-        const data = await _GAME_.findById(id).populate("genres");
+        const data = await _GAME_.findById(id).populate("genres activeUsers");
         if (data) {
             res.send(data);
         } else {
@@ -61,25 +74,35 @@ exports.game_getOne = async (req, res) => {
     }
 }
 
-exports.game_getByName = async (req, res) => {
+
+exports.game_isUserActiveInGame = async (req, res) => {
     try {
-        const { name } = req.params;
-        const data = await _GAME_.find({ name: { $regex: '.*' + name + '.*' } }).populate("genres");
+        const { id, idUser } = req.params;
+        const data = await _GAME_.findOne({ $and: [{ _id: id }, { activeUsers: idUser }] });
         if (data) {
-            res.send(data);
+            res.send(true);
         } else {
-            res.send({
-                message: "No se ha encontrado el juego.",
-                code: "GE00"
-            })
-            console.error(`message: "No se ha encontrado el juego.",
-            code: "GE00"`)
+            res.send(false);
         }
     } catch (error) {
         res.send(error);
         console.error(error)
     }
 }
+
+exports.game_GetUserActiveGames = async (req, res) => {
+    try {
+        const { idUser } = req.params;
+        const data = await _GAME_.find({ activeUsers: idUser });
+
+        res.send(data);
+
+    } catch (error) {
+        res.send(error);
+        console.error(error)
+    }
+}
+
 
 exports.game_getGamesByGenre = async (req, res) => {
     try {

@@ -33,15 +33,20 @@ const StyledGrid = styled(Grid)(() => ({
 
 
 
-export default function UserPreview() {
+export default function UserPreview(props) {
     const navigate = useNavigate();
+    const otherUserData = props.actualUser._id === props.c.members[0]._id ? props.c.members[1] : props.c.members[0]
+    const badgeVariant = props.c.seen ? "standard" : "dot"
+
+    const isFromUser = props.c.lastMessageFrom === props.actualUser._id ? true : false
+
 
     const navigateFunction = url => () => {
         navigate(url);
 
     };
     return (
-        <StyledGrid container onClick={navigateFunction("/chat?c=123")}>
+        <StyledGrid container onClick={navigateFunction(`/chat?c=${props.c._id}&u=${otherUserData._id}`)}>
 
             <Grid container item xs={3} sm={3} md={3} marginTop={3} marginBottom={3}
                 direction="row"
@@ -49,14 +54,26 @@ export default function UserPreview() {
                 alignItems="center"
 
             >
-                <StyledBadge
-                    overlap="circular"
-                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                    variant="dot"
+                {
+                    isFromUser ? (
+                        <StyledBadge
+                            overlap="circular"
+                            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                            variant={"standard"}
 
-                >
-                    <Avatar textAlign="center" alt="Remy Sharp" src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg" />
-                </StyledBadge>
+                        >
+                            <Avatar textAlign="center" alt={otherUserData.name} src={otherUserData.profilePic} />
+                        </StyledBadge>
+                    ) : (<StyledBadge
+                        overlap="circular"
+                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                        variant={badgeVariant}
+
+                    >
+                        <Avatar textAlign="center" alt={otherUserData.name} src={otherUserData.profilePic} />
+                    </StyledBadge>)
+                }
+
 
 
 
@@ -65,10 +82,10 @@ export default function UserPreview() {
                 direction="row"
                 justifyContent="start"
                 alignItems="center">
-                <Typography textAlign={"left"} fontWeight={"bold"} width={"100%"} noWrap>Darien Miguel Sánchez Arévalo </Typography>
-                <Typography textAlign={"left"} variant="caption" width={"100%"} noWrap>asdasdasdasdad</Typography>
+                <Typography textAlign={"left"} fontWeight={"bold"} width={"100%"} noWrap> {`${otherUserData.name} | ${otherUserData.email}`} </Typography>
+                <Typography textAlign={"left"} variant="caption" width={"100%"} noWrap>{props.c.lastMessage}</Typography>
                 <Divider variant="middle" />
-                <Typography textAlign={"right"} variant="caption" mr={4} fontWeight={"bold"} noWrap>23/03/2022 </Typography>
+                <Typography textAlign={"left"} variant="caption" mr={4} fontWeight={"bold"} noWrap>{props.c.lastMessageDate} </Typography>
 
             </Grid>
         </StyledGrid >

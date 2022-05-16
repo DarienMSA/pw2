@@ -15,17 +15,20 @@ exports.notification_getall = async (req, res) => {
 exports.notification_getUserNotifs = async (req, res) => {
     try {
         const { id } = req.params;
-        const data = await _NOTIFICATION_.find(id);
-        if (data) {
-            res.send(data);
-        } else {
-            res.send({
-                message: "No se ha encontrado las notificaciones del usuario.",
-                code: "NE00"
-            })
-            console.error(`message: "No se ha encontrado las notificaciones del usuario.",
-            code: "NE00"`)
-        }
+        const data = await _NOTIFICATION_.find({ user: id }).populate('fromUser fromGame user').sort({ _id: -1 });
+        console.log(data)
+        res.send(data);
+    } catch (error) {
+        res.send(error);
+        console.error(error);
+    }
+}
+
+exports.notification_getUserNotifsActive = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = await _NOTIFICATION_.find({ user: id, active: true });
+        res.send({ length: data.length });
     } catch (error) {
         res.send(error);
         console.error(error);
@@ -36,15 +39,7 @@ exports.notification_getUserNotifs = async (req, res) => {
 exports.notification_create = async (req, res) => {
     try {
         const { body } = req;
-        const notificationDB = await _NOTIFICATION_.find({ user: body.user });
-        if (notificationDB.length != 0) {
-            res.send({
-                message: "Tratando de crear una serie de notificaciones existente",
-                code: "NE00-C"
-            })
-            console.error(`message: "Tratando de crear una serie de notificaciones existente",
-            code: "NE00-C"`);
-        } else if (validateOrigin(notificationDB.notifications.origin)) {
+        if (validateOrigin(body.origin)) {
             const userDB = await _USER_.findById(body.user)
             if (userDB) {
                 let newNotLog = _NOTIFICATION_(body);
@@ -55,7 +50,7 @@ exports.notification_create = async (req, res) => {
                         console.error(err);
                         res.send({ code: "NE01-C", message: err });
                     })
-                res.send(newChanewNotLogtLog);
+                res.send(newNotLog);
             } else {
                 res.send({
                     message: "No existe el usuario ligado a las notificaciones.",
@@ -80,23 +75,26 @@ exports.notification_create = async (req, res) => {
     }
 }
 
-exports.notification_update = async (req, res) => {
+exports.notification_updateNotification = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = await _NOTIFICATION_.updateMany({ user: id }, { $set: { active: false } }, { returnOriginal: false });
+        res.send(data);
+    } catch (error) {
+        console.log(error)
+        res.send(error)
+    }
+}
+
+exports.notification_addNotification = async (req, res) => {
     try {
         const { id } = req.params;
         const { body } = req;
 
-        const notificationDB = await _NOTIFICATION_.find({ user: body.user });
-        if (notificationDB.length != 0) {
-            res.send({
-                message: "Tratando de crear una serie de notificaciones existente",
-                code: "NE00-C"
-            })
-            console.error(`message: "Tratando de crear una serie de notificaciones existente",
-            code: "NE00-C"`);
-        } else if (validateOrigin(notificationDB.notifications.origin)) {
+        if (validateOrigin(body.notifications.origin)) {
             const userDB = await _USER_.findById(body.user)
             if (userDB) {
-                const data = await _NOTIFICATION_.findOneAndUpdate({ _id: id }, { $push: { notifications: body.notifications } }, { returnOriginal: false }).populate('notifications.from');
+                const data = await _NOTIFICATION_.findOneAndUpdate({ user: id }, { body }, { returnOriginal: false }).populate('notifications.from');
                 res.send(data);
             } else {
                 res.send({
@@ -146,9 +144,6 @@ exports.notification_delete = async (req, res) => {
 
 const validateOrigin = (origin) => {
     switch (origin) {
-        case "message":
-            return true;
-            break;
         case "comment":
             return true;
             break;

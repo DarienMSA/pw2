@@ -8,27 +8,27 @@ import Typography from '@mui/material/Typography';
 import { Chip, Divider, IconButton } from '@mui/material';
 import { Box } from '@mui/system';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { useNavigate } from 'react-router-dom';
 
-export default function ActiveGame() {
+export default function ActiveGame(props) {
+    const navigate = useNavigate();
+    const goNavigate = url => () => {
+        navigate(url)
+    }
+
     return (
-        <Card elevation={10} sx={{ maxWidth: 345, margin: "10px", borderRadius: 5 }} >
+        <Card elevation={10} onClick={goNavigate(`/browse/game?id=${props.game._id}`)} sx={{ cursor: "pointer", maxWidth: 345, margin: "10px", borderRadius: 5 }} >
             <CardMedia
                 component="img"
                 alt="green iguana"
                 height="140"
-                image="https://image.api.playstation.com/vulcan/ap/rnd/202110/2000/aGhopp3MHppi7kooGE2Dtt8C.png"
+                image={props.game.image}
             />
             <CardContent>
                 <Divider variant="middle"> <Chip label="ELDEN RING" /> </Divider>
             </CardContent>
             <CardActions >
-                <Box textAlign='center' minWidth={"100%"}>
 
-                    <IconButton color="error" aria-label="Quitar juego activo" component="span">
-                        <DeleteForeverIcon />
-                    </IconButton>
-
-                </Box>
 
 
             </CardActions>

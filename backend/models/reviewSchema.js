@@ -8,18 +8,16 @@ const _REVIEW_SCHEMA_ = new _MONGOOSE_.Schema({
         ref: 'game'
     },
     userId: {
-        type: _MONGOOSE_.Schema.Types.ObjectId,
+        type: String,
         required: true,
-        ref: 'user'
     },
     content: {
         type: String,
         required: true,
-        minlength: 0,
-        maxlength: 140
+        minlength: 0
     },
     date: {
-        type: Date
+        type: String
     },
     score: {
         type: Number,

@@ -15,12 +15,12 @@ const _USER_SCHEMA_ = new _MONGOOSE_.Schema({
         minlength: 4,
         maxlength: 50
     },
-    password: {
+    /*password: {
         type: String,
         required: true,
         minlength: 4,
         maxlength: 20
-    },
+    },*/
     desc: {
         type: String,
         maxlength: 200
@@ -29,7 +29,7 @@ const _USER_SCHEMA_ = new _MONGOOSE_.Schema({
         type: String
     },
     birthday: {
-        type: Date
+        type: String
     },
     social: {
         twitter: { type: String },

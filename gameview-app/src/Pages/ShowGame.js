@@ -1,4 +1,4 @@
-import { Avatar, Checkbox, List, ListItem, ListItemButton, ListItemText, ListItemAvatar, Box, Button, CardMedia, Chip, Divider, FormControlLabel, FormGroup, Grid, Modal, Rating, styled, Switch, TextField, Typography, Stack, ThemeProvider } from '@mui/material'
+import { Avatar, Checkbox, List, ListItem, ListItemButton, ListItemText, ListItemAvatar, Box, Button, CardMedia, Chip, Divider, FormControlLabel, FormGroup, Grid, Modal, Rating, styled, Switch, TextField, Typography, Stack, ThemeProvider, Collapse, Alert } from '@mui/material'
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import SearchIcon from '@mui/icons-material/Search';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -7,12 +7,14 @@ import ActiveUsers from '../Components/ShowGame/ActiveUsers';
 import Review from '../Components/ShowGame/Review';
 import btheme from '../Components/GameView-Theme';
 import { useLocation, useNavigate } from 'react-router-dom';
-import imageBadge from '../Assets/icon.png';
+
 import LoggedBar from '../Components/loggedBar';
 import UnloggedBar from '../Components/unloggedBar';
-import { GetUser } from '../Services/UserServices';
-import { GetGameID } from '../Services/GameServices';
-import { GetReviewUserGame } from '../Services/ReviewServices';
+import { GetUser, GetUserEmail } from '../Services/UserServices';
+import { AddActiveUser, GetGameID, IsUserActive, RemoveActiveUser } from '../Services/GameServices';
+import { CreateReview, DeleteReview, GetGameReviews, GetGameScores, GetReviewUserGame, UpdateReview } from '../Services/ReviewServices';
+import { useAuth0 } from '@auth0/auth0-react';
+import { CreateUserBadges, DeleteUserBadges, GetAllBadges, GetUserGameBadges, UpdateUserGameBadges } from '../Services/BadgeServices';
 
 const style = {
     position: 'absolute',
@@ -26,7 +28,6 @@ const style = {
     p: 4,
     borderRadius: "1%",
 };
-
 const GameImage = styled(CardMedia)(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         height: "400px",
@@ -101,58 +102,101 @@ export default function ShowGame() {
     const handleClose3 = () => setOpen3(false);
     const { search } = useLocation();
     const searchParams = new URLSearchParams((search));
-    const session = localStorage.getItem("UserSession");
-    const [user, setUser] = useState({})
+    const [userDB, setUserDB] = useState({});
+    const { user, isLoading, isAuthenticated } = useAuth0();
     const [game, setGame] = useState({})
-    const [userReview, setUserReview] = useState({})
+    const [reviews, setReviews] = useState([])
+    const [openAlertModifReview, setOpenAlertModifReview] = useState(false);
+    const [textAlertModifReview, setTextAlertModifReview] = useState("");
+    const [openAlertCreateReview, setOpenAlertCreateReview] = useState(false);
+    const [textAlertCreateReview, setTextAlertCreateReview] = useState("");
+    const [userReview, setUserReview] = useState({
+        gameId: searchParams.get("id"),
+        userId: "",
+        content: "",
+        date: "",
+        score: 1
+    })
+    const [userBadges, setUserBadges] = useState({
+        gameId: searchParams.get("id"),
+        userId: "",
+        badges: []
+    })
     const [userHasReview, setUserHasReview] = useState(false)
-    const [genres, setGenres] = useState([])
-    const mountedRef = useRef(true)
-
-    const [checked, setChecked] = React.useState([1]);
+    const [badges, setBadges] = useState([]);
+    const [counter, setCounter] = useState(0);
+    const [scores, setScores] = useState({
+        "zeroStars": 0,
+        "OneStars": 0,
+        "twoStars": 0,
+        "threeStars": 0,
+        "fourStars": 0,
+        "fiveStars": 0
+    })
+    const [switchActiveGame, setSwitchActiveGame] = useState(false)
     async function getUser() {
 
-        const data = await GetUser(session);
+        const data = await GetUserEmail(user.email);
 
         if (data.email) {
-            setUser(data);
-
+            userActive(data._id)
+            setUserDB(data);
         } else {
             navigate("/")
-            console.log("error")
         }
     }
-    async function getUser() {
+    async function getScores() {
+        const data = await GetGameScores(searchParams.get("id"))
+        setScores(data)
+    }
+    async function getBadges() {
+        const data = await GetAllBadges();
 
-        const data = await GetUser(session);
-
-        if (data.email) {
-            setUser(data);
-
-        } else {
-            navigate("/")
-            console.log("error")
-        }
+        if (data.length != 0)
+            setBadges(data)
     }
     async function getUserGameReview() {
 
-        const data = await GetReviewUserGame(searchParams.get("id"), session);
-
+        const data = await GetReviewUserGame(searchParams.get("id"), user.email);
         if (data.content) {
             setUserReview(data);
             setUserHasReview(true);
 
         } else {
             setUserHasReview(false);
+            setUserReview({
+                ...userReview,
+                userId: user.email
+            })
+        }
+    }
+
+    async function getReviews() {
+
+        const data = await GetGameReviews(searchParams.get("id"));
+        setReviews(data)
+    }
+
+    async function getUserGameBadges() {
+
+        const data = await GetUserGameBadges(user.email, searchParams.get("id"));
+        if (data.gameId) {
+
+            setUserBadges(data);
+
+        } else {
+            setUserBadges({
+                ...userBadges,
+                userId: user.email
+            })
         }
     }
     async function getGame() {
 
         const data = await GetGameID(searchParams.get("id"));
-
+        console.log(game);
         if (data.launchDate) {
             setGame(data);
-            setGenres(data.genres)
 
         } else {
             navigate("/")
@@ -160,37 +204,221 @@ export default function ShowGame() {
         }
     }
 
+    async function userActive(idUser) {
+        const data = await IsUserActive(searchParams.get("id"), idUser)
+        setSwitchActiveGame(data)
+    }
+
     useEffect(() => {
+        if (!isLoading) {
 
-        getUser();
-        getGame();
-        getUserGameReview();
+            if (!isAuthenticated) {
+                navigate("/")
+            }
 
-        return () => {
-            mountedRef.current = false
+            getGame();
+            getBadges();
+            getReviews();
+            getScores();
+            if (isAuthenticated) {
+                getUser();
+                getUserGameReview();
+                getUserGameBadges();
+
+
+
+            }
+
         }
-    }, []);
+
+    }, [isLoading, counter, searchParams.get("id")]);
+
+    if (!Object.keys(game).length) return (<h1></h1>)
+
 
     const navigateFunction = url => () => {
         navigate(url)
     };
 
-    const handleToggle = (value) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
+    const handleSwitchToggle = (e) => {
+        if (e.target.checked) {
+            async function addActive() {
+                const data = await AddActiveUser(searchParams.get("id"), userDB._id)
+                console.log("AddData: ", data)
+            }
+            addActive();
+        } else {
+            async function removeActive() {
+                const data = await RemoveActiveUser(searchParams.get("id"), userDB._id)
+                console.log("RemoveData: ", data)
+            }
+            removeActive();
+        }
+        setSwitchActiveGame(e.target.checked)
+        setCounter((c) => c + 1)
+    };
 
-        if (currentIndex === -1) {
+    const handleToggle = (value) => () => {
+        //userBadges.badges.filter(e => e.name === badge.name).length === 1
+        //const currentIndex = userBadges.badges.indexOf(value);
+        const exists = userBadges.badges.filter(e => e.name === value.name).length
+        const index = userBadges.badges.indexOf(value);
+        const newChecked = [...userBadges.badges];
+        if (exists === 0) {
             newChecked.push(value);
         } else {
-            newChecked.splice(currentIndex, 1);
+            newChecked.splice(index, 1);
+        }
+        setUserBadges({
+            ...userBadges,
+            badges: newChecked
+
+        })
+        //setChecked(newChecked);
+    };
+
+    const handleOnChange = (e) => {
+        const { name, value } = e.target;
+        setUserReview({
+            ...userReview,
+            [name]: value
+        })
+    }
+
+    const processReview = () => {
+        async function postReview() {
+            console.log("userReview: ", userReview)
+            const data = await CreateReview(userReview);
+            console.log(data)
+            if (data.newReview.content) {
+                setUserReview(data.newReview);
+                setUserHasReview(true);
+                setGame({
+                    ...game,
+                    score: data.newScore
+                })
+
+                let aux = userBadges;
+                aux = {
+                    ...aux,
+                    badges: []
+                };
+                for (let index = 0; index < userBadges.badges.length; index++) {
+                    aux.badges.push(userBadges.badges[index]._id);
+
+                }
+                const dataBadges = await CreateUserBadges(aux)
+                if (dataBadges.userId) {
+                    setUserBadges(dataBadges)
+                    getReviews();
+                    setOpen2(false);
+                }
+
+            } else {
+                setUserHasReview(false);
+            }
+        }
+        setOpenAlertCreateReview(false)
+        if (userBadges.badges.length == 0) {
+            setTextAlertCreateReview("Introduce por lo menos una medalla.");
+            setOpenAlertCreateReview(true)
+        } else if (userReview.content.length === 0) {
+            setTextAlertCreateReview("Debes de escribir para publicar tu reseña.");
+            setOpenAlertCreateReview(true)
+        } else if (userReview.score > 5 || userReview.score < 1) {
+            setTextAlertCreateReview("Solo puedes puntuar entre 1 y 5");
+            setOpenAlertCreateReview(true)
+        } else {
+            postReview();
         }
 
-        setChecked(newChecked);
-    };
+
+    }
+
+    const deleteReview = () => {
+        async function delReview() {
+            console.log("userReview: ", userReview)
+            const data = await DeleteReview(userReview._id);
+            console.log("data: ", data);
+            await DeleteUserBadges(userBadges._id);
+
+            setUserReview({
+                gameId: searchParams.get("id"),
+                userId: user.email,
+                content: "",
+                date: "",
+                score: 1
+            })
+            setUserBadges({
+                gameId: searchParams.get("id"),
+                userId: user.email,
+                badges: []
+            })
+            setUserHasReview(false)
+            setGame({
+                ...game,
+                score: data.newScore
+            })
+            getReviews();
+            setOpen3(false);
+        }
+        //console.log("userReview: ", userReview)
+        delReview();
+    }
+
+    const updateProcessReview = () => {
+        async function putReview() {
+            const data = await UpdateReview(userReview, userReview._id);
+
+            if (data.data.content) {
+                setUserReview(data.data);
+                setUserHasReview(true);
+
+                setGame({
+                    ...game,
+                    score: data.newScore
+                })
+
+                let aux = userBadges;
+                aux = {
+                    ...aux,
+                    badges: []
+                };
+                for (let index = 0; index < userBadges.badges.length; index++) {
+                    aux.badges.push(userBadges.badges[index]._id);
+
+                }
+
+                const dataBadges = await UpdateUserGameBadges(userBadges._id, aux)
+                //const dataBadges = await CreateUserBadges(aux)
+                getReviews();
+                setOpen3(false);
+                if (dataBadges.data.userId) {
+
+                    setUserBadges(dataBadges.data)
+                    setCounter((c) => c + 1)
+                }
+            }
+        }
+
+        setOpenAlertModifReview(false)
+        if (userBadges.badges.length == 0) {
+            setTextAlertModifReview("Introduce por lo menos una medalla.");
+            setOpenAlertModifReview(true)
+        } else if (userReview.content.length === 0) {
+            setTextAlertModifReview("Debes de escribir para publicar tu reseña.");
+            setOpenAlertModifReview(true)
+        } else if (userReview.score > 5 || userReview.score < 1) {
+            setTextAlertModifReview("Solo puedes puntuar entre 1 y 5");
+            setOpenAlertModifReview(true)
+        } else {
+            putReview();
+        }
+    }
     //
     return (
         <ThemeProvider theme={btheme}>
-            {session !== null ? <LoggedBar></LoggedBar> : <UnloggedBar></UnloggedBar>}
+            {isAuthenticated ? <LoggedBar></LoggedBar> : <UnloggedBar></UnloggedBar>}
             <Grid container>
                 <Grid container item xs={12} justifyContent={"center"} >
                     <Grid item container xs={12} md={3} justifyContent={"center"} alignItems={"center"} my={5} >
@@ -216,8 +444,8 @@ export default function ShowGame() {
                             <Typography mb={2} variant="h6" component={"h1"} >{game.studio} - {game.launchDate}</Typography>
                             <StyledStack sx={{ overflow: "auto", paddingBottom: 2 }} direction={"row"} spacing={.5}>
                                 {
-                                    genres.map((genre, index) => (
-                                        <Chip color="info" onClick={navigateFunction("/browse?v=" + genre.name)} label={genre.name} />
+                                    game.genres.map((genre, index) => (
+                                        <Chip key={genre._id} color="info" onClick={navigateFunction("/browse?c=" + genre._id)} label={genre.name} />
                                     ))
                                 }
                             </StyledStack>
@@ -225,14 +453,15 @@ export default function ShowGame() {
                             <Typography variant="h6" textAlign={"left"} my={3}> {game.synopsis} </Typography>
                         </Grid>
                         <Grid item container xs={12} justifyContent="flex-end" alignItems="flex-end">
+
                             {
-                                userHasReview || (
+                                (userHasReview && isAuthenticated) || (
                                     <Button onClick={handleOpen2} sx={{ marginRight: "30px", marginY: 1 }} variant="contained" color="warning" endIcon={<AddCircleIcon />}>Crear Reseña</Button>
                                 )
 
                             }
                             {
-                                userHasReview && (
+                                (userHasReview && isAuthenticated) && (
                                     <Button onClick={handleOpen3} sx={{ marginRight: "30px", marginY: 1 }} variant="contained" color="warning" endIcon={<AddCircleIcon />}>Modificar Reseña</Button>
                                 )
                             }
@@ -247,17 +476,17 @@ export default function ShowGame() {
                                         Reseña y puntúa el juego
                                     </Typography>
                                     <Grid container alignItems="center" justifyContent="center">
-                                        <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', maxHeight: 200, overflow: "auto", overflowX: "hidden" }}>
-                                            {badgeList.map((badge) => {
-                                                const labelId = `checkbox-list-secondary-label-${badge.index}`;
+                                        <List dense sx={{ width: '100%', maxWidth: 600, bgcolor: 'background.paper', maxHeight: 200, overflow: "auto", overflowX: "hidden" }}>
+                                            {badges.map((badge, index) => {
+                                                const labelId = `checkbox-list-secondary-label-${index}`;
                                                 return (
                                                     <ListItem
-                                                        key={badge.index}
+                                                        key={index}
                                                         secondaryAction={
                                                             <Checkbox
                                                                 edge="end"
-                                                                onChange={handleToggle(badge.index)}
-                                                                checked={checked.indexOf(badge.index) !== -1}
+                                                                onChange={handleToggle(badge)}
+                                                                checked={userBadges.badges.filter(e => e.name === badge.name).length === 1}
                                                                 inputProps={{ 'aria-labelledby': labelId }}
                                                             />
                                                         }
@@ -266,11 +495,11 @@ export default function ShowGame() {
                                                         <ListItemButton>
                                                             <ListItemAvatar>
                                                                 <Avatar
-                                                                    alt={badge.name}
+                                                                    alt={`${badge.name}: ${badge.desc}`}
                                                                     src={badge.image}
                                                                 />
                                                             </ListItemAvatar>
-                                                            <ListItemText id={labelId} primary={badge.name} />
+                                                            <ListItemText id={labelId} primary={`${badge.name}: ${badge.desc}`} />
                                                         </ListItemButton>
                                                     </ListItem>
                                                 );
@@ -278,12 +507,14 @@ export default function ShowGame() {
                                         </List>
 
                                     </Grid>
-                                    <TextField fullWidth id="outlined-basic" multiline rows={4} maxRows={8} autoComplete='none' variant="outlined" sx={{ mt: 1.5, mb: 2 }} />
+                                    <TextField onChange={handleOnChange} name="content" fullWidth id="outlined-basic" multiline rows={4} autoComplete='none' variant="outlined" sx={{ mt: 1.5, mb: 2 }} />
                                     <TextField
                                         id="date"
                                         label="¿Cuándo terminaste el juego? (opcional)"
                                         type="date"
                                         color={"info"}
+                                        onChange={handleOnChange}
+                                        name="date"
                                         defaultValue="2017-05-24"
                                         fullWidth
                                         InputLabelProps={{
@@ -291,14 +522,19 @@ export default function ShowGame() {
                                         }}
                                     />
                                     <Grid container justifyContent="-moz-initial" mt={2}>
-                                        <Grid xs={10}>
-                                            <Rating precision={0.5} name="no-value" defaultValue={1} size="large" />
+                                        <Grid item xs={10}>
+                                            <Rating precision={1} max={5} onChange={handleOnChange} name="score" value={userReview.score} size="large" />
                                         </Grid>
-                                        <Grid xs={2} sx={{
+                                        <Grid item xs={2} sx={{
                                             display: "flex",
                                             flexDirection: 'row-reverse'
                                         }}>
-                                            <Button color="buttonPrimary" sx={{ color: "#FFF2EF" }} variant="contained">Publicar</Button>
+                                            <Button color="buttonPrimary" onClick={processReview} sx={{ color: "#FFF2EF" }} variant="contained">Publicar</Button>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Collapse in={openAlertCreateReview}>
+                                                <Alert id="alert-create" variant="filled" severity="warning" sx={{ mt: 2 }}> {textAlertCreateReview} </Alert>
+                                            </Collapse>
                                         </Grid>
                                     </Grid>
                                 </Box>
@@ -314,16 +550,16 @@ export default function ShowGame() {
                                     </Typography>
                                     <Grid container alignItems="center" justifyContent="center">
                                         <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', maxHeight: 200, overflow: "auto", overflowX: "hidden" }}>
-                                            {badgeList.map((badge) => {
-                                                const labelId = `checkbox-list-secondary-label-${badge.index}`;
+                                            {badges.map((badge, index) => {
+                                                const labelId = `checkbox-list-secondary-label-${index}`;
                                                 return (
                                                     <ListItem
-                                                        key={badge.index}
+                                                        key={index}
                                                         secondaryAction={
                                                             <Checkbox
                                                                 edge="end"
-                                                                onChange={handleToggle(badge.index)}
-                                                                checked={checked.indexOf(badge.index) !== -1}
+                                                                onChange={handleToggle(badge)}
+                                                                checked={userBadges.badges.filter(e => e.name === badge.name).length === 1}
                                                                 inputProps={{ 'aria-labelledby': labelId }}
                                                             />
                                                         }
@@ -332,42 +568,51 @@ export default function ShowGame() {
                                                         <ListItemButton>
                                                             <ListItemAvatar>
                                                                 <Avatar
-                                                                    alt={badge.name}
+                                                                    alt={`${badge.name}: ${badge.desc}`}
                                                                     src={badge.image}
                                                                 />
                                                             </ListItemAvatar>
-                                                            <ListItemText id={labelId} primary={badge.name} />
+                                                            <ListItemText id={labelId} primary={`${badge.name}: ${badge.desc}`} />
                                                         </ListItemButton>
                                                     </ListItem>
                                                 );
                                             })}
                                         </List>
                                     </Grid>
-                                    <TextField fullWidth id="outlined-basic" multiline rows={4} maxRows={8} autoComplete='none' variant="outlined" sx={{ mt: 1.5, mb: 2 }} />
+                                    <TextField onChange={handleOnChange} name="content" fullWidth id="outlined-basic" multiline value={userReview.content} rows={4} autoComplete='none' variant="outlined" sx={{ mt: 1.5, mb: 2 }} />
                                     <TextField
                                         id="date"
                                         label="¿Cuándo terminaste el juego? (opcional)"
+                                        onChange={handleOnChange}
                                         type="date"
+                                        name="date"
                                         color={"info"}
-                                        defaultValue="2017-05-24"
+                                        defaultValue={userReview.date}
                                         fullWidth
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
                                     />
                                     <Grid container justifyContent="-moz-initial" mt={2}>
-                                        <Grid xs={6}>
+                                        <Grid item xs={6}>
 
-                                            <Rating precision={0.5} name="no-value" defaultValue={1} size="large" />
+                                            <Rating precision={1} onChange={handleOnChange} name="score" value={userReview.score} size="large" />
                                         </Grid>
-                                        <Grid xs={6} sx={{
+                                        <Grid item xs={6} sx={{
                                             display: "flex",
                                             flexDirection: 'row-reverse'
                                         }}>
-                                            <Button variant="contained" color="error" sx={{ color: "#FFF2EF" }}>Eliminar</Button>
-                                            <Button variant="contained" color="buttonPrimary" sx={{ color: "#FFF2EF", marginRight: 5 }}>Actualizar</Button>
+                                            <Button variant="contained" onClick={deleteReview} color="error" sx={{ color: "#FFF2EF" }}>Eliminar</Button>
+                                            <Button variant="contained" onClick={updateProcessReview} color="buttonPrimary" sx={{ color: "#FFF2EF", marginRight: 5 }}>Actualizar</Button>
+
 
                                         </Grid>
+                                        <Grid item xs={12}>
+                                            <Collapse in={openAlertModifReview}>
+                                                <Alert id="alert-modif" variant="filled" severity="warning" sx={{ mt: 2 }}> {textAlertModifReview} </Alert>
+                                            </Collapse>
+                                        </Grid>
+
                                     </Grid>
                                 </Box>
                             </Modal>
@@ -388,7 +633,7 @@ export default function ShowGame() {
                                         <Grid item container xs={12} md={12} lg={4} justifyContent="center" alignItems={"center"}
                                         >
                                             <FormGroup>
-                                                <FormControlLabel control={<Switch color={"buttonPrimary"} />} label={<span style={{ color: '#FFF2EF' }}>Quiero buscar jugadores</span>} />
+                                                <FormControlLabel control={<Switch onChange={handleSwitchToggle} color={"buttonPrimary"} checked={switchActiveGame} />} label={<span style={{ color: '#FFF2EF' }}>Quiero buscar jugadores</span>} />
                                             </FormGroup>
                                             <Typography color={"#FFF2EF"} width={"80%"} sx={{ my: 10 }}>
                                                 Estos son los usuarios que buscan tener una partida en Elden Ring, comunícate con ellos por sus redes sociales o enviándoles un mensaje
@@ -397,15 +642,12 @@ export default function ShowGame() {
                                         </Grid>
 
                                         <Grid item container xs={12} md={12} lg={8} justifyContent="center" alignItems={"center"} sx={{ maxHeight: "470px", overflow: "auto" }}>
-                                            <ActiveUsers></ActiveUsers>
-                                            <ActiveUsers></ActiveUsers>
-                                            <ActiveUsers></ActiveUsers>
-                                            <ActiveUsers></ActiveUsers>
-                                            <ActiveUsers></ActiveUsers>
-                                            <ActiveUsers></ActiveUsers>
-                                            <ActiveUsers></ActiveUsers>
-                                            <ActiveUsers></ActiveUsers>
-                                            <ActiveUsers></ActiveUsers>
+                                            {
+                                                game.activeUsers.map((user, index) => (
+                                                    <ActiveUsers key={index} user={user}></ActiveUsers>
+                                                ))
+                                            }
+
                                         </Grid>
                                     </Grid>
                                 </BoxModalActiveGames>
@@ -419,32 +661,61 @@ export default function ShowGame() {
 
                 </Grid>
 
+                <Grid container item xs={12} md={6} justifyContent={"center"} alignItems={"center"}>
 
-                <Grid container item xs={12} justifyContent={"center"} alignItems={"center"}>
+                    <Box sx={{
+                        '& > legend': { mt: 1 },
+                    }}>
+                        <Typography variant={"h5"} fontWeight={"bold"} textAlign={"center"}>Total de Puntuaciones</Typography>
+                        <Typography component="legend" textAlign={"center"}>{scores.fiveStars}</Typography>
+                        <Rating name="read-only" value={5} readOnly />
 
-                    <Review></Review>
+                        <Typography component="legend" textAlign={"center"}>{scores.fourStars}</Typography>
+                        <Rating name="read-only" value={4} readOnly />
 
-                    <Review></Review>
+                        <Typography component="legend" textAlign={"center"}>{scores.threeStars}</Typography>
+                        <Rating name="read-only" value={3} readOnly />
+
+                        <Typography component="legend" textAlign={"center"}>{scores.twoStars}</Typography>
+                        <Rating name="read-only" value={2} readOnly />
+
+                        <Typography component="legend" textAlign={"center"}>{scores.OneStars}</Typography>
+                        <Rating name="read-only" value={1} readOnly />
+
+                    </Box>
+                </Grid>
+
+                {
+                    userHasReview && (
+                        <Grid container item xs={12} md={6} justifyContent={"center"} alignItems={"center"} mt={5}>
+
+                            <Box sx={{
+                                '& > legend': { mt: 1 },
+                            }}>
+                                <Typography variant={"h5"} fontWeight={"bold"} textAlign={"center"}>Tu reseña.</Typography>
+                                <Review r={userReview} actualUser={userDB}></Review>
+
+
+                            </Box>
+                        </Grid>
+                    )
+                }
+
+
+                <Grid container item xs={12} justifyContent={"center"} alignItems={"center"} mt={10}>
+                    <Typography variant={"h5"} fontWeight={"bold"} textAlign={"center"}>Todas las reseñas.</Typography>
+                </Grid>
+
+                <Grid container item xs={12} justifyContent={"center"} alignItems={"center"} my={2}>
+
+                    {
+                        reviews.map((review, index) => (
+                            <Review key={index} r={review} actualUser={userDB}></Review>
+                        ))
+                    }
                 </Grid>
 
             </Grid>
         </ThemeProvider>
     )
 }
-
-
-const badgeList = [
-    { index: 1, name: "Depredador: Colector profesional de kills", image: imageBadge },
-    { index: 2, name: "Cazador de tesoros: El mejor looteador del condado", image: imageBadge },
-    { index: 3, name: "Estrella Fugaz: Recoge todos los objetos con un tiempo limitado.", image: imageBadge },
-    { index: 4, name: "A la siguiente: Se el primero en morir", image: imageBadge },
-    { index: 5, name: "Campeón: Gana un total de 50 partidas", image: imageBadge },
-    { index: 6, name: "A paso lento: Asesino de cuerpo a cuerpo", image: imageBadge },
-    { index: 7, name: "Leyenda: Gana un total de 100 partidas", image: imageBadge },
-    { index: 8, name: "Más difícil: Ha ganado en la mayor dificultad", image: imageBadge },
-    { index: 9, name: "Sin muertes: Te has pasado el juego sin morir", image: imageBadge },
-    { index: 10, name: "Sin golpes: Te has pasado el juego sin ser golpeado ninguna vez", image: imageBadge },
-    { index: 11, name: "Veterano: Llevas jugando este juego +3 años.", image: imageBadge }
-
-
-]

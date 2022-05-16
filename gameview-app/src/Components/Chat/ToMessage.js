@@ -24,13 +24,13 @@ const ToMessagePaper = styled(Paper)(({ theme }) => ({
 
 }));
 
-export default function ToMessage() {
+export default function ToMessage(props) {
     return (
         <Fragment>
             <Grid container margin={1} sx={{ marginTop: "25px" }}>
                 <ToMessagePaper elevation={2}>
-                    <Typography margin={2}>Muchas gracias por contestarme.Muchas gracias por contestarme.Muchas gracias por contestarme.Muchas gracias por contestarme.</Typography>
-                    <Typography variant="caption" margin={2}>01:40pm</Typography>
+                    <Typography margin={2}>{props.msg.content}</Typography>
+                    <Typography variant="caption" margin={2}>{props.msg.messageDate}</Typography>
                 </ToMessagePaper>
             </Grid>
 

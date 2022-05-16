@@ -18,7 +18,7 @@ const _GAME_SCHEMA_ = new _MONGOOSE_.Schema({
         type: String,
     },
     launchDate: {
-        type: Date
+        type: String
     },
     score: {
         type: Number,

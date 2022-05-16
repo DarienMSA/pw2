@@ -10,7 +10,7 @@ const _CHAT_LOG_SCHEMA_ = new _MONGOOSE_.Schema({
             content: { type: String, required: true },
             from: { type: _MONGOOSE_.Schema.Types.ObjectId, ref: 'user' },
             to: { type: _MONGOOSE_.Schema.Types.ObjectId, ref: 'user' },
-            messageDate: { type: Date }
+            messageDate: { type: String }
         }
     ]
 });

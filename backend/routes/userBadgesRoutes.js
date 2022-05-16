@@ -10,6 +10,8 @@ _ROUTER_.get("/userBadges/user/:idUser", _USER_BADGES_ROUTER_.userBadges_getUser
 
 _ROUTER_.post("/userBadges", _USER_BADGES_ROUTER_.userBadges_create);
 
+_ROUTER_.put("/userBadges/:id", _USER_BADGES_ROUTER_.userBadges_update);
+
 _ROUTER_.put("/userBadges/:id/addBadge/:idBadge", _USER_BADGES_ROUTER_.userBadges_addBadge);
 _ROUTER_.put("/userBadges/:id/removeBadge/:idBadge", _USER_BADGES_ROUTER_.userBadges_removeBadge);
 

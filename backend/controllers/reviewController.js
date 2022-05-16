@@ -2,9 +2,19 @@ const _REVIEW_ = require("../models/reviewSchema");
 const _GAME_ = require("../models/gameSchema");
 const _USER_ = require("../models/userSchema");
 
+function getScoreAvg(arr) {
+    if (arr.length === 0)
+        return 0
+    const total = arr.reduce((accumulator, object) => {
+        return accumulator + object.score;
+    }, 0)
+    const count = arr.length
+    return total / count
+}
+
 exports.review_getall = async (req, res) => {
     try {
-        const data = await _REVIEW_.find();
+        let data = await _REVIEW_.find();
         res.send(data);
     } catch (error) {
         res.send(error);
@@ -33,20 +43,48 @@ exports.review_getOne = async (req, res) => {
     }
 }
 
-exports.review_getOne = async (req, res) => {
+exports.review_getUserReviews = async (req, res) => {
     try {
         const { id } = req.params;
-        const data = await _REVIEW_.findById(id);
-        if (data) {
-            res.send(data);
-        } else {
-            res.send({
-                message: "No se ha encontrado la reseña.",
-                code: "RE00"
-            })
-            console.error(`message: "No se ha encontrado la reseña.",
-            code: "RE00"`);
-        }
+        const data = await _REVIEW_.find({ userId: id }).populate("gameId");
+        console.log("data", data)
+        res.send(data);
+    } catch (error) {
+        res.send(error);
+        console.error(error);
+    }
+}
+
+
+
+exports.review_getGameReviews = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = await _REVIEW_.find({ gameId: id });
+        res.send(data);
+    } catch (error) {
+        res.send(error);
+        console.error(error);
+    }
+}
+
+exports.review_getGameStarScores = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const zeroStars = await _REVIEW_.find({ gameId: id, score: 0 });
+        const OneStars = await _REVIEW_.find({ gameId: id, score: 1 });
+        const twoStars = await _REVIEW_.find({ gameId: id, score: 2 });
+        const threeStars = await _REVIEW_.find({ gameId: id, score: 3 });
+        const fourStars = await _REVIEW_.find({ gameId: id, score: 4 });
+        const fiveStars = await _REVIEW_.find({ gameId: id, score: 5 });
+        res.send({
+            zeroStars: zeroStars.length,
+            OneStars: OneStars.length,
+            twoStars: twoStars.length,
+            threeStars: threeStars.length,
+            fourStars: fourStars.length,
+            fiveStars: fiveStars.length
+        });
     } catch (error) {
         res.send(error);
         console.error(error);
@@ -73,19 +111,35 @@ exports.review_getUserGameReview = async (req, res) => {
     }
 }
 
+exports.review_getUserHasLike = async (req, res) => {
+    try {
+        const { id, idUser } = req.params;
+        const data = await _REVIEW_.findOne({ _id: id, voteUsers: idUser });
+        if (data) {
+            res.send({ like: true });
+        } else {
+            res.send({ like: false });
+
+        }
+    } catch (error) {
+        res.send(error);
+        console.error(error);
+    }
+}
+
 exports.review_create = async (req, res) => {
     try {
         const { body } = req;
         const gameDB = await _GAME_.findById(body.gameId);
         if (gameDB) {
-            const userDB = await _USER_.findById(body.userId);
+            const userDB = await _USER_.findOne({ email: body.userId });
             if (userDB) {
-                if (body.content.length < 0 || body.content.length > 140) {
+                if (body.content.length == 0) {
                     res.send({
-                        message: "La reseña solo puede contar con un máximo de 140 caracteres",
+                        message: "Debe de haber una reseña.",
                         code: "RE00-C"
                     })
-                    console.error(`message: "La reseña solo puede contar con un máximo de 140 caracteres",
+                    console.error(`message: "Debe de haber una reseña.",
                     code: "RE00-C"`);
                 } else if (body.score < 0 || body.score > 5) {
                     res.send({
@@ -114,12 +168,16 @@ exports.review_create = async (req, res) => {
                                 console.error(err);
                                 res.send({ code: "RE03-C", message: err });
                             })
+                        const reviewsOfGame = await _REVIEW_.find({ gameId: body.gameId })
+                        const avg = getScoreAvg(reviewsOfGame)
                         await _GAME_.findOneAndUpdate(
                             { _id: body.gameId },
                             {
+                                score: avg,
                                 $inc: { reviewsLength: 1 }
                             });
-                        res.send(newReview);
+
+                        res.send({ newReview, newScore: avg });
                     }
 
                 }
@@ -152,14 +210,14 @@ exports.review_update = async (req, res) => {
 
         const gameDB = await _GAME_.findById(body.gameId);
         if (gameDB) {
-            const userDB = await _USER_.findById(body.userId);
+            const userDB = await _USER_.findOne({ email: body.userId });
             if (userDB) {
-                if (body.name.length < 0 || body.name.length > 140) {
+                if (body.content.length == 0) {
                     res.send({
-                        message: "La reseña solo puede contar con un máximo de 140 caracteres",
+                        message: "Debe de haber una reseña.",
                         code: "RE00-C"
                     })
-                    console.error(`message: "La reseña solo puede contar con un máximo de 140 caracteres",
+                    console.error(`message: "Debe de haber una reseña.",
                     code: "RE00-C"`);
                 } else if (body.score < 0 || body.score > 5) {
                     res.send({
@@ -170,9 +228,17 @@ exports.review_update = async (req, res) => {
                     code: "RE01-C"`);
                 } else {
                     const data = await _REVIEW_.findOneAndUpdate({ _id: id }, body, { returnOriginal: false });
+                    const reviewsOfGame = await _REVIEW_.find({ gameId: body.gameId })
+                    const avg = getScoreAvg(reviewsOfGame)
+                    await _GAME_.findOneAndUpdate(
+                        { _id: body.gameId },
+                        {
+                            score: avg
+                        });
                     res.send({
                         message: "Registro actualizado exitosamente.",
-                        data //lo mismo a data: data
+                        data, //lo mismo a data: data,
+                        newScore: avg
                     })
                 }
             } else {
@@ -200,12 +266,20 @@ exports.review_update = async (req, res) => {
 exports.review_upvote = async (req, res) => {
     try {
         const { id, idUser } = req.params;
+        console.log("id: ", id)
+        console.log("idUser: ", idUser)
         const userDB = await _USER_.findById(idUser);
         if (userDB) {
             const reviewDB = await _REVIEW_.findById(id);
             if (reviewDB) {
-                reviewDB.vote++;
-                const data = await _COMMENT_.findOneAndUpdate({ _id: id }, { vote: reviewDB.vote }, { $push: { voteUsers: idUser } }, { returnOriginal: false });
+                const data = await _REVIEW_.findOneAndUpdate(
+                    { _id: id },
+                    {
+                        $inc: { vote: 1 },
+                        $push: { voteUsers: idUser }
+                    },
+                    { returnOriginal: false }
+                );
                 res.send({
                     message: "Se ha valorado la reseña.",
                     data //lo mismo a data: data
@@ -239,8 +313,13 @@ exports.review_downvote = async (req, res) => {
         if (userDB) {
             const reviewDB = await _REVIEW_.findById(id);
             if (reviewDB) {
-                reviewDB.vote--;
-                const data = await _COMMENT_.findOneAndUpdate({ _id: id }, { vote: reviewDB.vote }, { $pull: { voteUsers: idUser } }, { returnOriginal: false });
+                const data = await _REVIEW_.findOneAndUpdate(
+                    { _id: id },
+                    {
+                        $inc: { vote: -1 },
+                        $pull: { voteUsers: idUser }
+                    },
+                    { returnOriginal: false })
                 res.send({
                     message: "Se ha valorado la reseña.",
                     data //lo mismo a data: data
@@ -273,12 +352,21 @@ exports.review_delete = async (req, res) => {
         const reviewDB = await _REVIEW_.findById(id);
         if (reviewDB) {
             await _REVIEW_.deleteOne({ _id: id });
+            const reviewsOfGame = await _REVIEW_.find({ gameId: reviewDB.gameId })
+            const avg = getScoreAvg(reviewsOfGame)
+            console.log("reviewsOfGame: ", reviewsOfGame)
+            console.log("reviewDB: ", reviewDB)
             await _GAME_.findOneAndUpdate(
                 { _id: reviewDB.gameId },
                 {
+                    score: avg,
                     $inc: { reviewsLength: -1 }
                 });
-            res.send({ message: "Registro eliminado exitosamente" });
+
+            res.send({
+                message: "Registro eliminado exitosamente",
+                newScore: avg
+            });
         } else {
             res.send({
                 message: "No se ha encontrado la reseña.",

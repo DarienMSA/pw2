@@ -27,14 +27,14 @@ const FromMessagePaper = styled(Paper)(({ theme }) => ({
 
 }));
 
-export default function FromMessage() {
+export default function FromMessage(props) {
     return (
         <Fragment>
             <Grid container margin={1} direction="row-reverse" justifyContent={"flex-start"} sx={{ marginTop: "25px" }}>
                 <FromMessagePaper elevation={2}>
-                    <Typography margin={2}>Muchas gracias por contestarme.Muchas gracias por contestarme.Muchas gracias por contestarme.Muchas gracias por contestarme.</Typography>
+                    <Typography margin={2}>{props.msg.content}</Typography>
                     <Box textAlign="end">
-                        <Typography variant="caption" margin={2}>01:40pm</Typography>
+                        <Typography variant="caption" margin={2}>{props.msg.messageDate}</Typography>
                     </Box>
                 </FromMessagePaper>
             </Grid>

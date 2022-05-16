@@ -11,10 +11,9 @@ const _COMMENT_SCHEMA_ = new _MONGOOSE_.Schema({
             {
                 content: {
                     type: String,
-                    maxlength: 300
                 },
                 date: {
-                    type: Date
+                    type: String
                 },
                 user: {
                     type: _MONGOOSE_.Schema.Types.ObjectId,

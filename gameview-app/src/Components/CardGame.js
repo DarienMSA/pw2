@@ -22,23 +22,31 @@ export default function CardGame(props) {
             </CardActionArea>
             <CardContent sx={{ padding: 1 }}>
 
-                <Typography variant="button" component="div" sx={{
+                <Typography textAlign={"center"} variant="button" component="div" sx={{
                     display: '-webkit-box',
                     overflow: 'hidden',
                     WebkitBoxOrient: 'vertical',
                     WebkitLineClamp: 1,
                     marginLeft: .5
                 }}>
-                    <Link href='/memes' underline='none' color='inherit'>
-                        {props.g.name}
-                    </Link>
-                </Typography>
-                <Divider variant="middle" sx={{ mb: 1.5, mt: 0.5 }} />
-                <Stack direction="row" spacing={0.5} justifyContent="center">
 
-                    <Chip sx={{ minWidth: 0.35 }} label={props.g.genres[0].name} onClick={navigateFunction("/browse?v=" + props.g.genres[0].name)} color="info" size="small" />
-                    <Chip sx={{ minWidth: 0.35 }} label={props.g.genres[1].name} onClick={navigateFunction("/browse?v=" + props.g.genres[1].name)} color="info" size="small" />
-                </Stack>
+                    {props.g.name}
+
+                </Typography>
+
+
+                {
+                    props.g.genres[0].name && (
+                        <>
+                            <Divider variant="middle" sx={{ mb: 1.5, mt: 0.5 }} />
+                            <Stack direction="row" spacing={0.5} justifyContent="center">
+                                <Chip sx={{ minWidth: 0.35 }} label={props.g.genres[0].name} onClick={navigateFunction("/browse?c=" + props.g.genres[0]._id)} color="info" size="small" />
+                                <Chip sx={{ minWidth: 0.35 }} label={props.g.genres[1].name} onClick={navigateFunction("/browse?c=" + props.g.genres[1]._id)} color="info" size="small" />
+                            </Stack>
+                        </>
+                    )
+                }
+
             </CardContent>
         </Card>
     )

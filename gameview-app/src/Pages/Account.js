@@ -9,7 +9,14 @@ import btheme from '../Components/GameView-Theme';
 import { useLocation, useNavigate } from 'react-router-dom';
 import LoggedBar from '../Components/loggedBar';
 import UnloggedBar from '../Components/unloggedBar';
-import { GetUser } from '../Services/UserServices';
+import { GetUser, GetUserEmail } from '../Services/UserServices';
+import { useAuth0 } from '@auth0/auth0-react';
+import { GetUserReviews } from '../Services/ReviewServices';
+import { GetUserActiveGames } from '../Services/GameServices';
+import facebookImage from '../Assets/facebook.png';
+import instagramImage from '../Assets/instagram.png';
+import twitterImage from '../Assets/twitter.png';
+import discordImage from '../Assets/discord.png';
 
 
 
@@ -18,45 +25,82 @@ export default function Account() {
     const [openDiscordMessage, setOpenDiscordMessage] = React.useState(false);
     const { search } = useLocation();
     const searchParams = new URLSearchParams((search));
-    const session = localStorage.getItem("UserSession");
 
 
-    const [user, setUser] = useState({})
-    const [userSocial, setUserSocial] = useState({})
+    const { user, isLoading, isAuthenticated } = useAuth0();
+    const [userDB, setUserDB] = useState({});
+    const [reviews, setReviews] = useState([])
+    const [activeGames, setActiveGames] = useState([])
     const [discordMessage, setDiscordMessage] = useState("");
 
+    async function getUserReviews(id) {
+        const data = await GetUserReviews(id);
+        setReviews(data);
+    }
+
+    async function getUserActiveGames(id) {
+
+        const data = await GetUserActiveGames(id);
+        setActiveGames(data);
+    }
+
+
     useEffect(() => {
-        if (session === null) {
-            navigate("/")
-        } else {
-            async function getUser() {
-                let id;
-                if (searchParams.has("u"))
-                    id = searchParams.get("u");
-                else
-                    id = session;
 
-                const data = await GetUser(id);
-                if (data.birthday === null)
-                    data.birthday = "";
+        if (!isLoading) {
 
-                setUser(data);
-                setUserSocial(data.social);
-                if (data.email) {
-                    if (data.social.discord !== "")
-                        setDiscordMessage("La cuenta se ha copiado en el portapapeles (" + data.social.discord + ")")
-                    else
-                        setDiscordMessage("El usuario no tiene disponible su cuenta de Discord");
-                } else {
-                    navigate("/")
-                }
+
+            if (!isAuthenticated) {
+                navigate("/")
             }
-            getUser();
+
+            if (!searchParams.has("u")) {
+
+                async function getActualUser() {
+                    const data = await GetUserEmail(user.email);
+                    if (data.email) {
+                        if (data.birthday === null)
+                            data.birthday = "";
+                        setUserDB(data);
+
+                        if (data.social.discord !== "")
+                            setDiscordMessage("La cuenta se ha copiado en el portapapeles (" + data.social.discord + ")")
+                        else
+                            setDiscordMessage("El usuario no tiene disponible su cuenta de Discord");
+                        getUserReviews(data.email)
+                        getUserActiveGames(data._id)
+                    } else {
+
+                    }
+                }
+                getActualUser();
+            } else if (searchParams.has("u")) {
+                async function getParamUser() {
+                    const data = await GetUser(searchParams.get("u"));
+                    console.log("getParamUser: ", data);
+                    if (data.email) {
+                        if (data.birthday === null)
+                            data.birthday = "";
+                        setUserDB(data);
+
+                        if (data.social.discord !== "")
+                            setDiscordMessage("La cuenta se ha copiado en el portapapeles (" + data.social.discord + ")")
+                        else
+                            setDiscordMessage("El usuario no tiene disponible su cuenta de Discord");
+                        getUserReviews(data.email)
+                        getUserActiveGames(data._id)
+                    } else {
+                        navigate("/")
+                    }
+                }
+                getParamUser();
+            }
+
         }
 
+    }, [isLoading]);
 
-
-    }, []);
+    if (!Object.keys(userDB).length && !Object.keys(reviews).length) return (<h1></h1>)
 
 
 
@@ -152,7 +196,7 @@ export default function Account() {
 
     return (
         <ThemeProvider theme={btheme}>
-            {session !== null ? <LoggedBar></LoggedBar> : <UnloggedBar></UnloggedBar>}
+            {isAuthenticated ? <LoggedBar></LoggedBar> : <UnloggedBar></UnloggedBar>}
             <Grid container direction="row" >
                 <Grid container item xs={12} md={3} direction={"column"} sx={{
                     borderRightWidth: "5px", borderTopWidth: "0px", borderBottomWidth: "0px", borderLeftWidth: "0px",
@@ -163,15 +207,15 @@ export default function Account() {
                 >
                     <Grid item mt={5} >
 
-                        <ProfileImg src={user.profilePic}></ProfileImg>
+                        <ProfileImg src={userDB.profilePic}></ProfileImg>
 
                     </Grid>
 
                     <Grid item mb={5} mt={5} textAlign={"center"}>
-                        <Typography mb={2} mt={2}>Correo: </Typography> <Typography display="inline" fontWeight={"bold"}> {user.email} </Typography>
-                        <Typography mb={2} mt={2}>Juegos Reseñados: </Typography> <Typography display="inline" fontWeight={"bold"}>23 </Typography>
+                        <Typography mb={2} mt={2}>Correo: </Typography> <Typography display="inline" fontWeight={"bold"}> {userDB.email} </Typography>
+                        <Typography mb={2} mt={2}>Juegos Reseñados: </Typography> <Typography display="inline" fontWeight={"bold"}>{reviews.length} </Typography>
                         {
-                            user.birthday != "" ? <Fragment> <Typography mb={2} mt={2}>Fecha de nacimiento: </Typography> <Typography display="inline" fontWeight={"bold"}>{user.birthday} </Typography> </Fragment> : <Typography sx={{ display: "none" }}></Typography>
+                            userDB.birthday != "" ? <Fragment> <Typography mb={2} mt={2}>Fecha de nacimiento: </Typography> <Typography display="inline" fontWeight={"bold"}>{userDB.birthday} </Typography> </Fragment> : <Typography sx={{ display: "none" }}></Typography>
                         }
 
                     </Grid>
@@ -183,19 +227,19 @@ export default function Account() {
                         >
                             <Grid container item xs={6} md={12} lg={6} justifyContent="center" mt={5} mb={5}
                                 alignItems="center">
-                                <SocialMedia onClick={onClickSocialMedia(userSocial.facebook)} src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1024px-Facebook_Logo_%282019%29.png"></SocialMedia>
+                                <SocialMedia onClick={onClickSocialMedia(userDB.social.facebook)} src={facebookImage}></SocialMedia>
                             </Grid>
                             <Grid container item xs={6} md={12} lg={6} justifyContent="center" mt={5} mb={5}
                                 alignItems="center">
-                                <SocialMedia onClick={onClickSocialMedia(userSocial.twitter)} src="http://assets.stickpng.com/images/580b57fcd9996e24bc43c53e.png"></SocialMedia>
+                                <SocialMedia onClick={onClickSocialMedia(userDB.social.twitter)} src={twitterImage}></SocialMedia>
                             </Grid>
                             <Grid container item xs={6} md={12} lg={6} justifyContent="center" mt={5} mb={5}
                                 alignItems="center">
-                                <SocialMedia onClick={onClickSocialMedia(userSocial.instagram)} src="http://assets.stickpng.com/images/580b57fcd9996e24bc43c521.png"></SocialMedia>
+                                <SocialMedia onClick={onClickSocialMedia(userDB.social.instagram)} src={instagramImage}></SocialMedia>
                             </Grid>
                             <Grid container item xs={6} md={12} lg={6} justifyContent="center" mt={5} mb={5}
                                 alignItems="center">
-                                <SocialMedia onClick={handleClick(userSocial.discord)} src="https://logodownload.org/wp-content/uploads/2017/11/discord-logo-7-1.png"></SocialMedia>
+                                <SocialMedia onClick={handleClick(userDB.social.discord)} src={discordImage}></SocialMedia>
                                 <Snackbar
                                     open={openDiscordMessage}
                                     autoHideDuration={6000}
@@ -221,11 +265,11 @@ export default function Account() {
                 <Grid container item xs={12} md={9} paddingLeft={3} direction="row">
 
                     <Grid item xs={12}>
-                        <Typography variant='h2' textAlign={"center"} mt={3} fontWeight={"bold"} fontSize={50} >{user.name}</Typography>
+                        <Typography variant='h2' textAlign={"center"} mt={3} fontWeight={"bold"} fontSize={50} >{userDB.name}</Typography>
                         <Divider variant="middle" sx={{ marginTop: "15px", marginBottom: "15px" }}> <Chip label="DESCRIPCIÓN" /> </Divider>
 
                         {
-                            user.desc != "" ? <Fragment><Typography variant="h6" textAlign={"center"} > {user.desc} </Typography></Fragment>
+                            userDB.desc != "" ? <Fragment><Typography variant="h6" textAlign={"center"} > {userDB.desc} </Typography></Fragment>
                                 : <Fragment><Typography variant="caption" component={"h6"} textAlign={"center"} > No hay descripción. </Typography></Fragment>
                         }
 
@@ -234,21 +278,11 @@ export default function Account() {
                             justifyContent="center"
                             alignItems="center">
                             <StyledCarousel className='styling-example' breakPoints={CbreakPoints}>
-                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="League of Legends" cat_1="MOBA" cat_2="Acción" />
-                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Apex Legends" cat_1="Shooter" cat_2="Battle Royale" />
-                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Battlefield 4" cat_1="Shooter" cat_2="Acción" />
-                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Skyrim" cat_1="Rol" cat_2="Aventura" />
-                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Crash Team Racing" cat_1="Carreras" cat_2="Plataformas" />
-                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="League of Legends" cat_1="MOBA" cat_2="Acción" />
-                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Apex Legends" cat_1="Shooter" cat_2="Battle Royale" />
-                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Battlefield 4" cat_1="Shooter" cat_2="Acción" />
-                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Skyrim" cat_1="Rol" cat_2="Aventura" />
-                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Crash Team Racing" cat_1="Carreras" cat_2="Plataformas" />
-                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="League of Legends" cat_1="MOBA" cat_2="Acción" />
-                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Apex Legends" cat_1="Shooter" cat_2="Battle Royale" />
-                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Battlefield 4" cat_1="Shooter" cat_2="Acción" />
-                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Skyrim" cat_1="Rol" cat_2="Aventura" />
-                                <CardGame image="https://cdn.game.tv/game-tv-content/images_3/9bd33486b9989e211af34682144ea9a3/GameTile.jpg" tittle="Crash Team Racing" cat_1="Carreras" cat_2="Plataformas" />
+                                {
+                                    reviews.map((review, index) => (
+                                        <CardGame key={index} g={review.gameId} cat_1="MOBA" cat_2="Acción" />
+                                    ))
+                                }
                             </StyledCarousel>
                         </Grid>
                         <Divider variant="middle" sx={{ marginTop: "15px", marginBottom: "15px" }}> <Chip label="JUEGOS ACTIVOS" /> </Divider>
@@ -257,15 +291,12 @@ export default function Account() {
                             alignItems="center"
                             marginBottom={5}>
                             <StyledCarousel breakPoints={CbreakPointsActive}>
-                                <ActiveGame></ActiveGame>
-                                <ActiveGame></ActiveGame>
-                                <ActiveGame></ActiveGame>
-                                <ActiveGame></ActiveGame>
-                                <ActiveGame></ActiveGame>
-                                <ActiveGame></ActiveGame>
-                                <ActiveGame></ActiveGame>
-                                <ActiveGame></ActiveGame>
-                                <ActiveGame></ActiveGame>
+                                {
+                                    activeGames.map((game, index) => (
+                                        <ActiveGame key={index} game={game}></ActiveGame>
+                                    ))
+                                }
+
                             </StyledCarousel>
 
 

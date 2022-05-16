@@ -4,7 +4,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Box } from "@mui/system";
 import btheme from "../Components/GameView-Theme";
 import { useNavigate } from "react-router-dom";
-import { GetAll, CreateUser } from "../Services/UserServices";
+import { CreateUser } from "../Services/UserServices";
 import LoggedBar from "../Components/loggedBar";
 import UnloggedBar from "../Components/unloggedBar";
 
@@ -52,16 +52,6 @@ function SignInScreen() {
         navigate(url);
 
     };
-    const [users, setUsers] = useState([])
-    useEffect(() => {
-        async function fetchData() {
-            const data = await GetAll();
-            setUsers(data);
-
-        }
-        fetchData();
-
-    }, []);
 
     const [anchorEl, setAnchorEl] = useState(null);
 

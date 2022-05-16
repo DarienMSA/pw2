@@ -1,50 +1,8 @@
 import { axiosBase as axios } from "./Config";
 
-export const GetAllExcept = async (id) => {
+export const GetAllBadges = async (id) => {
     try {
-        const response = await axios.get("/user/except/" + id);
-        if (response.status == 200) {
-            return response.data;
-        } else {
-            return []
-        }
-    } catch (err) {
-        console.error(err);
-        return err
-    }
-}
-
-export const CreateUser = async (data) => {
-    try {
-        const response = await axios.post("/user", data);
-        if (response.status == 200) {
-            return response.data;
-        } else {
-            return []
-        }
-    } catch (err) {
-        console.error(err);
-        return err
-    }
-}
-
-export const UpdateUser = async (id, data) => {
-    try {
-        const response = await axios.put("/user/" + id, data);
-        if (response.status == 200) {
-            return response.data;
-        } else {
-            return []
-        }
-    } catch (err) {
-        console.error(err);
-        return err
-    }
-}
-
-export const LogIn = async (email, pass) => {
-    try {
-        const response = await axios.get("/user/" + email + "/" + pass);
+        const response = await axios.get("/badge/");
         if (response.status == 200) {
             return response.data;
         } else {
@@ -56,9 +14,23 @@ export const LogIn = async (email, pass) => {
     }
 }
 
-export const GetUser = async (id) => {
+export const CreateUserBadges = async (data) => {
     try {
-        const response = await axios.get("/user/" + id);
+        const response = await axios.post("/userBadges", data);
+        if (response.status == 200) {
+            return response.data;
+        } else {
+            return []
+        }
+    } catch (err) {
+        console.error(err);
+        return err
+    }
+}
+
+export const GetUserGameBadges = async (userId, gameId) => {
+    try {
+        const response = await axios.get(`/userBadges/user/${userId}/game/${gameId}`);
         if (response.status == 200) {
             return response.data;
         } else {
@@ -70,13 +42,27 @@ export const GetUser = async (id) => {
     }
 }
 
-export const GetUserEmail = async (email) => {
+export const UpdateUserGameBadges = async (id, body) => {
     try {
-        const response = await axios.get("/user/email/" + email);
+        const response = await axios.put(`/userBadges/${id}`, body);
         if (response.status == 200) {
             return response.data;
         } else {
             return {}
+        }
+    } catch (err) {
+        console.error(err);
+        return err
+    }
+}
+
+export const DeleteUserBadges = async (id) => {
+    try {
+        const response = await axios.delete("/userBadges/" + id);
+        if (response.status == 200) {
+            return response.data;
+        } else {
+            return []
         }
     } catch (err) {
         console.error(err);

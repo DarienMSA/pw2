@@ -1,17 +1,22 @@
 import { Avatar, Box, Grid, IconButton, Menu, MenuItem, Snackbar, styled, Typography } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
-import React from 'react'
+import React, { useState } from 'react'
+import facebookImage from '../../Assets/facebook.png';
+import instagramImage from '../../Assets/instagram.png';
+import twitterImage from '../../Assets/twitter.png';
+import discordImage from '../../Assets/discord.png';
+import { useNavigate } from 'react-router-dom';
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
-        maxWidth: "280px"
+        width: "280px"
     },
     [theme.breakpoints.up('md')]: {
-
+        width: 450
 
     },
     [theme.breakpoints.up('lg')]: {
-
+        width: 530
     },
 
 }));
@@ -26,30 +31,31 @@ const StyledAvatar2 = styled(Avatar)(({ theme }) => ({
 
     },
     [theme.breakpoints.up('lg')]: {
-        width: 70, height: 70,
+        width: 70, height: 70
     },
 
 }));
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
-        marginLeft: 0,
+
     },
     [theme.breakpoints.up('md')]: {
-        marginLeft: 100,
+
 
     },
     [theme.breakpoints.up('lg')]: {
-        marginLeft: 150,
+
     },
 
 }));
 
 
-export default function ActiveUsers() {
+export default function ActiveUsers(props) {
     const [socialWebsAnchor, setSocialWebsAnchor] = React.useState(null);
     const [open, setOpen] = React.useState(false);
-
+    const [discordMessage, setDiscordMessage] = useState("")
+    const navigate = useNavigate();
     const isSocialWebsOpen = Boolean(socialWebsAnchor);
 
     const handleSocialWebsClose = () => {
@@ -61,10 +67,20 @@ export default function ActiveUsers() {
     };
 
     const handleClick = d => () => {
-        console.log(d);
-        navigator.clipboard.writeText(d);
+
+        if (d != "") {
+            setDiscordMessage(`La cuenta se ha copiado en el portapapeles (${d})`)
+            navigator.clipboard.writeText(d);
+        }
+        else
+            setDiscordMessage(`Este usuario no tiene disponible su cuenta de Discord.`)
         setOpen(true);
     };
+
+    const onClickSocialMedia = url => () => {
+        if (url !== "")
+            window.open(url, '_blank');
+    }
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -73,6 +89,10 @@ export default function ActiveUsers() {
 
         setOpen(false);
     };
+
+    const goNavigate = url => () => {
+        navigate(url)
+    }
 
     const action = (
         <React.Fragment>
@@ -107,25 +127,25 @@ export default function ActiveUsers() {
         >
             <MenuItem>
                 <IconButton size="large" aria-label="Facebook" color="inherit">
-                    <Avatar src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1024px-Facebook_Logo_%282019%29.png" />
+                    <Avatar onClick={onClickSocialMedia(props.user.social.facebook)} src={facebookImage} />
                 </IconButton>
                 <p>Facebook</p>
             </MenuItem>
             <MenuItem>
                 <IconButton size="large" aria-label="Facebook" color="inherit">
-                    <Avatar src="http://assets.stickpng.com/images/580b57fcd9996e24bc43c53e.png" />
+                    <Avatar onClick={onClickSocialMedia(props.user.social.twitter)} src={twitterImage} />
                 </IconButton>
                 <p>Twitter</p>
             </MenuItem>
             <MenuItem>
                 <IconButton size="large" aria-label="Facebook" color="inherit">
-                    <Avatar src="http://assets.stickpng.com/images/580b57fcd9996e24bc43c521.png" />
+                    <Avatar onClick={onClickSocialMedia(props.user.social.instagram)} src={instagramImage} />
                 </IconButton>
                 <p>Instagram</p>
             </MenuItem>
-            <MenuItem onClick={handleClick("Daze#7023")}>
+            <MenuItem onClick={handleClick(props.user.social.discord)}>
                 <IconButton size="large" aria-label="Facebook" color="inherit">
-                    <Avatar src="https://logodownload.org/wp-content/uploads/2017/11/discord-logo-7-1.png" />
+                    <Avatar src={discordImage} />
                 </IconButton>
                 <p>Discord</p>
 
@@ -134,7 +154,7 @@ export default function ActiveUsers() {
                 open={open}
                 autoHideDuration={6000}
                 onClose={handleClose}
-                message="La cuenta se ha copiado en el portapapeles (Daze#7023)"
+                message={discordMessage}
                 action={action}
             />
 
@@ -143,9 +163,9 @@ export default function ActiveUsers() {
     return (
         <Grid container sx={{ marginY: 3 }} alignItems={"center"}>
 
-            <StyledAvatar2 sx={{}} src="https://cdn.discordapp.com/attachments/782076463427878956/956035809994231868/FEaAt5RXEAouBTO_1.jpeg" ></StyledAvatar2>
+            <StyledAvatar2 sx={{ cursor: "pointer" }} onClick={goNavigate(`/account?u=${props.user._id}`)} src={props.user.profilePic} ></StyledAvatar2>
             <StyledTypography mb={3} variant="h5" color={"white"} noWrap>
-                Darien Miguel Sánchez Arévalo
+                {props.user.name}
             </StyledTypography>
             <StyledAvatar sx={{ marginTop: 5, cursor: "pointer", bgcolor: "#6998AB", height: 30, width: 30 }} onClick={handleSocialWebsOpen} aria-controls={SocialWebsMenu}>+</StyledAvatar>
 

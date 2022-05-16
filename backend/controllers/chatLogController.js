@@ -1,4 +1,5 @@
 const _CHAT_LOG_ = require("../models/chatLogSchema");
+const _CHAT_ = require("../models/chatSchema");
 
 exports.chatLog_getall = async (req, res) => {
     try {
@@ -15,6 +16,27 @@ exports.chatLog_getOne = async (req, res) => {
     try {
         const { id } = req.params;
         const data = await _CHAT_LOG_.findById(id);
+        console.log(data)
+        if (data) {
+            res.send(data);
+        } else {
+            res.send({
+                message: "No se ha encontrado el chat.",
+                code: "CLE00"
+            })
+            console.error(`message: "No se ha encontrado el chat.",
+            code: "CLE00"`);
+        }
+    } catch (error) {
+        res.send(error);
+        console.error(error);
+    }
+}
+
+exports.chatLog_getOneChat = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = await _CHAT_LOG_.findOne({ chat: id }).sort({ "message": -1 }).populate('message.from message.to');
         if (data) {
             res.send(data);
         } else {
@@ -60,6 +82,7 @@ exports.chatLog_create = async (req, res) => {
             code: "CLE01-C"`);
         } else {
             let newChatLog = _CHAT_LOG_(body);
+            await _CHAT_.findOneAndUpdate({ _id: body.chat }, { seen: false, lastMessageDate: body.message.messageDate, lastMessage: body.message.content, lastMessageFrom: body.message.from }, { returnOriginal: false });
             await newChatLog
                 .save()
                 .then((newObject) => console.log("Success!", newObject))
@@ -79,7 +102,7 @@ exports.chatLog_addMessage = async (req, res) => {
     try {
         const { id } = req.params;
         const { body } = req;
-        const chatLogDB = await _CHAT_LOG_.findById(id);
+        const chatLogDB = await _CHAT_LOG_.findOne({ chat: id });
 
         if (body.message.content.length < 1) {
             res.send({
@@ -97,7 +120,8 @@ exports.chatLog_addMessage = async (req, res) => {
             code: "CLE01-C"`);
         } else if (chatLogDB) {
 
-            const data = await _CHAT_LOG_.findOneAndUpdate({ _id: id }, { $push: { message: body.message } }, { returnOriginal: false }).populate('message.from message.to');
+            const data = await _CHAT_LOG_.findOneAndUpdate({ chat: id }, { $push: { message: body.message } }, { returnOriginal: false }).populate('message.from message.to');
+            await _CHAT_.findOneAndUpdate({ _id: id }, { seen: false, lastMessageDate: body.message.messageDate, lastMessage: body.message.content }, { returnOriginal: false });
 
             res.send({
                 message: "Registro actualizado exitosamente.",
@@ -139,4 +163,14 @@ exports.chatLog_delete = async (req, res) => {
         console.error(error)
     }
 
+}
+
+const getCurrentDate = () => {
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0');
+    let yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+    return today
 }
