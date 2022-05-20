@@ -6,6 +6,7 @@ const _PORT_ = 5000;
 
 _APP_.use(_CORS_());
 require('./models/connection')
+require("dotenv").config();
 
 /** requires de las rutas */
 const _USER_ROUTE_ = require('./routes/userRoutes');
@@ -32,6 +33,6 @@ _APP_.use('/api', _GENRE_ROUTE_);
 _APP_.use('/api', _NOTIFICATION_ROUTE_);
 _APP_.use('/api', _USER_BADGES_ROUTE);
 
-_APP_.listen(_PORT_, () => {
+_APP_.listen(process.env.PORT || _PORT_, () => {
     console.log("La aplicación está escuchando al puerto " + _PORT_);
 });
