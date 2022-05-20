@@ -76,8 +76,8 @@ export default function Account() {
                 getActualUser();
             } else if (searchParams.has("u")) {
                 async function getParamUser() {
-                    const data = await GetUser(searchParams.get("u"));
-                    console.log("getParamUser: ", data);
+                    const data = await GetUserEmail(searchParams.get("u"));
+
                     if (data.email) {
                         if (data.birthday === null)
                             data.birthday = "";

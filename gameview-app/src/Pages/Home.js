@@ -41,7 +41,7 @@ export default function Home() {
 
             async function getUserByEmail() {
                 const data = await GetUserEmail(user.email);
-                if (data.email) {
+                if (data._id) {
 
                     user._id = data._id
 
@@ -76,8 +76,6 @@ export default function Home() {
             getUserByEmail();
         }
     }, [isLoading]);
-
-    if (isLoading) return <h1>Cargando</h1>
 
 
 

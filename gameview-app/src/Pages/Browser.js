@@ -92,6 +92,8 @@ export default function Browser() {
                 GetGamesCategory()
             else
                 GetGamesSorted();
+
+            setPage(1);
         }
 
 

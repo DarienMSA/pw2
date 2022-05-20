@@ -121,7 +121,7 @@ exports.chatLog_addMessage = async (req, res) => {
         } else if (chatLogDB) {
 
             const data = await _CHAT_LOG_.findOneAndUpdate({ chat: id }, { $push: { message: body.message } }, { returnOriginal: false }).populate('message.from message.to');
-            await _CHAT_.findOneAndUpdate({ _id: id }, { seen: false, lastMessageDate: body.message.messageDate, lastMessage: body.message.content }, { returnOriginal: false });
+            await _CHAT_.findOneAndUpdate({ _id: body.chat }, { seen: false, lastMessageDate: body.message.messageDate, lastMessage: body.message.content, lastMessageFrom: body.message.from }, { returnOriginal: false });
 
             res.send({
                 message: "Registro actualizado exitosamente.",

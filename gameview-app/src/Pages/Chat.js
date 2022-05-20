@@ -81,14 +81,19 @@ export default function Chat() {
 
     async function setChatSeen() {
         const data = await SetSeenChat(searchParams.get("c"), true)
-        if (data.data.lastMessageFrom.email === user.email)
-            SetSeenChat(searchParams.get("c"), false)
+        console.log("data: ", data)
+        if (data.data.lastMessageFrom.email === user.email) {
+            const data2 = await SetSeenChat(searchParams.get("c"), false)
+            console.log("data2: ", data2);
+        }
+
     }
 
     async function getUsersChatLog() {
         const data = await GetChatLog(searchParams.get("c"))
         if (data._id) {
             data.message.sort(objectComparisonCallback)
+            setMessages([]);
             setMessages(data.message);
         }
         else

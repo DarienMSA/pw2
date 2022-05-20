@@ -136,6 +136,7 @@ export default function UpdateAccount() {
     const [userDB, setUserDB] = useState({})
     const [image, setImage] = useState("");
     const [openAlert, setOpenAlert] = useState(false);
+    const [counter, setCounter] = useState(0);
 
     useEffect(() => {
         if (!isLoading) {
@@ -236,10 +237,11 @@ export default function UpdateAccount() {
         }
 
         const response = await UpdateUser(user.email, updatedUser);
-        console.log(response)
         if (response.data.email) {
             setUserDB(response.data);
             handleCloseModalPass();
+            navigate("/account/update?c=ok" + counter);
+            setCounter((c) => c + 1);
         } else {
             navigate("/")
             console.log(response)
@@ -284,7 +286,7 @@ export default function UpdateAccount() {
         document.getElementById("info-twitter").style.display = "none";
         document.getElementById("info-instagram").style.display = "none";
         document.getElementById("info-discord").style.display = "none";
-        console.log(userDB);
+
         if (!validateFacebook(userDB.social.facebook) && userDB.social.facebook !== "") {
             bool = true;
             document.getElementById("info-facebook").style.display = "block";

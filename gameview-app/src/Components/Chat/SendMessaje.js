@@ -11,6 +11,7 @@ export default function DisplayMessage(props) {
         if (!isLoading) {
             const isFrom = props.msg.from.email === user.email ? "from" : "to"
             setType(isFrom)
+
         }
     }, [isLoading])
 

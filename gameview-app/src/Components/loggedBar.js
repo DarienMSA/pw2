@@ -19,7 +19,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import { Avatar, Divider, ThemeProvider, Tooltip } from '@mui/material';
 import NotifItem from './NavBar/NotifItem';
 import btheme from './GameView-Theme';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { GetUser, GetUserEmail } from '../Services/UserServices';
 import { useAuth0 } from '@auth0/auth0-react';
 import { LogoutButton } from './Auth0/LogoutButton.';
@@ -41,6 +41,8 @@ export default function LoggedBar() {
     const [notifications, setNotifications] = useState([]);
     const [notificationsLength, setNotificationsLength] = useState(0);
     const [numOfMessages, setNumOfMessages] = useState(0);
+    const { search } = useLocation();
+    const searchParams = new URLSearchParams((search));
 
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -80,7 +82,7 @@ export default function LoggedBar() {
 
 
 
-    }, [isLoading]);
+    }, [isLoading, searchParams.get("c")]);
 
     const handleMobileMenuClose = () => {
         setMobileMoreAnchorEl(null);
