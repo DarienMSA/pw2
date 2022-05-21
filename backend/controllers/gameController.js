@@ -261,7 +261,7 @@ exports.game_add_active_user = async (req, res) => {
                     $push: { activeUsers: idUser },
                     $inc: { activeUsersLength: 1 }
                 },
-                { returnOriginal: false });
+                { returnOriginal: false }).populate("genres activeUsers");
             res.send({
                 message: "Registro actualizado exitosamente.",
                 data //lo mismo a data: data
@@ -293,7 +293,7 @@ exports.game_remove_active_user = async (req, res) => {
                     $pull: { activeUsers: idUser },
                     $inc: { activeUsersLength: -1 }
                 },
-                { returnOriginal: false });
+                { returnOriginal: false }).populate("genres activeUsers");
             res.send({
                 message: "Registro actualizado exitosamente.",
                 data //lo mismo a data: data

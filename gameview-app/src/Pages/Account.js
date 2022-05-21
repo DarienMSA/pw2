@@ -35,12 +35,14 @@ export default function Account() {
 
     async function getUserReviews(id) {
         const data = await GetUserReviews(id);
+        setReviews([]);
         setReviews(data);
     }
 
     async function getUserActiveGames(id) {
 
         const data = await GetUserActiveGames(id);
+        setActiveGames([]);
         setActiveGames(data);
     }
 
@@ -59,6 +61,7 @@ export default function Account() {
                 async function getActualUser() {
                     const data = await GetUserEmail(user.email);
                     if (data.email) {
+                        document.title = data.name
                         if (data.birthday === null)
                             data.birthday = "";
                         setUserDB(data);
@@ -79,6 +82,7 @@ export default function Account() {
                     const data = await GetUserEmail(searchParams.get("u"));
 
                     if (data.email) {
+                        document.title = data.name
                         if (data.birthday === null)
                             data.birthday = "";
                         setUserDB(data);

@@ -12,6 +12,7 @@ import { CreateUser, GetUserEmail } from '../Services/UserServices'
 import { CreateNotification } from '../Services/NotificationServices'
 
 export default function Home() {
+    const navigate = useNavigate();
     const { user, isAuthenticated, isLoading } = useAuth0();
     const [userDB, setUserDB] = useState({})
 
@@ -26,6 +27,7 @@ export default function Home() {
     }
 
     useEffect(() => {
+        document.title = "GameView";
         if (!isLoading && isAuthenticated) {
             async function createNotification(newUser) {
                 const notification = {
@@ -35,18 +37,20 @@ export default function Home() {
                     date: getCurrentDate()
                 }
                 const data = await CreateNotification(notification);
-                console.log(data)
+
 
             }
 
             async function getUserByEmail() {
                 const data = await GetUserEmail(user.email);
+
                 if (data._id) {
 
                     user._id = data._id
 
                     setUserDB(data);
                 } else {
+
                     let newUser = {
                         email: user.email,
                         name: user.nickname.substring(0, 30),
@@ -60,12 +64,20 @@ export default function Home() {
                             facebook: ""
                         }
                     };
+
+                    if (newUser.name.length <= 3) {
+                        for (let index = 0; index < 4 - newUser.name.length; index++) {
+                            newUser.name = newUser.name.concat("_");
+                        }
+                    }
+
                     async function UserPost() {
                         const data = await CreateUser(newUser);
-                        user._id = data._id
+
                         if (data.email) {
                             setUserDB(data);
                             createNotification(data);
+                            navigate("/?c=created")
                         } else {
                         }
                     }
@@ -77,7 +89,7 @@ export default function Home() {
         }
     }, [isLoading]);
 
-
+    if (isLoading) return (<h1></h1>)
 
     return (
         <ThemeProvider theme={btheme}>

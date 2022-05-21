@@ -84,7 +84,6 @@ export default function Chat() {
         console.log("data: ", data)
         if (data.data.lastMessageFrom.email === user.email) {
             const data2 = await SetSeenChat(searchParams.get("c"), false)
-            console.log("data2: ", data2);
         }
 
     }
@@ -101,6 +100,7 @@ export default function Chat() {
     }
     async function getAllChats(id) {
         const data = await GetUserChats(id);
+        setChats([]);
         setChats(data);
         if (searchParams.has("c"))
             getUsersChatLog();
@@ -108,6 +108,7 @@ export default function Chat() {
 
     async function getAllUsers(id) {
         const data = await GetAllExcept(id);
+        setAllUsers([]);
         setAllUsers(data);
         getAllChats(id)
     }
@@ -133,6 +134,7 @@ export default function Chat() {
 
     useEffect(() => {
         if (!isLoading) {
+            document.title = "Chat"
             if (!isAuthenticated) {
                 navigate("/")
             }

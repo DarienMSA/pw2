@@ -25,7 +25,7 @@ export default function ActiveGame(props) {
                 image={props.game.image}
             />
             <CardContent>
-                <Divider variant="middle"> <Chip label="ELDEN RING" /> </Divider>
+                <Divider variant="middle"> <Chip label={props.game.name} /> </Divider>
             </CardContent>
             <CardActions >
 

@@ -40,32 +40,39 @@ export default function Browser() {
     };
     async function GetGamesSorted() {
         const data = await GetGamesSortedBy("name");
+        setGames([]);
         setGames(data);
         setNoOfPages(Math.ceil(data.length / itemsPerPage));
         setSearchValue("Mostrándose todos los juegos:")
+        document.title = "Mostrándose todos los juegos";
     }
     async function getCategories() {
         const data = await GetCategories();
+        setCategories([])
         setCategories(data)
     }
 
     async function GetGamesName() {
         const data = await GetGamesByName(searchParams.get("v"));
+        setGames([]);
 
         setGames(data);
         setNoOfPages(Math.ceil(data.length / itemsPerPage));
         setSearchValue(`Resultados de Búsqueda: ${searchParams.get("v")}`)
+        document.title = `Resultados de Búsqueda: ${searchParams.get("v")}`;
 
     }
 
     async function GetGamesCategory() {
         const data = await GetGamesByCategory(searchParams.get("c"));
 
+        setGames([]);
 
         setGames(data);
         setNoOfPages(Math.ceil(data.length / itemsPerPage));
         const category = await GetOneCategory(searchParams.get("c"))
         setSearchValue(`Resultados de Búsqueda: ${category.name}`)
+        document.title = `Resultados de Búsqueda: ${category.name}`;
 
 
     }

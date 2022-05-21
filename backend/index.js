@@ -34,5 +34,5 @@ _APP_.use('/api', _NOTIFICATION_ROUTE_);
 _APP_.use('/api', _USER_BADGES_ROUTE);
 
 _APP_.listen(process.env.PORT || _PORT_, () => {
-    console.log("La aplicación está escuchando al puerto " + _PORT_);
+    console.log("La aplicación está escuchando al puerto " + process.env.PORT);
 });

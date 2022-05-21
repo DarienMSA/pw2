@@ -46,7 +46,7 @@ exports.review_getOne = async (req, res) => {
 exports.review_getUserReviews = async (req, res) => {
     try {
         const { id } = req.params;
-        const data = await _REVIEW_.find({ userId: id }).populate("gameId");
+        const data = await _REVIEW_.find({ userId: id }).sort({ _id: -1 }).populate("gameId");
         console.log("data", data)
         res.send(data);
     } catch (error) {
@@ -60,7 +60,7 @@ exports.review_getUserReviews = async (req, res) => {
 exports.review_getGameReviews = async (req, res) => {
     try {
         const { id } = req.params;
-        const data = await _REVIEW_.find({ gameId: id });
+        const data = await _REVIEW_.find({ gameId: id }).sort({ _id: -1 });
         res.send(data);
     } catch (error) {
         res.send(error);

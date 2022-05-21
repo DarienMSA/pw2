@@ -143,6 +143,7 @@ export default function UpdateAccount() {
 
 
             if (isAuthenticated) {
+                document.title = "Actualizar Cuenta";
                 async function getUser() {
 
                     const data = await GetUserEmail(user.email);
@@ -461,7 +462,7 @@ export default function UpdateAccount() {
                                     name="birthday"
                                     onChange={handleOnChangePD}
                                     color={"info"}
-                                    defaultValue={userDB.birthday}
+                                    defaultValue={userDB.birthday === "" ? "1990-01-01" : userDB.birthday}
                                     fullWidth
                                     InputLabelProps={{
                                         shrink: true,

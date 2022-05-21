@@ -32,6 +32,7 @@ import { GetUserNotifications, GetUserNotificationsActive, setActiveAllNotificat
 export default function LoggedBar() {
     const navigate = useNavigate();
 
+
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [anchorElNotif, setAnchorElNotif] = React.useState(null);
@@ -64,15 +65,13 @@ export default function LoggedBar() {
                 getUserNotifs(id)
             }
             async function getUser() {
-
                 const data = await GetUserEmail(user.email);
-
                 if (data.email) {
                     setUserDB(data);
                     getNumberOfMessages(data._id)
                 } else {
                     navigate("/")
-                    console.log("error")
+                    console.log(data)
                 }
             }
 
@@ -211,15 +210,7 @@ export default function LoggedBar() {
                 <p>Perfil</p>
             </MenuItem>
 
-            <MenuItem onClick={logOut("/login")}>
-                <IconButton
-                    size="large"
-                    color="inherit"
-                >
-                    <LogoutIcon />
-                </IconButton>
-                <p>Cerrar sesión</p>
-            </MenuItem>
+            <LogoutButton />
 
             <Menu
                 sx={{ mt: '45px' }}

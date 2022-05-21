@@ -36,7 +36,7 @@ exports.comment_getOne = async (req, res) => {
 exports.comment_getReviewComments = async (req, res) => {
     try {
         const { id } = req.params;
-        const data = await _COMMENT_.find({ review: id }).populate('comment.user');
+        const data = await _COMMENT_.find({ review: id }).sort({ _id: -1 }).populate('comment.user');
         res.send(data);
     } catch (error) {
         res.send(error);

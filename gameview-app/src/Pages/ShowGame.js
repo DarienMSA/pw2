@@ -106,6 +106,7 @@ export default function ShowGame() {
     const { user, isLoading, isAuthenticated } = useAuth0();
     const [game, setGame] = useState({})
     const [reviews, setReviews] = useState([])
+    const [activeUsers, setActiveUsers] = useState([])
     const [openAlertModifReview, setOpenAlertModifReview] = useState(false);
     const [textAlertModifReview, setTextAlertModifReview] = useState("");
     const [openAlertCreateReview, setOpenAlertCreateReview] = useState(false);
@@ -152,8 +153,11 @@ export default function ShowGame() {
     async function getBadges() {
         const data = await GetAllBadges();
 
-        if (data.length != 0)
+        if (data.length != 0) {
+            setBadges([])
             setBadges(data)
+        }
+
     }
     async function getUserGameReview() {
 
@@ -174,6 +178,7 @@ export default function ShowGame() {
     async function getReviews() {
 
         const data = await GetGameReviews(searchParams.get("id"));
+        setReviews([])
         setReviews(data)
     }
 
@@ -194,9 +199,11 @@ export default function ShowGame() {
     async function getGame() {
 
         const data = await GetGameID(searchParams.get("id"));
-        console.log(game);
-        if (data.launchDate) {
+        if (data._id) {
+            document.title = data.name;
             setGame(data);
+            setActiveUsers([]);
+            setActiveUsers(data.activeUsers);
 
         } else {
             navigate("/")
@@ -244,18 +251,22 @@ export default function ShowGame() {
         if (e.target.checked) {
             async function addActive() {
                 const data = await AddActiveUser(searchParams.get("id"), userDB._id)
-                console.log("AddData: ", data)
+
+                setActiveUsers([]);
+                setActiveUsers(data.data.activeUsers);
             }
             addActive();
         } else {
             async function removeActive() {
                 const data = await RemoveActiveUser(searchParams.get("id"), userDB._id)
-                console.log("RemoveData: ", data)
+
+                setActiveUsers([]);
+                setActiveUsers(data.data.activeUsers);
             }
             removeActive();
         }
         setSwitchActiveGame(e.target.checked)
-        setCounter((c) => c + 1)
+
     };
 
     const handleToggle = (value) => () => {
@@ -626,7 +637,7 @@ export default function ShowGame() {
                             >
                                 <BoxModalActiveGames sx={{ background: "#1A374D" }}>
                                     <Typography color={"#FFF2EF"} textAlign={"center"} id="modal-modal-title" variant="h5" component="h2" my={3}>
-                                        Buscando jugadores para Elden Ring
+                                        Buscando jugadores para {game.name}
                                     </Typography>
                                     <Divider sx={{ marginY: "15px" }} variant="middle"></Divider>
                                     <Grid container id="modal-modal-description" sx={{ my: 2 }}>
@@ -636,14 +647,14 @@ export default function ShowGame() {
                                                 <FormControlLabel control={<Switch onChange={handleSwitchToggle} color={"buttonPrimary"} checked={switchActiveGame} />} label={<span style={{ color: '#FFF2EF' }}>Quiero buscar jugadores</span>} />
                                             </FormGroup>
                                             <Typography color={"#FFF2EF"} width={"80%"} sx={{ my: 10 }}>
-                                                Estos son los usuarios que buscan tener una partida en Elden Ring, comunícate con ellos por sus redes sociales o enviándoles un mensaje
+                                                Estos son los usuarios que buscan tener una partida en {game.name}, comunícate con ellos por sus redes sociales o enviándoles un mensaje
                                             </Typography>
 
                                         </Grid>
 
                                         <Grid item container xs={12} md={12} lg={8} justifyContent="center" alignItems={"center"} sx={{ maxHeight: "470px", overflow: "auto" }}>
                                             {
-                                                game.activeUsers.map((user, index) => (
+                                                activeUsers.map((user, index) => (
                                                     <ActiveUsers key={index} user={user}></ActiveUsers>
                                                 ))
                                             }
@@ -703,7 +714,7 @@ export default function ShowGame() {
 
 
                 <Grid container item xs={12} justifyContent={"center"} alignItems={"center"} mt={10}>
-                    <Typography variant={"h5"} fontWeight={"bold"} textAlign={"center"}>Todas las reseñas.</Typography>
+                    <Typography variant={"h5"} fontWeight={"bold"} textAlign={"center"}> {reviews.length === 0 ? "Este juego todavía no tiene reseñas." : "Todas las reseñas."} </Typography>
                 </Grid>
 
                 <Grid container item xs={12} justifyContent={"center"} alignItems={"center"} my={2}>

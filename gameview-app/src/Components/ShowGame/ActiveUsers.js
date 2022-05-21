@@ -163,7 +163,7 @@ export default function ActiveUsers(props) {
     return (
         <Grid container sx={{ marginY: 3 }} alignItems={"center"}>
 
-            <StyledAvatar2 sx={{ cursor: "pointer" }} onClick={goNavigate(`/account?u=${props.user._id}`)} src={props.user.profilePic} ></StyledAvatar2>
+            <StyledAvatar2 sx={{ cursor: "pointer" }} onClick={goNavigate(`/account?u=${props.user.email}`)} src={props.user.profilePic} ></StyledAvatar2>
             <StyledTypography mb={3} variant="h5" color={"white"} noWrap>
                 {props.user.name}
             </StyledTypography>
